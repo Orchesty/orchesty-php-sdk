@@ -83,7 +83,7 @@ final class OAuth1ApplicationAbstractTest extends DatabaseTestCaseAbstract
         $application = new NullOAuth1Application($provider);
         $application->authorize($applicationInstall);
 
-        self::assertTrue(TRUE);
+        self::assertFake();
     }
 
     /**
@@ -153,7 +153,7 @@ final class OAuth1ApplicationAbstractTest extends DatabaseTestCaseAbstract
     {
         parent::setUp();
 
-        $this->testApp = self::$container->get('hbpf.application.null3');
+        $this->testApp = self::getContainer()->get('hbpf.application.null3');
     }
 
     /**

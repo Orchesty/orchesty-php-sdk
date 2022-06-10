@@ -18,7 +18,7 @@ interface CustomNodeInterface
      *
      * @return ProcessDto
      */
-    public function process(ProcessDto $dto): ProcessDto;
+    public function processAction(ProcessDto $dto): ProcessDto;
 
     /**
      * @param ApplicationInterface $application

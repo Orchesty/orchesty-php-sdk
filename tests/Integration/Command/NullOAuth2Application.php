@@ -50,7 +50,7 @@ final class NullOAuth2Application extends OAuth2ApplicationAbstract
     /**
      * @return string
      */
-    public function getKey(): string
+    public function getName(): string
     {
         return 'null2';
     }
@@ -58,7 +58,7 @@ final class NullOAuth2Application extends OAuth2ApplicationAbstract
     /**
      * @return string
      */
-    public function getName(): string
+    public function getPublicName(): string
     {
         return 'null2';
     }

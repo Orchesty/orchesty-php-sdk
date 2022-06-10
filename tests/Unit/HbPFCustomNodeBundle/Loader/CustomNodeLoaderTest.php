@@ -49,7 +49,7 @@ final class CustomNodeLoaderTest extends KernelTestCaseAbstract
     {
         parent::setUp();
 
-        $this->customNodeLoader = self::$container->get('hbpf.loader.custom_node');
+        $this->customNodeLoader = self::getContainer()->get('hbpf.loader.custom_node');
     }
 
 }

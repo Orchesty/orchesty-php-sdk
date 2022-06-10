@@ -24,28 +24,6 @@ final class TraitTest extends KernelTestCaseAbstract
     private TestNullConnector $nullConnector;
 
     /**
-     * @covers \Hanaboso\PipesPhpSdk\Connector\Traits\ProcessActionNotSupportedTrait::processAction
-     *
-     * @throws Exception
-     */
-    public function testProcessActionException(): void
-    {
-        self::expectExceptionCode(ConnectorException::CONNECTOR_DOES_NOT_HAVE_PROCESS_ACTION);
-        $this->nullConnector->processAction(new ProcessDto());
-    }
-
-    /**
-     * @covers \Hanaboso\PipesPhpSdk\Connector\Traits\ProcessEventNotSupportedTrait::processEvent
-     *
-     * @throws Exception
-     */
-    public function testProcessEventException(): void
-    {
-        self::expectExceptionCode(ConnectorException::CONNECTOR_DOES_NOT_HAVE_PROCESS_EVENT);
-        $this->nullConnector->processEvent(new ProcessDto());
-    }
-
-    /**
      * @covers \Hanaboso\PipesPhpSdk\Connector\Traits\ProcessExceptionTrait::createException
      *
      * @throws Exception

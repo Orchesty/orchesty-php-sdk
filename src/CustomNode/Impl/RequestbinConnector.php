@@ -33,7 +33,7 @@ final class RequestbinConnector extends CustomNodeAbstract
      * @return ProcessDto
      * @throws CurlException
      */
-    public function process(ProcessDto $dto): ProcessDto
+    public function processAction(ProcessDto $dto): ProcessDto
     {
         $req = new RequestDto(CurlManager::METHOD_POST, new Uri($this->url));
         $req->setBody($dto->getData())

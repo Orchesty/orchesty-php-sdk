@@ -2,10 +2,12 @@
 
 namespace Hanaboso\PipesPhpSdk\Application\Base;
 
+use Exception;
 use GuzzleHttp\Psr7\Uri;
 use Hanaboso\CommonsBundle\Enum\ApplicationTypeEnum;
 use Hanaboso\PipesPhpSdk\Application\Document\ApplicationInstall;
 use Hanaboso\PipesPhpSdk\Application\Model\Form\Field;
+use Hanaboso\Utils\File\File;
 
 /**
  * Class ApplicationAbstract
@@ -16,6 +18,29 @@ abstract class ApplicationAbstract implements ApplicationInterface
 {
 
     public const FORM = 'form';
+
+    /**
+     * @var string
+     */
+    protected $logoFilename = 'logo.svg';
+
+    /**
+     * @return string|null
+     */
+    public function getLogo(): ?string
+    {
+        try {
+            if (file_exists($this->logoFilename)) {
+                return sprintf(
+                    'data:%s;base64, %s',
+                    mime_content_type($this->logoFilename),
+                    base64_encode(File::getContent($this->logoFilename)),
+                );
+            }
+        } catch (Exception $e) {$e;}
+
+        return NULL;
+    }
 
     /**
      * @return string
@@ -83,10 +108,10 @@ abstract class ApplicationAbstract implements ApplicationInterface
     public function toArray(): array
     {
         return [
-            'name'               => $this->getName(),
+            'name'               => $this->getPublicName(),
             'authorization_type' => $this->getAuthorizationType(),
             'application_type'   => $this->getApplicationType(),
-            'key'                => $this->getKey(),
+            'key'                => $this->getName(),
             'description'        => $this->getDescription(),
         ];
     }

@@ -51,6 +51,14 @@ abstract class ConnectorAbstract implements ConnectorInterface
             return TRUE;
         }
 
+        if (!$message) {
+            $message = sprintf(
+                'Returned StatusCode [%d] is not in allowed statusCodes [%s]',
+                $statusCode,
+                implode(', ', $this->okStatuses),
+            );
+        }
+
         $dto->setStopProcess(ProcessDto::STOP_AND_FAILED, $message);
 
         return FALSE;
@@ -87,7 +95,7 @@ abstract class ConnectorAbstract implements ConnectorInterface
     public function getApplicationKey(): ?string
     {
         if ($this->application) {
-            return $this->application->getKey();
+            return $this->application->getName();
         }
 
         return NULL;

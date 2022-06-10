@@ -22,7 +22,7 @@ final class TestNullApplication extends BasicApplicationAbstract
     /**
      * @return string
      */
-    public function getKey(): string
+    public function getName(): string
     {
         return 'null-key';
     }
@@ -30,7 +30,7 @@ final class TestNullApplication extends BasicApplicationAbstract
     /**
      * @return string
      */
-    public function getName(): string
+    public function getPublicName(): string
     {
         return 'Null';
     }

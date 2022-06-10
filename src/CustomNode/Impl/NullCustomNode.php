@@ -19,9 +19,9 @@ final class NullCustomNode extends CustomNodeAbstract
      *
      * @return ProcessDto
      */
-    public function process(ProcessDto $dto): ProcessDto
+    public function processAction(ProcessDto $dto): ProcessDto
     {
-        $dto->addHeader(PipesHeaders::createKey(PipesHeaders::RESULT_MESSAGE), 'Null worker resending data.');
+        $dto->addHeader(PipesHeaders::RESULT_MESSAGE, 'Null worker resending data.');
 
         return $dto;
     }

@@ -5,7 +5,6 @@ namespace Hanaboso\PipesPhpSdk\Utils;
 use Hanaboso\CommonsBundle\Process\ProcessDto;
 use Hanaboso\PipesPhpSdk\Connector\Exception\ConnectorException;
 use Hanaboso\PipesPhpSdk\Connector\Traits\ProcessExceptionTrait;
-use Hanaboso\PipesPhpSdk\RabbitMq\Impl\Batch\SuccessMessage;
 use Hanaboso\Utils\String\Json;
 use JsonException;
 
@@ -20,20 +19,15 @@ trait ProcessContentTrait
     use ProcessExceptionTrait;
 
     /**
-     * @param ProcessDto|SuccessMessage $dto
-     * @param string                    $key
-     * @param mixed[]                   $contents
-     * @param bool                      $throw
+     * @param ProcessDto $dto
+     * @param string     $key
+     * @param mixed[]    $contents
+     * @param bool       $throw
      *
      * @return mixed
      * @throws ConnectorException
      */
-    protected function getContentByKey(
-        ProcessDto|SuccessMessage $dto,
-        string $key,
-        array $contents = [],
-        bool $throw = TRUE,
-    ): mixed
+    protected function getContentByKey(ProcessDto $dto, string $key, array $contents = [], bool $throw = TRUE): mixed
     {
         $contents = $contents ?: Json::decode($dto->getData());
         $content  = $this->getByKey($contents, $key);
@@ -46,14 +40,14 @@ trait ProcessContentTrait
     }
 
     /**
-     * @param ProcessDto|SuccessMessage $dto
-     * @param mixed[]                   $parameters
+     * @param ProcessDto $dto
+     * @param mixed[]    $parameters
      *
      * @return mixed[]
      * @throws ConnectorException
      * @throws JsonException
      */
-    protected function checkRequiredContent(ProcessDto|SuccessMessage $dto, array $parameters): array
+    protected function checkRequiredContent(ProcessDto $dto, array $parameters): array
     {
         $data = Json::decode($dto->getData());
 

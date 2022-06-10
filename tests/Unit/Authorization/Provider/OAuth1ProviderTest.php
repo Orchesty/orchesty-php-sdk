@@ -211,7 +211,7 @@ final class OAuth1ProviderTest extends KernelTestCaseAbstract
      */
     public function testCreateClient(): void
     {
-        $provider = self::$container->get('hbpf.providers.oauth1_provider');
+        $provider = self::getContainer()->get('hbpf.providers.oauth1_provider');
 
         $dto = new OAuth1Dto(
             (new ApplicationInstall())

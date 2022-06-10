@@ -19,7 +19,7 @@ final class RequestBinConnectorTest extends DatabaseTestCaseAbstract
 
     /**
      * @covers \Hanaboso\PipesPhpSdk\CustomNode\Impl\RequestbinConnector
-     * @covers \Hanaboso\PipesPhpSdk\CustomNode\Impl\RequestbinConnector::process
+     * @covers \Hanaboso\PipesPhpSdk\CustomNode\Impl\RequestbinConnector::processAction
      *
      * @throws Exception
      */
@@ -29,7 +29,7 @@ final class RequestBinConnectorTest extends DatabaseTestCaseAbstract
         $curl->expects(self::any())->method('send')->willReturn(new ResponseDto(200, 'test', 'body', []));
 
         $connector = new RequestbinConnector('www.testUrl.com', $curl);
-        $dto       = $connector->process(new ProcessDto());
+        $dto       = $connector->processAction(new ProcessDto());
 
         self::assertEquals('{}', $dto->getData());
     }

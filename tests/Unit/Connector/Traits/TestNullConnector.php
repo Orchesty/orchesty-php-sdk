@@ -2,9 +2,8 @@
 
 namespace PipesPhpSdkTests\Unit\Connector\Traits;
 
+use Hanaboso\CommonsBundle\Process\ProcessDto;
 use Hanaboso\PipesPhpSdk\Connector\ConnectorAbstract;
-use Hanaboso\PipesPhpSdk\Connector\Traits\ProcessActionNotSupportedTrait;
-use Hanaboso\PipesPhpSdk\Connector\Traits\ProcessEventNotSupportedTrait;
 use Hanaboso\PipesPhpSdk\Connector\Traits\ProcessExceptionTrait;
 
 /**
@@ -15,8 +14,6 @@ use Hanaboso\PipesPhpSdk\Connector\Traits\ProcessExceptionTrait;
 final class TestNullConnector extends ConnectorAbstract
 {
 
-    use ProcessActionNotSupportedTrait;
-    use ProcessEventNotSupportedTrait;
     use ProcessExceptionTrait;
 
     /**
@@ -25,6 +22,18 @@ final class TestNullConnector extends ConnectorAbstract
     public function getId(): string
     {
         return 'null-test-trait';
+    }
+
+    /**
+     * @param ProcessDto $dto
+     *
+     * @return ProcessDto
+     */
+    public function processAction(ProcessDto $dto): ProcessDto
+    {
+        $dto;
+
+        return new ProcessDto();
     }
 
 }

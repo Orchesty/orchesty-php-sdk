@@ -120,7 +120,7 @@ final class ApplicationHandlerTest extends DatabaseTestCaseAbstract
 
         $handler = new ApplicationHandler($manager);
         $handler->authorizeApplication('null', 'user', '/redirect/url');
-        self::assertTrue(TRUE);
+        self::assertFake();
     }
 
     /**
@@ -136,7 +136,7 @@ final class ApplicationHandlerTest extends DatabaseTestCaseAbstract
 
         $handler = new ApplicationHandler($manager);
         $handler->authorizeApplication('null', 'user', '/redirect/url');
-        self::assertTrue(TRUE);
+        self::assertFake();
     }
 
     /**
@@ -164,7 +164,7 @@ final class ApplicationHandlerTest extends DatabaseTestCaseAbstract
     {
         parent::setUp();
 
-        $this->handler = self::$container->get('hbpf.application.handler');
+        $this->handler = self::getContainer()->get('hbpf.application.handler');
     }
 
     /**

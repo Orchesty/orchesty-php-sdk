@@ -24,20 +24,6 @@ final class ConnectorManager
      * @return ProcessDto
      * @throws ConnectorException
      */
-    public function processEvent(ConnectorInterface $conn, Request $request): ProcessDto
-    {
-        $dto = ProcessDtoFactory::createFromRequest($request);
-
-        return $conn->processEvent($dto);
-    }
-
-    /**
-     * @param ConnectorInterface $conn
-     * @param Request            $request
-     *
-     * @return ProcessDto
-     * @throws ConnectorException
-     */
     public function processAction(ConnectorInterface $conn, Request $request): ProcessDto
     {
         $dto = ProcessDtoFactory::createFromRequest($request);
