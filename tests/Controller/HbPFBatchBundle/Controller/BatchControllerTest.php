@@ -117,16 +117,4 @@ final class BatchControllerTest extends ControllerTestCaseAbstract
         self::getContainer()->set('hbpf.handler.batch', $handler);
     }
 
-    /**
-     * @throws Exception
-     */
-    private function mockBatchHandler(): void
-    {
-        $handler = $this->getMockBuilder(BatchHandler::class)
-            ->disableOriginalConstructor()
-            ->getMock();
-
-        $handler->method('getBeaches');
-    }
-
 }
