@@ -15,7 +15,7 @@
         "hanaboso/rabbit-mq-bundle": "^1.5",
         "hanaboso/utils": "^1.1",
         "league/oauth2-client": "^2.6",
-        "phpoffice/phpspreadsheet": "1.21",
+        "phpoffice/phpspreadsheet": "^1.23.0",
         "symfony/monolog-bundle": "^v3.8",
         "symfony/yaml": "^v6.1"
     },
