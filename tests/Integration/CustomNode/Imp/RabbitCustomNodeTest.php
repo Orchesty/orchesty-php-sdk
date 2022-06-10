@@ -55,7 +55,7 @@ final class RabbitCustomNodeTest extends DatabaseTestCaseAbstract
         $this->setProperty($this->nullConnector, 'queues', [1, 2]);
         $this->invokeMethod($this->nullConnector, 'publishMessage', [['message'], ['headers']]);
 
-        self::assertTrue(TRUE);
+        self::assertFake();
     }
 
     /**
@@ -163,7 +163,7 @@ final class RabbitCustomNodeTest extends DatabaseTestCaseAbstract
             ],
         );
         $this->invokeMethod($this->nullConnector, 'validate', [$dto]);
-        self::assertTrue(TRUE);
+        self::assertFake();
     }
 
     /**
@@ -183,7 +183,7 @@ final class RabbitCustomNodeTest extends DatabaseTestCaseAbstract
 
         $this->invokeMethod($this->nullConnector, 'normalizeHeaders', [$dto]);
 
-        self::assertTrue(TRUE);
+        self::assertFake();
     }
 
     /**
@@ -212,7 +212,7 @@ final class RabbitCustomNodeTest extends DatabaseTestCaseAbstract
         );
 
         $this->invokeMethod($this->nullConnector, 'bindChannels', [$dto]);
-        self::assertTrue(TRUE);
+        self::assertFake();
     }
 
     /**
@@ -226,11 +226,11 @@ final class RabbitCustomNodeTest extends DatabaseTestCaseAbstract
         $this->setProperty($this->nullConnector, 'queues', [1, 2]);
         $this->invokeMethod($this->nullConnector, 'unbindChannels');
 
-        self::assertTrue(TRUE);
+        self::assertFake();
     }
 
     /**
-     * @covers \Hanaboso\PipesPhpSdk\CustomNode\Impl\RabbitCustomNode::process
+     * @covers \Hanaboso\PipesPhpSdk\CustomNode\Impl\RabbitCustomNode::processAction
      * @covers \Hanaboso\PipesPhpSdk\CustomNode\Impl\RabbitCustomNode::validate
      * @covers \Hanaboso\PipesPhpSdk\CustomNode\Impl\RabbitCustomNode::normalizeHeaders
      * @covers \Hanaboso\PipesPhpSdk\CustomNode\Impl\RabbitCustomNode::bindChannels
@@ -239,7 +239,7 @@ final class RabbitCustomNodeTest extends DatabaseTestCaseAbstract
      *
      * @throws Exception
      */
-    public function testProcess(): void
+    public function testProcessAction(): void
     {
         $node = new Node();
         $this->pfd($node);
@@ -255,7 +255,7 @@ final class RabbitCustomNodeTest extends DatabaseTestCaseAbstract
             ],
         );
 
-        $dto = $this->nullConnector->process($dto);
+        $dto = $this->nullConnector->processAction($dto);
         self::assertEquals(5, count($dto->getHeaders()));
     }
 

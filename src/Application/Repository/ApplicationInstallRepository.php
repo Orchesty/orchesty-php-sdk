@@ -2,6 +2,7 @@
 
 namespace Hanaboso\PipesPhpSdk\Application\Repository;
 
+use Doctrine\ODM\MongoDB\MongoDBException;
 use Doctrine\ODM\MongoDB\Repository\DocumentRepository;
 use Hanaboso\CommonsBundle\Process\ProcessDto;
 use Hanaboso\PipesPhpSdk\Application\Document\ApplicationInstall;
@@ -47,6 +48,20 @@ final class ApplicationInstallRepository extends DocumentRepository
     }
 
     /**
+     * @return int
+     * @throws MongoDBException
+     */
+    public function getInstalledApplicationsCount(): int
+    {
+        /** @var int $res */
+        $res = $this->createQueryBuilder()
+            ->field('deleted')->equals(FALSE)
+            ->count()->getQuery()->execute();
+
+        return $res;
+    }
+
+    /**
      * @param ProcessDto $dto
      * @param bool       $clear
      *
@@ -73,8 +88,9 @@ final class ApplicationInstallRepository extends DocumentRepository
     {
         $ab  = $this->createAggregationBuilder();
         $res = $ab
-            ->group()->field('id')
-            ->expression('$key')
+            ->match()->field('deleted')->equals(FALSE)
+            ->group()
+            ->field('id')->expression('$key')
             ->field('total_sum')->sum(1)
             ->field('non_expire_sum')->sum(
                 $ab->expr()->cond(
@@ -87,7 +103,8 @@ final class ApplicationInstallRepository extends DocumentRepository
                 ),
             )
             ->sort('id', 'ASC')
-            ->execute()
+            ->getAggregation()
+            ->getIterator()
             ->toArray();
 
         $ret = [];
@@ -95,6 +112,31 @@ final class ApplicationInstallRepository extends DocumentRepository
             $ret[] = [
                 '_id'   => $item['_id'],
                 'value' => ['total_sum' => $item['total_sum'], 'non_expire_sum' => $item['non_expire_sum']],
+            ];
+        }
+
+        return $ret;
+    }
+
+    /**
+     * @return mixed[]
+     */
+    public function getUsersCount(): array
+    {
+        $res = $this->createQueryBuilder()
+            ->field('deleted')->equals(FALSE)
+            ->sort('id', 'ASC')
+            ->getQuery()
+            ->toArray();
+
+        $ret = [];
+        /** @var ApplicationInstall $item */
+        foreach ($res as $item) {
+            $ret[] = [
+                'id'                  => $item->getId(),
+                'name'                 => $item->getKey(),
+                'user'                 => $item->getUser(),
+                'nonEncryptedSettings' => $item->getNonEncryptedSettings(),
             ];
         }
 
@@ -124,7 +166,8 @@ final class ApplicationInstallRepository extends DocumentRepository
                     ->field('name')->ifNull('$user', ''),
             )
             ->sort('id', 'ASC')
-            ->execute()
+            ->getAggregation()
+            ->getIterator()
             ->toArray();
 
         $ret = ['_id' => $application];

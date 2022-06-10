@@ -22,13 +22,13 @@ final class CustomNodeHandlerTest extends DatabaseTestCaseAbstract
 
     /**
      * @covers \Hanaboso\PipesPhpSdk\HbPFCustomNodeBundle\Handler\CustomNodeHandler
-     * @covers \Hanaboso\PipesPhpSdk\HbPFCustomNodeBundle\Handler\CustomNodeHandler::process
+     * @covers \Hanaboso\PipesPhpSdk\HbPFCustomNodeBundle\Handler\CustomNodeHandler::processAction
      *
      * @throws Exception
      */
     public function testProcess(): void
     {
-        $dto = $this->handler->process('null', new Request());
+        $dto = $this->handler->processAction('null', new Request());
 
         self::assertEquals('', $dto->getData());
     }
@@ -41,7 +41,7 @@ final class CustomNodeHandlerTest extends DatabaseTestCaseAbstract
     public function testProcessTest(): void
     {
         $this->handler->processTest('null');
-        self::assertTrue(TRUE);
+        self::assertFake();
     }
 
     /**
@@ -59,7 +59,7 @@ final class CustomNodeHandlerTest extends DatabaseTestCaseAbstract
     {
         parent::setUp();
 
-        $this->handler = self::$container->get('hbpf.handler.custom_node');
+        $this->handler = self::getContainer()->get('hbpf.handler.custom_node');
     }
 
 }

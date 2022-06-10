@@ -25,14 +25,6 @@ interface ConnectorInterface
      * @return ProcessDto
      * @throws ConnectorException
      */
-    public function processEvent(ProcessDto $dto): ProcessDto;
-
-    /**
-     * @param ProcessDto $dto
-     *
-     * @return ProcessDto
-     * @throws ConnectorException
-     */
     public function processAction(ProcessDto $dto): ProcessDto;
 
     /**

@@ -213,7 +213,7 @@ final class OAuth2ApplicationAbstractTest extends DatabaseTestCaseAbstract
     {
         parent::setUp();
 
-        $this->testApp = self::$container->get('hbpf.application.null2');
+        $this->testApp = self::getContainer()->get('hbpf.application.null2');
     }
 
     /**

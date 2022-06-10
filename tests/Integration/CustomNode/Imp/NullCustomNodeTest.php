@@ -18,12 +18,12 @@ final class NullCustomNodeTest extends DatabaseTestCaseAbstract
 {
 
     /**
-     * @covers \Hanaboso\PipesPhpSdk\CustomNode\Impl\NullCustomNode::process
+     * @covers \Hanaboso\PipesPhpSdk\CustomNode\Impl\NullCustomNode::processAction
      */
     public function testProcess(): void
     {
         $dto = new ProcessDto();
-        (new NullCustomNode())->process($dto);
+        (new NullCustomNode())->processAction($dto);
 
         self::assertEquals(['pf-result-message' => 'Null worker resending data.'], $dto->getHeaders());
     }

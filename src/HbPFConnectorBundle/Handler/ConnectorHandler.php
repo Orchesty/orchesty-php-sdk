@@ -27,20 +27,6 @@ final class ConnectorHandler
     }
 
     /**
-     * @param string  $id
-     * @param Request $request
-     *
-     * @return ProcessDto
-     * @throws ConnectorException
-     */
-    public function processEvent(string $id, Request $request): ProcessDto
-    {
-        $conn = $this->loader->getConnector($id);
-
-        return $this->connManager->processEvent($conn, $request);
-    }
-
-    /**
      * @param string $id
      *
      * @return void

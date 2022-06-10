@@ -5,7 +5,6 @@ namespace Hanaboso\PipesPhpSdk\Utils;
 use Hanaboso\CommonsBundle\Process\ProcessDto;
 use Hanaboso\PipesPhpSdk\Connector\Exception\ConnectorException;
 use Hanaboso\PipesPhpSdk\Connector\Traits\ProcessExceptionTrait;
-use Hanaboso\PipesPhpSdk\RabbitMq\Impl\Batch\SuccessMessage;
 use Hanaboso\Utils\System\PipesHeaders;
 
 /**
@@ -40,15 +39,15 @@ trait ProcessHeaderTrait
     }
 
     /**
-     * @param ProcessDto|SuccessMessage $dto
-     * @param string                    $key
-     * @param string                    $value
+     * @param ProcessDto $dto
+     * @param string     $key
+     * @param string     $value
      *
-     * @return ProcessDto|SuccessMessage
+     * @return ProcessDto
      */
-    protected function setHeader(ProcessDto|SuccessMessage $dto, string $key, string $value): ProcessDto|SuccessMessage
+    protected function setHeader(ProcessDto $dto, string $key, string $value): ProcessDto
     {
-        return $dto->addHeader(PipesHeaders::createKey($key), $value);
+        return $dto->addHeader($key, $value);
     }
 
 }

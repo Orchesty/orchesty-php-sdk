@@ -46,7 +46,7 @@ final class ApplicationManagerTest extends DatabaseTestCaseAbstract
      */
     public function testGetApplication(): void
     {
-        self::assertEquals('null-key', $this->manager->getApplication('null')->getKey());
+        self::assertEquals('null-key', $this->manager->getApplication('null')->getName());
     }
 
     /**
@@ -168,7 +168,7 @@ final class ApplicationManagerTest extends DatabaseTestCaseAbstract
     {
         parent::setUp();
 
-        $this->manager = self::$container->get('hbpf.application.manager');
+        $this->manager = self::getContainer()->get('hbpf.application.manager');
     }
 
     /**

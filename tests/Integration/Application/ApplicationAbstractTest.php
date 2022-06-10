@@ -22,6 +22,14 @@ final class ApplicationAbstractTest extends DatabaseTestCaseAbstract
     private TestNullApplication $application;
 
     /**
+     * @covers \Hanaboso\PipesPhpSdk\Application\Base\ApplicationAbstract::getLogo
+     */
+    public function testGetLogo(): void
+    {
+        self::assertEquals(NULL, $this->application->getLogo());
+    }
+
+    /**
      * @covers \Hanaboso\PipesPhpSdk\Application\Base\ApplicationAbstract::getApplicationType
      */
     public function testGetApplicationType(): void
@@ -99,7 +107,7 @@ final class ApplicationAbstractTest extends DatabaseTestCaseAbstract
     {
         parent::setUp();
 
-        $this->application = self::$container->get('hbpf.application.null');
+        $this->application = self::getContainer()->get('hbpf.application.null');
     }
 
     /**

@@ -21,7 +21,7 @@ final class TestOAuth2NullApplication extends OAuth2ApplicationAbstract
     /**
      * @return string
      */
-    public function getKey(): string
+    public function getName(): string
     {
         return 'null2';
     }
@@ -29,7 +29,7 @@ final class TestOAuth2NullApplication extends OAuth2ApplicationAbstract
     /**
      * @return string
      */
-    public function getName(): string
+    public function getPublicName(): string
     {
         return 'Null2';
     }

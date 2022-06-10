@@ -39,6 +39,27 @@ final class ApplicationInstallRepositoryTest extends DatabaseTestCaseAbstract
     }
 
     /**
+     * @covers  \Hanaboso\PipesPhpSdk\Application\Repository\ApplicationInstallRepository::getApplicationsCount
+     * @covers  \Hanaboso\PipesPhpSdk\Application\Document\ApplicationInstall::setUser
+     * @covers  \Hanaboso\PipesPhpSdk\Application\Document\ApplicationInstall::setKey
+     * @covers  \Hanaboso\PipesPhpSdk\Application\Document\ApplicationInstall::setExpires
+     *
+     * @throws Exception
+     */
+    public function testGetApplicationsCount(): void
+    {
+        $this->createApps();
+        /** @var ApplicationInstallRepository $appInstallRepository */
+        $appInstallRepository = $this->dm->getRepository(ApplicationInstall::class);
+
+        self::assertEquals(
+            4,
+            $appInstallRepository->getInstalledApplicationsCount(),
+        );
+    }
+
+
+    /**
      * @covers  \Hanaboso\PipesPhpSdk\Application\Repository\ApplicationInstallRepository::getApplicationsCountDetails
      * @covers  \Hanaboso\PipesPhpSdk\Application\Document\ApplicationInstall::setUser
      * @covers  \Hanaboso\PipesPhpSdk\Application\Document\ApplicationInstall::setKey

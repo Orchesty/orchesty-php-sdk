@@ -49,7 +49,7 @@ abstract class CustomNodeAbstract implements CustomNodeInterface
     public function getApplicationKey(): ?string
     {
         if ($this->application) {
-            return $this->application->getKey();
+            return $this->application->getName();
         }
 
         return NULL;

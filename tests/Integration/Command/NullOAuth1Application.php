@@ -42,7 +42,7 @@ final class NullOAuth1Application extends OAuth1ApplicationAbstract implements O
     /**
      * @return string
      */
-    public function getKey(): string
+    public function getName(): string
     {
         return 'null1';
     }
@@ -50,7 +50,7 @@ final class NullOAuth1Application extends OAuth1ApplicationAbstract implements O
     /**
      * @return string
      */
-    public function getName(): string
+    public function getPublicName(): string
     {
         return 'null1';
     }

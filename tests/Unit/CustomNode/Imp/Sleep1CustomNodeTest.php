@@ -15,12 +15,12 @@ final class Sleep1CustomNodeTest extends KernelTestCaseAbstract
 {
 
     /**
-     * @covers \Hanaboso\PipesPhpSdk\CustomNode\Impl\Sleep1CustomNode::process
+     * @covers \Hanaboso\PipesPhpSdk\CustomNode\Impl\Sleep1CustomNode::processAction
      */
     public function testProcess(): void
     {
         $start = microtime(TRUE);
-        (new Sleep1CustomNode())->process(new ProcessDto());
+        (new Sleep1CustomNode())->processAction(new ProcessDto());
         $time = microtime(TRUE) - $start;
         self::assertGreaterThan(1, $time);
     }

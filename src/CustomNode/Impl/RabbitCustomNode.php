@@ -81,7 +81,7 @@ abstract class RabbitCustomNode extends CustomNodeAbstract implements LoggerAwar
      * @throws MappingException
      * @throws Exception
      */
-    public function process(ProcessDto $dto): ProcessDto
+    public function processAction(ProcessDto $dto): ProcessDto
     {
         $this->validate($dto);
         $this->normalizeHeaders($dto);

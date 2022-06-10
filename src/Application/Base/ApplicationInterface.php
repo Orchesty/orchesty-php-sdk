@@ -31,17 +31,22 @@ interface ApplicationInterface
     /**
      * @return string
      */
-    public function getKey(): string;
-
-    /**
-     * @return string
-     */
     public function getName(): string;
 
     /**
      * @return string
      */
+    public function getPublicName(): string;
+
+    /**
+     * @return string
+     */
     public function getDescription(): string;
+
+    /**
+     * @return string|null
+     */
+    public function getLogo(): ?string;
 
     /**
      * @param ApplicationInstall $applicationInstall

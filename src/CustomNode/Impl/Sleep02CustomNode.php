@@ -18,7 +18,7 @@ final class Sleep02CustomNode extends CustomNodeAbstract
      *
      * @return ProcessDto
      */
-    public function process(ProcessDto $dto): ProcessDto
+    public function processAction(ProcessDto $dto): ProcessDto
     {
         usleep(200_000);
 
