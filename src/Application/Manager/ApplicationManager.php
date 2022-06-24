@@ -6,7 +6,6 @@ use Doctrine\Common\Annotations\PsrCachedReader;
 use Doctrine\ODM\MongoDB\DocumentManager;
 use Doctrine\ODM\MongoDB\MongoDBException;
 use Doctrine\Persistence\ObjectRepository;
-use Exception;
 use Hanaboso\CommonsBundle\Transport\Curl\CurlManager;
 use Hanaboso\PipesPhpSdk\Application\Base\ApplicationInterface;
 use Hanaboso\PipesPhpSdk\Application\Document\ApplicationInstall;
@@ -28,6 +27,8 @@ use Symfony\Component\HttpFoundation\Request;
  */
 class ApplicationManager
 {
+
+    public const APPLICATION_SETTINGS = 'applicationSettings';
 
     /**
      * @var ObjectRepository<ApplicationInstall>&ApplicationInstallRepository
@@ -120,35 +121,50 @@ class ApplicationManager
      * @param string  $user
      * @param mixed[] $data
      *
-     * @return ApplicationInstall
-     * @throws Exception
+     * @return mixed[]
+     * @throws ApplicationInstallException
+     * @throws MongoDBException
      */
-    public function saveApplicationSettings(string $key, string $user, array $data): ApplicationInstall
+    public function saveApplicationSettings(string $key, string $user, array $data): array
     {
         /** @var BasicApplicationInterface $application */
         $application        = $this->loader->getApplication($key);
-        $applicationInstall = $application->setApplicationSettings($this->repository->findUserApp($key, $user), $data);
+        $applicationInstall = $this->repository->findUserApp($key, $user);
+        $res                = $application->saveApplicationForms($applicationInstall, $data)->toArray();
         $this->dm->flush();
         $this->dm->refresh($applicationInstall);
 
-        return $applicationInstall;
+
+        return [
+            ...$res,
+            self::APPLICATION_SETTINGS => $application->getApplicationForms($applicationInstall),
+        ];
     }
 
     /**
      * @param string $key
      * @param string $user
+     * @param string $formKey
+     * @param string $fieldKey
      * @param string $password
      *
      * @return ApplicationInstall
-     * @throws Exception
+     * @throws ApplicationInstallException
+     * @throws MongoDBException
      */
-    public function saveApplicationPassword(string $key, string $user, string $password): ApplicationInstall
+    public function saveApplicationPassword(
+        string $key,
+        string $user,
+        string $formKey,
+        string $fieldKey,
+        string $password,
+    ): ApplicationInstall
     {
         $applicationInstall = $this->repository->findUserApp($key, $user);
 
         /** @var BasicApplicationInterface $application */
         $application = $this->loader->getApplication($key);
-        $application = $application->setApplicationPassword($applicationInstall, $password);
+        $application = $application->savePassword($applicationInstall, $formKey, $fieldKey, $password);
         $this->dm->flush();
         $this->dm->refresh($applicationInstall);
 

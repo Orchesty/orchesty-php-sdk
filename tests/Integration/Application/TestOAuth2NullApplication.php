@@ -4,9 +4,11 @@ namespace PipesPhpSdkTests\Integration\Application;
 
 use Hanaboso\CommonsBundle\Transport\Curl\CurlException;
 use Hanaboso\CommonsBundle\Transport\Curl\Dto\RequestDto;
+use Hanaboso\PipesPhpSdk\Application\Base\ApplicationInterface;
 use Hanaboso\PipesPhpSdk\Application\Document\ApplicationInstall;
 use Hanaboso\PipesPhpSdk\Application\Model\Form\Field;
 use Hanaboso\PipesPhpSdk\Application\Model\Form\Form;
+use Hanaboso\PipesPhpSdk\Application\Model\Form\FormStack;
 use Hanaboso\PipesPhpSdk\Authorization\Base\OAuth2\OAuth2ApplicationAbstract;
 use Hanaboso\PipesPhpSdk\Authorization\Base\OAuth2\OAuth2ApplicationInterface;
 
@@ -75,15 +77,18 @@ final class TestOAuth2NullApplication extends OAuth2ApplicationAbstract
     }
 
     /**
-     * @return Form
+     * @return FormStack
      */
-    public function getSettingsForm(): Form
+    public function getFormStack(): FormStack
     {
-        $form = new Form();
-
-        return $form
+        $form = new Form(ApplicationInterface::AUTHORIZATION_FORM, 'testPublicName');
+        $form
             ->addField(new Field(Field::TEXT, OAuth2ApplicationInterface::CLIENT_ID, 'Client Id', NULL, TRUE))
             ->addField(new Field(Field::TEXT, OAuth2ApplicationInterface::CLIENT_SECRET, 'Client Secret', NULL, TRUE));
+
+        $formStack = new FormStack();
+
+        return $formStack->addForm($form);
     }
 
     /**

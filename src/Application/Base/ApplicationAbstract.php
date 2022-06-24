@@ -17,8 +17,6 @@ use Hanaboso\Utils\File\File;
 abstract class ApplicationAbstract implements ApplicationInterface
 {
 
-    public const FORM = 'form';
-
     /**
      * @var string
      */
@@ -55,23 +53,26 @@ abstract class ApplicationAbstract implements ApplicationInterface
      *
      * @return mixed[]
      */
-    public function getApplicationForm(ApplicationInstall $applicationInstall): array
+    public function getApplicationForms(ApplicationInstall $applicationInstall): array
     {
-        $settings = $applicationInstall->getSettings()[self::FORM] ?? [];
-        $form     = $this->getSettingsForm();
-        foreach ($form->getFields() as $field) {
-            if (array_key_exists($field->getKey(), $settings)) {
-                if ($field->getType() === Field::PASSWORD) {
-                    $field->setValue(TRUE);
+        $settings  = $applicationInstall->getSettings();
+        $formStack = $this->getFormStack();
+        foreach ($formStack->getForms() as $form) {
+            foreach ($form->getFields() as $field) {
+                if (array_key_exists($form->getKey(), $settings) &&
+                    array_key_exists($field->getKey(), $settings[$form->getKey()])) {
+                    if ($field->getType() === Field::PASSWORD) {
+                        $field->setValue(TRUE);
 
-                    continue;
+                        continue;
+                    }
+
+                    $field->setValue($settings[$form->getKey()][$field->getKey()]);
                 }
-
-                $field->setValue($settings[$field->getKey()]);
             }
         }
 
-        return $form->toArray();
+        return $formStack->toArray();
     }
 
     /**
@@ -80,16 +81,50 @@ abstract class ApplicationAbstract implements ApplicationInterface
      *
      * @return ApplicationInstall
      */
-    public function setApplicationSettings(ApplicationInstall $applicationInstall, array $settings): ApplicationInstall
+    public function saveApplicationForms(ApplicationInstall $applicationInstall, array $settings): ApplicationInstall
     {
         $preparedSetting = [];
-        foreach ($this->getSettingsForm()->getFields() as $field) {
-            if (array_key_exists($field->getKey(), $settings)) {
-                $preparedSetting[$field->getKey()] = $settings[$field->getKey()];
+        foreach ($this->getFormStack()->getForms() as $form){
+            foreach ($form->getFields() as $field) {
+                if (array_key_exists($form->getKey(), $settings) &&
+                    array_key_exists($field->getKey(), $settings[$form->getKey()])) {
+                    $currentForm = $preparedSetting[$form->getKey()] ?? NULL;
+                    if ($currentForm) {
+                        $preparedSetting[$form->getKey()][$field->getKey()] =
+                            $settings[$form->getKey()][$field->getKey()];
+                    }
+                    else {
+                        $preparedSetting[$form->getKey()] = [
+                            $field->getKey() => $settings[$form->getKey()][$field->getKey()]];
+                    }
+
+                }
             }
         }
 
-        return $applicationInstall->addSettings([self::FORM => $preparedSetting]);
+        if (count($preparedSetting) > 0) {
+            $applicationInstall->addSettings($preparedSetting);
+        }
+
+        return $applicationInstall;
+    }
+
+    /**
+     * @param ApplicationInstall $applicationInstall
+     * @param string             $formKey
+     * @param string             $fieldKey
+     * @param string             $password
+     *
+     * @return ApplicationInstall
+     */
+    public function savePassword(
+        ApplicationInstall $applicationInstall,
+        string $formKey,
+        string $fieldKey,
+        string $password,
+    ): ApplicationInstall
+    {
+        return $applicationInstall->addSettings([$formKey => [$fieldKey => $password]]);
     }
 
     /**

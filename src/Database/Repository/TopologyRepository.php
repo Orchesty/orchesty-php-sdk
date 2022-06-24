@@ -188,7 +188,7 @@ final  class TopologyRepository extends DocumentRepository
     /**
      * @param string $topologyId
      *
-     * @return Mixed[]
+     * @return mixed[]
      * @throws Exception
      */
     public function getActiveTopologiesVersions(string $topologyId): array

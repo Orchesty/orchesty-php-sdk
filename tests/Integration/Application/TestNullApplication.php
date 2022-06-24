@@ -4,11 +4,14 @@ namespace PipesPhpSdkTests\Integration\Application;
 
 use Hanaboso\CommonsBundle\Transport\Curl\CurlException;
 use Hanaboso\CommonsBundle\Transport\Curl\Dto\RequestDto;
+use Hanaboso\PipesPhpSdk\Application\Base\ApplicationInterface;
 use Hanaboso\PipesPhpSdk\Application\Document\ApplicationInstall;
 use Hanaboso\PipesPhpSdk\Application\Model\Form\Field;
 use Hanaboso\PipesPhpSdk\Application\Model\Form\Form;
+use Hanaboso\PipesPhpSdk\Application\Model\Form\FormStack;
 use Hanaboso\PipesPhpSdk\Application\Utils\SynchronousAction;
 use Hanaboso\PipesPhpSdk\Authorization\Base\Basic\BasicApplicationAbstract;
+use Hanaboso\PipesPhpSdk\Authorization\Base\Basic\BasicApplicationInterface;
 use Symfony\Component\HttpFoundation\Request;
 
 /**
@@ -96,16 +99,19 @@ final class TestNullApplication extends BasicApplicationAbstract
     }
 
     /**
-     * @return Form
+     * @return FormStack
      */
-    public function getSettingsForm(): Form
+    public function getFormStack(): FormStack
     {
-        $form = new Form();
+        $form = new Form(ApplicationInterface::AUTHORIZATION_FORM,'testPublicName');
+        $form
+            ->addField(new Field(Field::TEXT, BasicApplicationInterface::USER, 'Username', NULL, TRUE))
+            ->addField(new Field(Field::PASSWORD, BasicApplicationInterface::PASSWORD, 'Password', NULL, TRUE))
+            ->addField(new Field(Field::TEXT, ApplicationInterface::TOKEN, 'Token', NULL, TRUE));
 
-        return $form
-            ->addField(new Field(Field::TEXT, 'user', 'Username', NULL, TRUE))
-            ->addField(new Field(Field::PASSWORD, 'password', 'Password', NULL, TRUE))
-            ->addField(new Field(Field::TEXT, 'token', 'Token', NULL, TRUE));
+        $formStack = new FormStack();
+
+        return $formStack->addForm($form);
     }
 
 }

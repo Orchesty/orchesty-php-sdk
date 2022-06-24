@@ -4,8 +4,9 @@ namespace PipesPhpSdkTests\Integration\Application;
 
 use Exception;
 use Hanaboso\CommonsBundle\Enum\ApplicationTypeEnum;
-use Hanaboso\PipesPhpSdk\Application\Base\ApplicationAbstract;
+use Hanaboso\PipesPhpSdk\Application\Base\ApplicationInterface;
 use Hanaboso\PipesPhpSdk\Application\Document\ApplicationInstall;
+use Hanaboso\PipesPhpSdk\Authorization\Base\Basic\BasicApplicationInterface;
 use PipesPhpSdkTests\DatabaseTestCaseAbstract;
 
 /**
@@ -55,7 +56,7 @@ final class ApplicationAbstractTest extends DatabaseTestCaseAbstract
     }
 
     /**
-     * @covers \Hanaboso\PipesPhpSdk\Application\Base\ApplicationAbstract::getApplicationForm
+     * @covers \Hanaboso\PipesPhpSdk\Application\Base\ApplicationAbstract::getApplicationForms
      * @covers \Hanaboso\PipesPhpSdk\Application\Document\ApplicationInstall::setKey
      * @covers \Hanaboso\PipesPhpSdk\Application\Document\ApplicationInstall::setUser
      * @covers \Hanaboso\PipesPhpSdk\Application\Document\ApplicationInstall::setSettings
@@ -66,11 +67,13 @@ final class ApplicationAbstractTest extends DatabaseTestCaseAbstract
     {
         $applicationInstall = $this->createApplicationInstall();
 
-        self::assertEquals(3, count($this->application->getApplicationForm($applicationInstall)));
+        self::assertEquals(3, count($this->application->getApplicationForms(
+            $applicationInstall,
+        )[ApplicationInterface::AUTHORIZATION_FORM][ApplicationInterface::FIELDS]));
     }
 
     /**
-     * @covers \Hanaboso\PipesPhpSdk\Application\Base\ApplicationAbstract::setApplicationSettings
+     * @covers \Hanaboso\PipesPhpSdk\Application\Base\ApplicationAbstract::saveApplicationForms
      * @covers \Hanaboso\PipesPhpSdk\Application\Document\ApplicationInstall::setKey
      * @covers \Hanaboso\PipesPhpSdk\Application\Document\ApplicationInstall::setUser
      * @covers \Hanaboso\PipesPhpSdk\Application\Document\ApplicationInstall::setSettings
@@ -81,14 +84,14 @@ final class ApplicationAbstractTest extends DatabaseTestCaseAbstract
     {
         $applicationInstall = $this->createApplicationInstall();
 
-        $applicationInstall = $this->application->setApplicationSettings(
+        $applicationInstall = $this->application->saveApplicationForms(
             $applicationInstall,
-            ['user' => 'myUsername'],
+            [ApplicationInterface::AUTHORIZATION_FORM => [BasicApplicationInterface::USER => 'myUsername']],
         );
 
         self::assertEquals(
             'myUsername',
-            $applicationInstall->getSettings()[ApplicationAbstract::FORM]['user'],
+            $applicationInstall->getSettings()[ApplicationInterface::AUTHORIZATION_FORM][BasicApplicationInterface::USER],
         );
     }
 
@@ -121,9 +124,9 @@ final class ApplicationAbstractTest extends DatabaseTestCaseAbstract
             ->setUser('user')
             ->setSettings(
                 [
-                    ApplicationAbstract::FORM => [
-                        'user'     => 'user12',
-                        'password' => '!@#$$%%',
+                    ApplicationInterface::AUTHORIZATION_FORM => [
+                        BasicApplicationInterface::USER     => 'user12',
+                        BasicApplicationInterface::PASSWORD => '!@#$$%%',
                     ],
                 ],
             );

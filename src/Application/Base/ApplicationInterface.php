@@ -4,7 +4,7 @@ namespace Hanaboso\PipesPhpSdk\Application\Base;
 
 use Hanaboso\CommonsBundle\Transport\Curl\Dto\RequestDto;
 use Hanaboso\PipesPhpSdk\Application\Document\ApplicationInstall;
-use Hanaboso\PipesPhpSdk\Application\Model\Form\Form;
+use Hanaboso\PipesPhpSdk\Application\Model\Form\FormStack;
 
 /**
  * Interface ApplicationInterface
@@ -14,9 +14,12 @@ use Hanaboso\PipesPhpSdk\Application\Model\Form\Form;
 interface ApplicationInterface
 {
 
+    public const  FORM                   = 'form';
+    public const  AUTHORIZATION_FORM     = 'authorization_form';
     public const  AUTHORIZATION_SETTINGS = 'authorization_settings';
     public const  TOKEN                  = 'token';
     public const  REDIRECT_URL           = 'redirect_url';
+    public const  FIELDS                 = 'fields';
 
     /**
      * @return string
@@ -65,9 +68,9 @@ interface ApplicationInterface
     ): RequestDto;
 
     /**
-     * @return Form
+     * @return FormStack
      */
-    public function getSettingsForm(): Form;
+    public function getFormStack(): FormStack;
 
     /**
      * @param ApplicationInstall $applicationInstall
@@ -75,7 +78,29 @@ interface ApplicationInterface
      *
      * @return ApplicationInstall
      */
-    public function setApplicationSettings(ApplicationInstall $applicationInstall, array $settings): ApplicationInstall;
+    public function saveApplicationForms(ApplicationInstall $applicationInstall, array $settings): ApplicationInstall;
+
+    /**
+     * @param ApplicationInstall $applicationInstall
+     *
+     * @return mixed[]
+     */
+    public function getApplicationForms(ApplicationInstall $applicationInstall): array;
+
+    /**
+     * @param ApplicationInstall $applicationInstall
+     * @param string             $formKey
+     * @param string             $fieldKey
+     * @param string             $password
+     *
+     * @return ApplicationInstall
+     */
+    public function savePassword(
+        ApplicationInstall $applicationInstall,
+        string $formKey,
+        string $fieldKey,
+        string $password,
+    ): ApplicationInstall;
 
     /**
      * @param ApplicationInstall $applicationInstall
