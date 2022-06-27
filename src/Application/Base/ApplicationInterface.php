@@ -14,12 +14,10 @@ use Hanaboso\PipesPhpSdk\Application\Model\Form\FormStack;
 interface ApplicationInterface
 {
 
-    public const  FORM                   = 'form';
-    public const  AUTHORIZATION_FORM     = 'authorization_form';
-    public const  AUTHORIZATION_SETTINGS = 'authorization_settings';
-    public const  TOKEN                  = 'token';
-    public const  REDIRECT_URL           = 'redirect_url';
-    public const  FIELDS                 = 'fields';
+    public const  AUTHORIZATION_FORM = 'authorization_form';
+    public const  TOKEN              = 'token';
+    public const  REDIRECT_URL       = 'redirect_url';
+    public const  FIELDS             = 'fields';
 
     /**
      * @return string

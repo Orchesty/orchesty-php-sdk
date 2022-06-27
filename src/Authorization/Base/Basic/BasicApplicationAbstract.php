@@ -41,7 +41,7 @@ abstract class BasicApplicationAbstract extends ApplicationAbstract implements B
                 )
             ) ||
             isset(
-                $applicationInstall->getSettings()[ApplicationInterface::AUTHORIZATION_FORM][BasicApplicationInterface::TOKEN],
+                $applicationInstall->getSettings()[ApplicationInterface::AUTHORIZATION_FORM][ApplicationInterface::TOKEN],
             );
     }
 

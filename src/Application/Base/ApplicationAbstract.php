@@ -35,7 +35,9 @@ abstract class ApplicationAbstract implements ApplicationInterface
                     base64_encode(File::getContent($this->logoFilename)),
                 );
             }
-        } catch (Exception $e) {$e;}
+        } catch (Exception) {
+
+        }
 
         return NULL;
     }

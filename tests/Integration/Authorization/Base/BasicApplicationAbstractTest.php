@@ -47,7 +47,7 @@ final class BasicApplicationAbstractTest extends DatabaseTestCaseAbstract
     }
 
     /**
-     * @covers \Hanaboso\PipesPhpSdk\Authorization\Base\Basic\BasicApplicationAbstract::setApplicationToken
+     * @covers \Hanaboso\PipesPhpSdk\Authorization\Base\Basic\BasicApplicationAbstract::saveApplicationForms
      *
      * @throws Exception
      */

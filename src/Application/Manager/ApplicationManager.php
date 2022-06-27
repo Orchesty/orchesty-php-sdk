@@ -134,7 +134,6 @@ class ApplicationManager
         $this->dm->flush();
         $this->dm->refresh($applicationInstall);
 
-
         return [
             ...$res,
             self::APPLICATION_SETTINGS => $application->getApplicationForms($applicationInstall),
