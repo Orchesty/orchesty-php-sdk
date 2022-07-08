@@ -14,6 +14,14 @@ final class TestNullRabbitNode extends RabbitCustomNode
 {
 
     /**
+     * @return string
+     */
+    public function getName(): string
+    {
+        return 'test-null-rabbit';
+    }
+
+    /**
      * @param ProcessDto $dto
      */
     protected function processBatch(ProcessDto $dto): void

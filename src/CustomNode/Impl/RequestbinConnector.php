@@ -7,14 +7,14 @@ use Hanaboso\CommonsBundle\Process\ProcessDto;
 use Hanaboso\CommonsBundle\Transport\Curl\CurlException;
 use Hanaboso\CommonsBundle\Transport\Curl\CurlManager;
 use Hanaboso\CommonsBundle\Transport\Curl\Dto\RequestDto;
-use Hanaboso\PipesPhpSdk\CustomNode\CustomNodeAbstract;
+use Hanaboso\PipesPhpSdk\CustomNode\CommonNodeAbstract;
 
 /**
  * Class RequestbinConnector
  *
  * @package Hanaboso\PipesPhpSdk\CustomNode\Impl
  */
-final class RequestbinConnector extends CustomNodeAbstract
+final class RequestbinConnector extends CommonNodeAbstract
 {
 
     /**
@@ -42,6 +42,14 @@ final class RequestbinConnector extends CustomNodeAbstract
         $this->curl->send($req);
 
         return $dto;
+    }
+
+    /**
+     * @return string
+     */
+    public function getName(): string
+    {
+        return 'requestbin-connector';
     }
 
 }

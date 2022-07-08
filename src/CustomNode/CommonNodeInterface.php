@@ -6,11 +6,11 @@ use Hanaboso\CommonsBundle\Process\ProcessDto;
 use Hanaboso\PipesPhpSdk\Application\Base\ApplicationInterface;
 
 /**
- * Interface CustomNodeInterface
+ * Interface CommonNodeInterface
  *
  * @package Hanaboso\PipesPhpSdk\CustomNode
  */
-interface CustomNodeInterface
+interface CommonNodeInterface
 {
 
     /**
@@ -23,9 +23,9 @@ interface CustomNodeInterface
     /**
      * @param ApplicationInterface $application
      *
-     * @return CustomNodeInterface
+     * @return CommonNodeInterface
      */
-    public function setApplication(ApplicationInterface $application): CustomNodeInterface;
+    public function setApplication(ApplicationInterface $application): CommonNodeInterface;
 
     /**
      * @return string|null

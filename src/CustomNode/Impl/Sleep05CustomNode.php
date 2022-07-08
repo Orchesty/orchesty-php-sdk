@@ -3,14 +3,14 @@
 namespace Hanaboso\PipesPhpSdk\CustomNode\Impl;
 
 use Hanaboso\CommonsBundle\Process\ProcessDto;
-use Hanaboso\PipesPhpSdk\CustomNode\CustomNodeAbstract;
+use Hanaboso\PipesPhpSdk\CustomNode\CommonNodeAbstract;
 
 /**
  * Class Sleep05CustomNode
  *
  * @package Hanaboso\PipesPhpSdk\CustomNode\Impl
  */
-final class Sleep05CustomNode extends CustomNodeAbstract
+final class Sleep05CustomNode extends CommonNodeAbstract
 {
 
     /**
@@ -23,6 +23,14 @@ final class Sleep05CustomNode extends CustomNodeAbstract
         usleep(500_000);
 
         return $dto;
+    }
+
+    /**
+     * @return string
+     */
+    public function getName(): string
+    {
+        return 'sleep05-custom-node';
     }
 
 }

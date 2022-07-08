@@ -3,7 +3,6 @@
 namespace PipesPhpSdkTests\Integration\Application\Repository;
 
 use Exception;
-use Hanaboso\CommonsBundle\Process\ProcessDto;
 use Hanaboso\PipesPhpSdk\Application\Document\ApplicationInstall;
 use Hanaboso\PipesPhpSdk\Application\Exception\ApplicationInstallException;
 use Hanaboso\PipesPhpSdk\Application\Repository\ApplicationInstallRepository;
@@ -99,23 +98,6 @@ final class ApplicationInstallRepositoryTest extends DatabaseTestCaseAbstract
 
         self::expectException(ApplicationInstallException::class);
         $appInstallRepository->findUserApp('user', 'key');
-    }
-
-    /**
-     * @covers \Hanaboso\PipesPhpSdk\Application\Repository\ApplicationInstallRepository::findUserAppByHeaders
-     *
-     * @throws Exception
-     */
-    public function testFindUserAppByHeaders(): void
-    {
-        $this->createApps();
-        $dto = (new ProcessDto())->setHeaders(['pf-application' => 'hubspot', 'pf-user' => 'user2']);
-
-        /** @var ApplicationInstallRepository $appInstallRepository */
-        $appInstallRepository = $this->dm->getRepository(ApplicationInstall::class);
-
-        $applicationInstall = $appInstallRepository->findUserAppByHeaders($dto);
-        self::assertFalse($applicationInstall->isDeleted());
     }
 
     /**

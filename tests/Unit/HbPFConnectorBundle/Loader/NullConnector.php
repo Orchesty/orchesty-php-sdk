@@ -41,4 +41,12 @@ final class NullConnector extends ConnectorAbstract
         return $dto;
     }
 
+    /**
+     * @return string
+     */
+    function getName(): string
+    {
+        return 'null-connector';
+    }
+
 }

@@ -3,7 +3,7 @@
 namespace Hanaboso\PipesPhpSdk\CustomNode\Impl;
 
 use Hanaboso\CommonsBundle\Process\ProcessDto;
-use Hanaboso\PipesPhpSdk\CustomNode\CustomNodeAbstract;
+use Hanaboso\PipesPhpSdk\CustomNode\CommonNodeAbstract;
 use Hanaboso\Utils\System\PipesHeaders;
 
 /**
@@ -11,7 +11,7 @@ use Hanaboso\Utils\System\PipesHeaders;
  *
  * @package Hanaboso\PipesPhpSdk\CustomNode\Impl
  */
-final class NullCustomNode extends CustomNodeAbstract
+final class NullCustomNode extends CommonNodeAbstract
 {
 
     /**
@@ -24,6 +24,14 @@ final class NullCustomNode extends CustomNodeAbstract
         $dto->addHeader(PipesHeaders::RESULT_MESSAGE, 'Null worker resending data.');
 
         return $dto;
+    }
+
+    /**
+     * @return string
+     */
+    public function getName(): string
+    {
+        return 'nullCustomNode';
     }
 
 }

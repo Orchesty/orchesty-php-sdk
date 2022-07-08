@@ -8,6 +8,7 @@ use Hanaboso\PipesPhpSdk\Database\Document\Embed\EmbedNode;
 use Hanaboso\PipesPhpSdk\Database\Document\Node;
 use Hanaboso\Utils\System\PipesHeaders;
 use InvalidArgumentException;
+use LogicException;
 use Monolog\Logger;
 use PhpAmqpLib\Channel\AMQPChannel;
 use PipesPhpSdkTests\DatabaseTestCaseAbstract;
@@ -29,13 +30,14 @@ final class RabbitCustomNodeTest extends DatabaseTestCaseAbstract
     private TestNullRabbitNode $nullConnector;
 
     /**
-     * @covers \Hanaboso\PipesPhpSdk\CustomNode\CustomNodeAbstract::getApplicationKey
-     * @covers \Hanaboso\PipesPhpSdk\CustomNode\CustomNodeAbstract::setApplication
+     * @covers \Hanaboso\PipesPhpSdk\CustomNode\CommonNodeAbstract::getApplicationKey
+     * @covers \Hanaboso\PipesPhpSdk\CustomNode\CommonNodeAbstract::setApplication
      */
     public function testGetApplicationKey(): void
     {
-        $key = $this->nullConnector->getApplicationKey();
-        self::assertNull($key);
+        self::expectException(LogicException::class);
+        self::expectExceptionMessage('Application has not set.');
+        $this->nullConnector->getApplicationKey();
 
         $this->nullConnector->setApplication(new TestNullApplication());
         $key = $this->nullConnector->getApplicationKey();

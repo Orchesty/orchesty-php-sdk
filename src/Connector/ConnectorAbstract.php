@@ -3,23 +3,20 @@
 namespace Hanaboso\PipesPhpSdk\Connector;
 
 use Hanaboso\CommonsBundle\Process\ProcessDto;
-use Hanaboso\PipesPhpSdk\Application\Base\ApplicationInterface;
-use Hanaboso\PipesPhpSdk\Connector\Exception\ConnectorException;
+use Hanaboso\CommonsBundle\Transport\Curl\CurlManager;
+use Hanaboso\PipesPhpSdk\CustomNode\CommonNodeAbstract;
 use Hanaboso\Utils\Exception\PipesFrameworkException;
-use Hanaboso\Utils\String\Json;
+use LogicException;
 
 /**
  * Class ConnectorAbstract
  *
  * @package Hanaboso\PipesPhpSdk\Connector
  */
-abstract class ConnectorAbstract implements ConnectorInterface
+abstract class ConnectorAbstract extends CommonNodeAbstract implements ConnectorInterface
 {
 
-    /**
-     * @var ApplicationInterface|null
-     */
-    protected ?ApplicationInterface $application = NULL;
+    protected ?CurlManager $sender;
 
     /**
      * @var mixed[]
@@ -27,14 +24,6 @@ abstract class ConnectorAbstract implements ConnectorInterface
     protected array $okStatuses = [
         200,
         201,
-    ];
-
-    /**
-     * @var mixed[]
-     */
-    protected array $badStatuses = [
-        409,
-        400,
     ];
 
     /**
@@ -65,61 +54,25 @@ abstract class ConnectorAbstract implements ConnectorInterface
     }
 
     /**
-     * @param ApplicationInterface $application
+     * @param CurlManager $sender
      *
-     * @return ConnectorInterface
+     * @return $this
      */
-    public function setApplication(ApplicationInterface $application): ConnectorInterface
-    {
-        $this->application = $application;
+    public function setSender(CurlManager $sender): self {
+        $this->sender = $sender;
 
         return $this;
     }
 
     /**
-     * @return ApplicationInterface
-     * @throws ConnectorException
+     * @return CurlManager
      */
-    public function getApplication(): ApplicationInterface
-    {
-        if ($this->application) {
-            return $this->application;
+    protected function getSender(): CurlManager {
+        if ($this->sender) {
+            return $this->sender;
         }
 
-        throw new ConnectorException('Application has not set.', ConnectorException::MISSING_APPLICATION);
-    }
-
-    /**
-     * @return string|null
-     */
-    public function getApplicationKey(): ?string
-    {
-        if ($this->application) {
-            return $this->application->getName();
-        }
-
-        return NULL;
-    }
-
-    /**
-     * @param ProcessDto $dto
-     *
-     * @return mixed[]
-     */
-    protected function getJsonContent(ProcessDto $dto): array
-    {
-        return Json::decode($dto->getData());
-    }
-
-    /**
-     * @param ProcessDto $dto
-     * @param mixed[]    $content
-     *
-     * @return ProcessDto
-     */
-    protected function setJsonContent(ProcessDto $dto, array $content): ProcessDto
-    {
-        return $dto->setData(Json::encode($content));
+        throw new LogicException('CurlManager has not set.');
     }
 
 }

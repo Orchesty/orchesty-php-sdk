@@ -36,4 +36,12 @@ final class TestNullConnector extends ConnectorAbstract
         return new ProcessDto();
     }
 
+    /**
+     * @return string
+     */
+    function getName(): string
+    {
+        return 'test-null-connector';
+    }
+
 }

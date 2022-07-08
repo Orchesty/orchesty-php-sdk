@@ -8,7 +8,7 @@ use Doctrine\ODM\MongoDB\Mapping\MappingException;
 use Doctrine\Persistence\ObjectRepository;
 use Exception;
 use Hanaboso\CommonsBundle\Process\ProcessDto;
-use Hanaboso\PipesPhpSdk\CustomNode\CustomNodeAbstract;
+use Hanaboso\PipesPhpSdk\CustomNode\CommonNodeAbstract;
 use Hanaboso\PipesPhpSdk\Database\Document\Embed\EmbedNode;
 use Hanaboso\PipesPhpSdk\Database\Document\Node;
 use Hanaboso\PipesPhpSdk\Database\Repository\NodeRepository;
@@ -27,7 +27,7 @@ use RabbitMqBundle\Utils\Message;
  *
  * @package Hanaboso\PipesPhpSdk\CustomNode\Impl
  */
-abstract class RabbitCustomNode extends CustomNodeAbstract implements LoggerAwareInterface
+abstract class RabbitCustomNode extends CommonNodeAbstract implements LoggerAwareInterface
 {
 
     /**

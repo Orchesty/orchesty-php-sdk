@@ -37,6 +37,7 @@ parameters:
 			- RabbitMqBundle\Consumer\AsyncConsumer
 			- RabbitMqBundle\Consumer\Consumer
 			- RabbitMqBundle\Consumer\Consumer
+			- Hanaboso\PipesPhpSdk\CustomNode\CommonNodeAbstract
 
 		classesNotRequiredToBeAbstractOrFinal:
 			- Hanaboso\PipesPhpSdk\Application\Document\ApplicationInstall

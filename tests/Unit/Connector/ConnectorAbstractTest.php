@@ -4,8 +4,11 @@ namespace PipesPhpSdkTests\Unit\Connector;
 
 use Exception;
 use Hanaboso\CommonsBundle\Process\ProcessDto;
+use Hanaboso\CommonsBundle\Transport\Curl\CurlClientFactory;
+use Hanaboso\CommonsBundle\Transport\Curl\CurlManager;
 use Hanaboso\PhpCheckUtils\PhpUnit\Traits\PrivateTrait;
 use Hanaboso\PipesPhpSdk\Connector\Exception\ConnectorException;
+use LogicException;
 use PipesPhpSdkTests\Integration\Application\TestNullApplication;
 use PipesPhpSdkTests\KernelTestCaseAbstract;
 use PipesPhpSdkTests\Unit\Connector\Traits\TestNullConnector;
@@ -54,7 +57,9 @@ final class ConnectorAbstractTest extends KernelTestCaseAbstract
      */
     public function testGetApplicationKey(): void
     {
-        self::assertNull($this->nullConnector->getApplicationKey());
+        self::expectException(LogicException::class);
+        self::expectExceptionMessage('Application has not set.');
+        $this->nullConnector->getApplicationKey();
     }
 
     /**
@@ -81,26 +86,14 @@ final class ConnectorAbstractTest extends KernelTestCaseAbstract
     }
 
     /**
-     * @covers \Hanaboso\PipesPhpSdk\Connector\ConnectorAbstract::setJsonContent
-     * @covers \Hanaboso\PipesPhpSdk\Connector\ConnectorAbstract::getJsonContent
-     *
+     * @covers \Hanaboso\PipesPhpSdk\Connector\ConnectorAbstract::getApplication
+
      * @throws Exception
      */
-    public function testJsonContent(): void
+    public function testGetSetSender(): void
     {
-        $dto = new ProcessDto();
-        $this->invokeMethod(
-            $this->nullConnector,
-            'setJsonContent',
-            [$dto, ['data' => 'something']],
-        );
-
-        $result = $this->invokeMethod(
-            $this->nullConnector,
-            'getJsonContent',
-            [$dto],
-        );
-        self::assertEquals(['data' => 'something'], $result);
+        $this->nullConnector->setSender(new CurlManager(new CurlClientFactory()));
+        self::assertNotEmpty(self::getProperty($this->nullConnector,'sender'));
     }
 
     /**

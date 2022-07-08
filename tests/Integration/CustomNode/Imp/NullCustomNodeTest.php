@@ -29,9 +29,8 @@ final class NullCustomNodeTest extends DatabaseTestCaseAbstract
     }
 
     /**
-     * @covers \Hanaboso\PipesPhpSdk\CustomNode\CustomNodeAbstract::getApplication
-
-     * @throws Exception
+     * @covers \Hanaboso\PipesPhpSdk\CustomNode\CommonNodeAbstract::getApplication
+ * @throws Exception
      */
     public function testGetApplicationException(): void
     {
@@ -41,9 +40,8 @@ final class NullCustomNodeTest extends DatabaseTestCaseAbstract
     }
 
     /**
-     * @covers \Hanaboso\PipesPhpSdk\CustomNode\CustomNodeAbstract::getApplication
-
-     * @throws Exception
+     * @covers \Hanaboso\PipesPhpSdk\CustomNode\CommonNodeAbstract::getApplication
+ * @throws Exception
      */
     public function testGetApplication(): void
     {

@@ -4,12 +4,10 @@ namespace Hanaboso\PipesPhpSdk\Application\Repository;
 
 use Doctrine\ODM\MongoDB\MongoDBException;
 use Doctrine\ODM\MongoDB\Repository\DocumentRepository;
-use Hanaboso\CommonsBundle\Process\ProcessDto;
 use Hanaboso\PipesPhpSdk\Application\Document\ApplicationInstall;
 use Hanaboso\PipesPhpSdk\Application\Exception\ApplicationInstallException;
 use Hanaboso\Utils\Date\DateTimeUtils;
 use Hanaboso\Utils\Exception\DateTimeException;
-use Hanaboso\Utils\System\PipesHeaders;
 use MongoDB\BSON\UTCDateTime;
 
 /**
@@ -48,6 +46,29 @@ final class ApplicationInstallRepository extends DocumentRepository
     }
 
     /**
+     * @param string $key
+     *
+     * @return ApplicationInstall
+     * @throws ApplicationInstallException
+     */
+    public function findOneByName(string $key): ApplicationInstall
+    {
+        /** @var ApplicationInstall | null $app */
+        $app = $this->createQueryBuilder()
+            ->field(ApplicationInstall::KEY)->equals($key)
+            ->getQuery()->getSingleResult();
+
+        if (!$app) {
+            throw new ApplicationInstallException(
+                sprintf('Application [%s] was not found .', $key),
+                ApplicationInstallException::APP_WAS_NOT_FOUND,
+            );
+        }
+
+        return $app;
+    }
+
+    /**
      * @return int
      * @throws MongoDBException
      */
@@ -59,25 +80,6 @@ final class ApplicationInstallRepository extends DocumentRepository
             ->count()->getQuery()->execute();
 
         return $res;
-    }
-
-    /**
-     * @param ProcessDto $dto
-     * @param bool       $clear
-     *
-     * @return ApplicationInstall
-     * @throws ApplicationInstallException
-     */
-    public function findUserAppByHeaders(ProcessDto $dto, bool $clear = TRUE): ApplicationInstall
-    {
-        if ($clear) {
-            $this->clear();
-        }
-
-        return $this->findUserApp(
-            (string) PipesHeaders::get(PipesHeaders::APPLICATION, $dto->getHeaders()),
-            (string) PipesHeaders::get(PipesHeaders::USER, $dto->getHeaders()),
-        );
     }
 
     /**

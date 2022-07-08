@@ -4,8 +4,8 @@ namespace Hanaboso\PipesPhpSdk\HbPFConnectorBundle\Handler;
 
 use Hanaboso\CommonsBundle\Process\ProcessDto;
 use Hanaboso\PipesPhpSdk\Connector\Exception\ConnectorException;
-use Hanaboso\PipesPhpSdk\Connector\Model\ConnectorManager;
 use Hanaboso\PipesPhpSdk\HbPFConnectorBundle\Loader\ConnectorLoader;
+use Hanaboso\PipesPhpSdk\Utils\ProcessDtoFactory;
 use Symfony\Component\HttpFoundation\Request;
 
 /**
@@ -19,10 +19,9 @@ final class ConnectorHandler
     /**
      * ConnectorHandler constructor.
      *
-     * @param ConnectorManager $connManager
-     * @param ConnectorLoader  $loader
+     * @param ConnectorLoader $loader
      */
-    function __construct(private ConnectorManager $connManager, private ConnectorLoader $loader)
+    function __construct(private ConnectorLoader $loader)
     {
     }
 
@@ -48,7 +47,7 @@ final class ConnectorHandler
     {
         $conn = $this->loader->getConnector($id);
 
-        return $this->connManager->processAction($conn, $request);
+        return $conn->processAction(ProcessDtoFactory::createFromRequest($request));
     }
 
     /**
