@@ -91,7 +91,7 @@ final class BatchControllerTest extends ControllerTestCaseAbstract
 
         self::assertEquals(200, $response->getStatusCode());
         self::assertEquals(
-            ['{"test":"test"}'],
+            [['body' => '{"test":"test"}', 'headers' => []]],
             Json::decode((string) $response->getContent()),
         );
     }
