@@ -19,7 +19,7 @@ final class TestNullConnector extends ConnectorAbstract
     /**
      * @return string
      */
-    public function getId(): string
+    public function getName(): string
     {
         return 'null-test-trait';
     }
@@ -34,14 +34,6 @@ final class TestNullConnector extends ConnectorAbstract
         $dto;
 
         return new ProcessDto();
-    }
-
-    /**
-     * @return string
-     */
-    function getName(): string
-    {
-        return 'test-null-connector';
     }
 
 }

@@ -3,7 +3,7 @@
 namespace Hanaboso\PipesPhpSdk\CustomNode;
 
 use Hanaboso\CommonsBundle\Process\ProcessDto;
-use Hanaboso\PipesPhpSdk\Application\Base\ApplicationInterface;
+use Hanaboso\PipesPhpSdk\Connector\Exception\ConnectorException;
 
 /**
  * Interface CommonNodeInterface
@@ -14,22 +14,16 @@ interface CommonNodeInterface
 {
 
     /**
+     * @return string
+     */
+    public function getName(): string;
+
+    /**
      * @param ProcessDto $dto
      *
      * @return ProcessDto
+     * @throws ConnectorException
      */
     public function processAction(ProcessDto $dto): ProcessDto;
-
-    /**
-     * @param ApplicationInterface $application
-     *
-     * @return CommonNodeInterface
-     */
-    public function setApplication(ApplicationInterface $application): CommonNodeInterface;
-
-    /**
-     * @return string|null
-     */
-    public function getApplicationKey(): ?string;
 
 }

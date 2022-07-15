@@ -29,7 +29,7 @@ trait ProcessContentTrait
      */
     protected function getContentByKey(ProcessDto $dto, string $key, array $contents = [], bool $throw = TRUE): mixed
     {
-        $contents = $contents ?: Json::decode($dto->getData());
+        $contents = $contents ?: $dto->getJsonData();
         $content  = $this->getByKey($contents, $key);
 
         if (!$content && $throw) {

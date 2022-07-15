@@ -31,7 +31,7 @@ final class RequestBinConnectorTest extends DatabaseTestCaseAbstract
         $connector = new RequestbinConnector('www.testUrl.com', $curl);
         $dto       = $connector->processAction(new ProcessDto());
 
-        self::assertEquals('{}', $dto->getData());
+        self::assertEquals([], $dto->getJsonData());
     }
 
 }

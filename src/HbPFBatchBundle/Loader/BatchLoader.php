@@ -3,7 +3,7 @@
 namespace Hanaboso\PipesPhpSdk\HbPFBatchBundle\Loader;
 
 use Hanaboso\CommonsBundle\Utils\NodeServiceLoader;
-use Hanaboso\PipesPhpSdk\Batch\BatchInterface;
+use Hanaboso\PipesPhpSdk\Batch\BatchAbstract;
 use Hanaboso\PipesPhpSdk\Batch\Exception\BatchException;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
@@ -29,15 +29,15 @@ final class BatchLoader
     /**
      * @param string $id
      *
-     * @return BatchInterface
+     * @return BatchAbstract
      * @throws BatchException
      */
-    public function getBatch(string $id): BatchInterface
+    public function getBatch(string $id): BatchAbstract
     {
         $name = sprintf('%s.%s', self::BATCH_PREFIX, $id);
 
         if ($this->container->has($name)) {
-            /** @var BatchInterface $conn */
+            /** @var BatchAbstract $conn */
             $conn = $this->container->get($name);
         } else {
             throw new BatchException(

@@ -130,31 +130,31 @@ abstract class RabbitCustomNode extends CommonNodeAbstract implements LoggerAwar
     {
         if ($this->isEmpty(PipesHeaders::get(PipesHeaders::NODE_ID, $dto->getHeaders()))) {
             throw new InvalidArgumentException(
-                sprintf('Missing "%s" in the message header.', PipesHeaders::createKey(PipesHeaders::NODE_ID)),
+                sprintf('Missing "%s" in the message header.', PipesHeaders::NODE_ID),
             );
         }
 
         if ($this->isEmpty(PipesHeaders::get(PipesHeaders::TOPOLOGY_ID, $dto->getHeaders()))) {
             throw new InvalidArgumentException(
-                sprintf('Missing "%s" in the message header.', PipesHeaders::createKey(PipesHeaders::TOPOLOGY_ID)),
+                sprintf('Missing "%s" in the message header.', PipesHeaders::TOPOLOGY_ID),
             );
         }
 
         if ($this->isEmpty(PipesHeaders::get(PipesHeaders::CORRELATION_ID, $dto->getHeaders()))) {
             throw new InvalidArgumentException(
-                sprintf('Missing "%s" in the message header.', PipesHeaders::createKey(PipesHeaders::CORRELATION_ID)),
+                sprintf('Missing "%s" in the message header.', PipesHeaders::CORRELATION_ID),
             );
         }
 
         if ($this->isEmpty(PipesHeaders::get(PipesHeaders::PROCESS_ID, $dto->getHeaders()))) {
             throw new InvalidArgumentException(
-                sprintf('Missing "%s" in the message header.', PipesHeaders::createKey(PipesHeaders::PROCESS_ID)),
+                sprintf('Missing "%s" in the message header.', PipesHeaders::PROCESS_ID),
             );
         }
 
-        if (!array_key_exists(PipesHeaders::createKey(PipesHeaders::PARENT_ID), $dto->getHeaders())) {
+        if (!array_key_exists(PipesHeaders::PARENT_ID, $dto->getHeaders())) {
             throw new InvalidArgumentException(
-                sprintf('Missing "%s" in the message header.', PipesHeaders::createKey(PipesHeaders::PARENT_ID)),
+                sprintf('Missing "%s" in the message header.', PipesHeaders::PARENT_ID),
             );
         }
     }

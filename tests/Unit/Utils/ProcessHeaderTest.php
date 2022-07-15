@@ -5,7 +5,6 @@ namespace PipesPhpSdkTests\Unit\Utils;
 use Exception;
 use Hanaboso\CommonsBundle\Process\ProcessDto;
 use Hanaboso\PipesPhpSdk\Connector\Exception\ConnectorException;
-use Hanaboso\Utils\System\PipesHeaders;
 use PipesPhpSdkTests\KernelTestCaseAbstract;
 
 /**
@@ -28,7 +27,7 @@ final class ProcessHeaderTest extends KernelTestCaseAbstract
         $process = $this->invokeMethod(
             $process,
             'getHeaderByKey',
-            [(new ProcessDto()), 'key', [PipesHeaders::createKey('key') => 'data']],
+            [(new ProcessDto()), 'key', ['key' => 'data']],
         );
 
         self::assertEquals('data', $process);
@@ -60,7 +59,7 @@ final class ProcessHeaderTest extends KernelTestCaseAbstract
         /** @var ProcessDto $dto */
         $dto = $this->invokeMethod($process, 'setHeader', [$dto, 'key', 'data']);
 
-        self::assertEquals(['pf-key' => 'data'], $dto->getHeaders());
+        self::assertEquals(['key' => 'data'], $dto->getHeaders());
     }
 
 }

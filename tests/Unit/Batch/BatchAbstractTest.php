@@ -3,7 +3,7 @@
 namespace PipesPhpSdkTests\Unit\Batch;
 
 use Exception;
-use Hanaboso\CommonsBundle\Process\ProcessDto;
+use Hanaboso\CommonsBundle\Process\BatchProcessDto;
 use Hanaboso\PhpCheckUtils\PhpUnit\Traits\PrivateTrait;
 use Hanaboso\PipesPhpSdk\Batch\Exception\BatchException;
 use PipesPhpSdkTests\Integration\Application\TestNullApplication;
@@ -23,7 +23,7 @@ final class BatchAbstractTest extends KernelTestCaseAbstract
     /**
      * @var TestNullBatch
      */
-    private TestNullBatch $nullConnector;
+    private TestNullBatch $nullBatchConnector;
 
     /**
      * @covers \Hanaboso\PipesPhpSdk\Batch\BatchAbstract::evaluateStatusCode
@@ -32,10 +32,10 @@ final class BatchAbstractTest extends KernelTestCaseAbstract
      */
     public function testEvaluateStatusCode(): void
     {
-        $result = $this->nullConnector->evaluateStatusCode(200, new ProcessDto());
+        $result = $this->nullBatchConnector->evaluateStatusCode(200, new BatchProcessDto());
         self::assertTrue($result);
 
-        $result = $this->nullConnector->evaluateStatusCode(400, new ProcessDto());
+        $result = $this->nullBatchConnector->evaluateStatusCode(400, new BatchProcessDto());
         self::assertFalse($result);
     }
 
@@ -44,9 +44,9 @@ final class BatchAbstractTest extends KernelTestCaseAbstract
      */
     public function testSetApplication(): void
     {
-        $this->nullConnector->setApplication(new TestNullApplication());
+        $this->nullBatchConnector->setApplication(new TestNullApplication());
 
-        self::assertEquals('null-key', $this->nullConnector->getApplicationKey());
+        self::assertEquals('null-key', $this->nullBatchConnector->getApplicationKey());
     }
 
     /**
@@ -54,7 +54,7 @@ final class BatchAbstractTest extends KernelTestCaseAbstract
      */
     public function testGetApplicationKey(): void
     {
-        self::assertNull($this->nullConnector->getApplicationKey());
+        self::assertNull($this->nullBatchConnector->getApplicationKey());
     }
 
     /**
@@ -66,7 +66,7 @@ final class BatchAbstractTest extends KernelTestCaseAbstract
     {
         self::expectException(BatchException::class);
         self::expectExceptionCode(BatchException::MISSING_APPLICATION);
-        $this->nullConnector->getApplication();
+        $this->nullBatchConnector->getApplication();
     }
 
     /**
@@ -76,31 +76,8 @@ final class BatchAbstractTest extends KernelTestCaseAbstract
      */
     public function testGetApplication(): void
     {
-        $this->nullConnector->setApplication(new TestNullApplication());
-        self::assertNotEmpty($this->nullConnector->getApplication());
-    }
-
-    /**
-     * @covers \Hanaboso\PipesPhpSdk\Batch\BatchAbstract::setJsonContent
-     * @covers \Hanaboso\PipesPhpSdk\Batch\BatchAbstract::getJsonContent
-     *
-     * @throws Exception
-     */
-    public function testJsonContent(): void
-    {
-        $dto = new ProcessDto();
-        $this->invokeMethod(
-            $this->nullConnector,
-            'setJsonContent',
-            [$dto, ['data' => 'something']],
-        );
-
-        $result = $this->invokeMethod(
-            $this->nullConnector,
-            'getJsonContent',
-            [$dto],
-        );
-        self::assertEquals(['data' => 'something'], $result);
+        $this->nullBatchConnector->setApplication(new TestNullApplication());
+        self::assertNotEmpty($this->nullBatchConnector->getApplication());
     }
 
     /**
@@ -110,7 +87,7 @@ final class BatchAbstractTest extends KernelTestCaseAbstract
     {
         parent::setUp();
 
-        $this->nullConnector = new TestNullBatch();
+        $this->nullBatchConnector = new TestNullBatch();
     }
 
 }

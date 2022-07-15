@@ -16,7 +16,7 @@ interface ConnectorInterface
     /**
      * @return string
      */
-    public function getId(): string;
+    public function getName(): string;
 
     /**
      * @param ProcessDto $dto

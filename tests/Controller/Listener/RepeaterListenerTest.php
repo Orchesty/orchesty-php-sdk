@@ -43,14 +43,14 @@ final class RepeaterListenerTest extends ControllerTestCaseAbstract
 
         $listener = new RepeaterListener($this->dm);
         $dto      = new ProcessDto();
-        $dto->setHeaders([PipesHeaders::createKey(PipesHeaders::NODE_ID) => $node->getId()]);
+        $dto->setHeaders([PipesHeaders::NODE_ID => $node->getId()]);
 
         $eventMock = $this->mockEvent(new OnRepeatException($dto));
         $listener->onRepeatableException($eventMock);
         /** @var Response $response */
         $response = $eventMock->getResponse();
-        self::assertEquals($maxHops, $response->headers->get(PipesHeaders::createKey(PipesHeaders::REPEAT_MAX_HOPS)));
-        self::assertEquals($interval, $response->headers->get(PipesHeaders::createKey(PipesHeaders::REPEAT_INTERVAL)));
+        self::assertEquals($maxHops, $response->headers->get(PipesHeaders::REPEAT_MAX_HOPS));
+        self::assertEquals($interval, $response->headers->get(PipesHeaders::REPEAT_INTERVAL));
     }
 
     /**
@@ -78,7 +78,7 @@ final class RepeaterListenerTest extends ControllerTestCaseAbstract
         $this->pfd($node);
         $listener = new RepeaterListener($this->dm);
         $dto      = new ProcessDto();
-        $dto->setHeaders([PipesHeaders::createKey(PipesHeaders::NODE_ID) => $node->getId()]);
+        $dto->setHeaders([PipesHeaders::NODE_ID => $node->getId()]);
 
         $eventMock = $this->mockEvent(new OnRepeatException($dto));
         $listener->onRepeatableException($eventMock);
@@ -111,11 +111,11 @@ final class RepeaterListenerTest extends ControllerTestCaseAbstract
 
         self::assertEquals(
             $maxHops,
-            (int) $response->headers->get(PipesHeaders::createKey(PipesHeaders::REPEAT_INTERVAL)),
+            (int) $response->headers->get(PipesHeaders::REPEAT_INTERVAL),
         );
         self::assertEquals(
             $interval,
-            (int) $response->headers->get(PipesHeaders::createKey(PipesHeaders::REPEAT_MAX_HOPS)),
+            (int) $response->headers->get(PipesHeaders::REPEAT_MAX_HOPS),
         );
         self::assertEquals(200, $response->getStatusCode());
     }

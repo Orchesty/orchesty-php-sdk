@@ -16,11 +16,6 @@ trait ProcessExceptionTrait
 {
 
     /**
-     * @return string
-     */
-    abstract public function getId(): string;
-
-    /**
      * @param string $message
      * @param string ...$arguments
      *
@@ -28,7 +23,7 @@ trait ProcessExceptionTrait
      */
     protected function createException(string $message, string ...$arguments): BatchException
     {
-        $message = sprintf("Batch '%s': %s", $this->getId(), $message);
+        $message = sprintf("Batch '%s': %s", $this->getName(), $message);
 
         if ($arguments) {
             $message = sprintf($message, ...$arguments);
@@ -82,7 +77,7 @@ trait ProcessExceptionTrait
         int $maxHops = 10,
     ): OnRepeatException
     {
-        $message = sprintf("Batch '%s': %s: %s", $this->getId(), $throwable::class, $throwable->getMessage());
+        $message = sprintf("Batch '%s': %s: %s", $this->getName(), $throwable::class, $throwable->getMessage());
 
         return (new OnRepeatException($dto, $message, $throwable->getCode(), $throwable))
             ->setInterval($interval)

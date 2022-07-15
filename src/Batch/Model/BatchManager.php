@@ -2,11 +2,10 @@
 
 namespace Hanaboso\PipesPhpSdk\Batch\Model;
 
-use Hanaboso\CommonsBundle\Process\ProcessDto;
-use Hanaboso\PipesPhpSdk\Batch\BatchInterface;
+use Hanaboso\CommonsBundle\Process\BatchProcessDto;
+use Hanaboso\PipesPhpSdk\Batch\BatchAbstract;
 use Hanaboso\PipesPhpSdk\Connector\Exception\ConnectorException;
 use Hanaboso\PipesPhpSdk\Utils\ProcessDtoFactory;
-use Hanaboso\Utils\System\PipesHeaders;
 use Symfony\Component\HttpFoundation\Request;
 
 /**
@@ -18,23 +17,15 @@ final class BatchManager
 {
 
     /**
-     * @param BatchInterface $conn
-     * @param Request        $request
+     * @param BatchAbstract $conn
+     * @param Request       $request
      *
-     * @return ProcessDto
+     * @return BatchProcessDto
      * @throws ConnectorException
      */
-    public function processAction(BatchInterface $conn, Request $request): ProcessDto
+    public function processAction(BatchAbstract $conn, Request $request): BatchProcessDto
     {
-        $dto = ProcessDtoFactory::createFromRequest($request);
-        $key = $conn->getApplicationKey();
-        if ($key) {
-            $headers                                                     = $dto->getHeaders();
-            $headers[PipesHeaders::createKey(PipesHeaders::APPLICATION)] = [$key];
-            $dto->setHeaders($headers);
-        }
-
-        return $conn->processAction($dto);
+        return $conn->processAction(ProcessDtoFactory::createBatchFromRequest($request));
     }
 
 }

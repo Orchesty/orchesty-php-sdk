@@ -3,7 +3,8 @@
 namespace Hanaboso\PipesPhpSdk\Connector;
 
 use Hanaboso\CommonsBundle\Process\ProcessDto;
-use Hanaboso\CommonsBundle\Transport\Curl\CurlManager;
+use Hanaboso\CommonsBundle\Process\ProcessDtoAbstract;
+use Hanaboso\CommonsBundle\Transport\CurlManagerInterface;
 use Hanaboso\PipesPhpSdk\CustomNode\CommonNodeAbstract;
 use Hanaboso\Utils\Exception\PipesFrameworkException;
 use LogicException;
@@ -16,7 +17,7 @@ use LogicException;
 abstract class ConnectorAbstract extends CommonNodeAbstract implements ConnectorInterface
 {
 
-    protected ?CurlManager $sender;
+    protected ?CurlManagerInterface $sender;
 
     /**
      * @var mixed[]
@@ -48,26 +49,26 @@ abstract class ConnectorAbstract extends CommonNodeAbstract implements Connector
             );
         }
 
-        $dto->setStopProcess(ProcessDto::STOP_AND_FAILED, $message);
+        $dto->setStopProcess(ProcessDtoAbstract::STOP_AND_FAILED, $message);
 
         return FALSE;
     }
 
     /**
-     * @param CurlManager $sender
+     * @param CurlManagerInterface $sender
      *
      * @return $this
      */
-    public function setSender(CurlManager $sender): self {
+    public function setSender(CurlManagerInterface $sender): self {
         $this->sender = $sender;
 
         return $this;
     }
 
     /**
-     * @return CurlManager
+     * @return CurlManagerInterface
      */
-    protected function getSender(): CurlManager {
+    protected function getSender(): CurlManagerInterface {
         if ($this->sender) {
             return $this->sender;
         }

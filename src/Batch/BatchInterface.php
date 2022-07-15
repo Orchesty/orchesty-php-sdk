@@ -2,8 +2,7 @@
 
 namespace Hanaboso\PipesPhpSdk\Batch;
 
-use Hanaboso\CommonsBundle\Process\ProcessDto;
-use Hanaboso\PipesPhpSdk\Application\Base\ApplicationInterface;
+use Hanaboso\CommonsBundle\Process\BatchProcessDto;
 use Hanaboso\PipesPhpSdk\Connector\Exception\ConnectorException;
 
 /**
@@ -17,26 +16,14 @@ interface BatchInterface
     /**
      * @return string
      */
-    public function getId(): string;
+    public function getName(): string;
 
     /**
-     * @param ProcessDto $dto
+     * @param BatchProcessDto $dto
      *
-     * @return ProcessDto
+     * @return BatchProcessDto
      * @throws ConnectorException
      */
-    public function processAction(ProcessDto $dto): ProcessDto;
-
-    /**
-     * @param ApplicationInterface $application
-     *
-     * @return BatchInterface
-     */
-    public function setApplication(ApplicationInterface $application): BatchInterface;
-
-    /**
-     * @return string|null
-     */
-    public function getApplicationKey(): ?string;
+    public function processAction(BatchProcessDto $dto): BatchProcessDto;
 
 }

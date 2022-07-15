@@ -47,7 +47,7 @@ final class BatchController implements LoggerAwareInterface
         try {
             $dto = $this->batchHandler->processAction($id, $request);
 
-            return $this->getResponse($dto->getData(), 200, ControllerUtils::createHeaders($dto->getHeaders()));
+            return $this->getResponse($dto->getBridgeData(), 200, ControllerUtils::createHeaders($dto->getHeaders()));
         } catch (PipesFrameworkExceptionAbstract | OnRepeatException $e) {
             throw $e;
         } catch (Throwable $e) {

@@ -2,7 +2,7 @@
 
 namespace PipesPhpSdkTests\Unit\HbPFBatchBundle\Loader;
 
-use Hanaboso\CommonsBundle\Process\ProcessDto;
+use Hanaboso\CommonsBundle\Process\BatchProcessDto;
 use Hanaboso\PipesPhpSdk\Batch\BatchAbstract;
 
 /**
@@ -16,27 +16,17 @@ final class NullBatch extends BatchAbstract
     /**
      * @return string
      */
-    public function getId(): string
+    public function getName(): string
     {
         return '0';
     }
 
     /**
-     * @param ProcessDto $dto
+     * @param BatchProcessDto $dto
      *
-     * @return ProcessDto
+     * @return BatchProcessDto
      */
-    public function processEvent(ProcessDto $dto): ProcessDto
-    {
-        return $dto;
-    }
-
-    /**
-     * @param ProcessDto $dto
-     *
-     * @return ProcessDto
-     */
-    public function processAction(ProcessDto $dto): ProcessDto
+    public function processAction(BatchProcessDto $dto): BatchProcessDto
     {
         return $dto;
     }

@@ -43,7 +43,7 @@ final class BatchHandlerTest extends DatabaseTestCaseAbstract
     {
         $dto = $this->handler->processAction('null', new Request());
 
-        self::assertEquals('', $dto->getData());
+        self::assertEquals('[]', $dto->getBridgeData());
     }
 
     /**

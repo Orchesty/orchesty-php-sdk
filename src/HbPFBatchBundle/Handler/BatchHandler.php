@@ -2,7 +2,7 @@
 
 namespace Hanaboso\PipesPhpSdk\HbPFBatchBundle\Handler;
 
-use Hanaboso\CommonsBundle\Process\ProcessDto;
+use Hanaboso\CommonsBundle\Process\BatchProcessDto;
 use Hanaboso\PipesPhpSdk\Batch\Exception\BatchException;
 use Hanaboso\PipesPhpSdk\Batch\Model\BatchManager;
 use Hanaboso\PipesPhpSdk\Connector\Exception\ConnectorException;
@@ -42,11 +42,11 @@ final class BatchHandler
      * @param string  $id
      * @param Request $request
      *
-     * @return ProcessDto
+     * @return BatchProcessDto
      * @throws BatchException
      * @throws ConnectorException
      */
-    public function processAction(string $id, Request $request): ProcessDto
+    public function processAction(string $id, Request $request): BatchProcessDto
     {
         $conn = $this->loader->getBatch($id);
 

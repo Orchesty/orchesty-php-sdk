@@ -5,7 +5,7 @@ namespace Hanaboso\PipesPhpSdk\Listener;
 use Doctrine\ODM\MongoDB\DocumentManager;
 use Exception;
 use Hanaboso\CommonsBundle\Exception\OnRepeatException;
-use Hanaboso\CommonsBundle\Process\ProcessDto;
+use Hanaboso\CommonsBundle\Process\ProcessDtoAbstract;
 use Hanaboso\PipesPhpSdk\Database\Document\Node;
 use Hanaboso\PipesPhpSdk\Database\Repository\NodeRepository;
 use Hanaboso\Utils\Exception\PipesFrameworkException;
@@ -82,10 +82,10 @@ class RepeaterListener implements EventSubscriberInterface, LoggerAwareInterface
     /**
      * @param OnRepeatException $e
      *
-     * @return ProcessDto
+     * @return ProcessDtoAbstract
      * @throws PipesFrameworkException
      */
-    private function getRepeatedDto(OnRepeatException $e): ProcessDto
+    private function getRepeatedDto(OnRepeatException $e): ProcessDtoAbstract
     {
         $dto              = $e->getProcessDto();
         $node             = $this->nodeRepo->findOneBy(['id' => $dto->getHeader(PipesHeaders::NODE_ID, '')]);

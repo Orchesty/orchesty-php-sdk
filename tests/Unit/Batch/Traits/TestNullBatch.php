@@ -2,7 +2,7 @@
 
 namespace PipesPhpSdkTests\Unit\Batch\Traits;
 
-use Hanaboso\CommonsBundle\Process\ProcessDto;
+use Hanaboso\CommonsBundle\Process\BatchProcessDto;
 use Hanaboso\PipesPhpSdk\Batch\BatchAbstract;
 use Hanaboso\PipesPhpSdk\Batch\Traits\ProcessExceptionTrait;
 
@@ -19,21 +19,21 @@ final class TestNullBatch extends BatchAbstract
     /**
      * @return string
      */
-    public function getId(): string
+    public function getName(): string
     {
         return 'null-test-trait';
     }
 
     /**
-     * @param ProcessDto $dto
+     * @param BatchProcessDto $dto
      *
-     * @return ProcessDto
+     * @return BatchProcessDto
      */
-    public function processAction(ProcessDto $dto): ProcessDto
+    public function processAction(BatchProcessDto $dto): BatchProcessDto
     {
         $dto;
 
-        return new ProcessDto();
+        return new BatchProcessDto();
     }
 
 }

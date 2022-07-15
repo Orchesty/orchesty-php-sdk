@@ -30,7 +30,7 @@ final class BatchManagerTest extends KernelTestCaseAbstract
         /** @var NullBatch $batch */
         $batch = self::getContainer()->get('hbpf.batch.null');
         $dto   = $manager->processAction($batch, new Request());
-        self::assertEquals('', $dto->getData());
+        self::assertEquals('[]', $dto->getBridgeData());
     }
 
 }

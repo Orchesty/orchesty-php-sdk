@@ -3,7 +3,7 @@
 namespace PipesPhpSdkTests\Controller\HbPFBatchBundle\Controller;
 
 use Exception;
-use Hanaboso\CommonsBundle\Process\ProcessDto;
+use Hanaboso\CommonsBundle\Process\BatchProcessDto;
 use Hanaboso\PipesPhpSdk\HbPFBatchBundle\Handler\BatchHandler;
 use Hanaboso\Utils\String\Json;
 use PipesPhpSdkTests\ControllerTestCaseAbstract;
@@ -91,7 +91,7 @@ final class BatchControllerTest extends ControllerTestCaseAbstract
 
         self::assertEquals(200, $response->getStatusCode());
         self::assertEquals(
-            ['test' => 'test'],
+            ['{"test":"test"}'],
             Json::decode((string) $response->getContent()),
         );
     }
@@ -108,9 +108,9 @@ final class BatchControllerTest extends ControllerTestCaseAbstract
             ->onlyMethods(['processAction', 'processTest'])
             ->getMock();
 
-        $dto = new ProcessDto();
+        $dto = new BatchProcessDto();
         $dto
-            ->setData(Json::encode(['test' => 'test']))
+            ->setItemList([['test' => 'test']])
             ->setHeaders([]);
         $handler->method($method)->willReturn($dto);
 

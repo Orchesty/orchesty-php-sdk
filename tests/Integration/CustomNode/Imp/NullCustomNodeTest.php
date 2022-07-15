@@ -25,7 +25,7 @@ final class NullCustomNodeTest extends DatabaseTestCaseAbstract
         $dto = new ProcessDto();
         (new NullCustomNode())->processAction($dto);
 
-        self::assertEquals(['pf-result-message' => 'Null worker resending data.'], $dto->getHeaders());
+        self::assertEquals(['result-message' => 'Null worker resending data.'], $dto->getHeaders());
     }
 
     /**

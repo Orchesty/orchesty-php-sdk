@@ -93,9 +93,9 @@ abstract class CommonNodeAbstract implements CommonNodeInterface
     /**
      * @param DocumentManager|null $db
      *
-     * @return CommonNodeAbstract
+     * @return $this
      */
-    public function setDb(?DocumentManager $db): CommonNodeAbstract
+    public function setDb(?DocumentManager $db): self
     {
         $this->db = $db;
 

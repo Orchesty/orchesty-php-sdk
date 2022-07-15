@@ -2,11 +2,11 @@
 
 namespace Hanaboso\PipesPhpSdk\Batch;
 
-use Hanaboso\CommonsBundle\Process\ProcessDto;
+use Hanaboso\CommonsBundle\Process\BatchProcessDto;
+use Hanaboso\CommonsBundle\Process\ProcessDtoAbstract;
 use Hanaboso\PipesPhpSdk\Application\Base\ApplicationInterface;
 use Hanaboso\PipesPhpSdk\Batch\Exception\BatchException;
 use Hanaboso\Utils\Exception\PipesFrameworkException;
-use Hanaboso\Utils\String\Json;
 
 /**
  * Class BatchAbstract
@@ -38,14 +38,14 @@ abstract class BatchAbstract implements BatchInterface
     ];
 
     /**
-     * @param int         $statusCode
-     * @param ProcessDto  $dto
-     * @param string|null $message
+     * @param int             $statusCode
+     * @param BatchProcessDto $dto
+     * @param string|null     $message
      *
      * @return bool
      * @throws PipesFrameworkException
      */
-    public function evaluateStatusCode(int $statusCode, ProcessDto $dto, ?string $message = NULL): bool
+    public function evaluateStatusCode(int $statusCode, BatchProcessDto $dto, ?string $message = NULL): bool
     {
         if (in_array($statusCode, $this->okStatuses, TRUE)) {
             return TRUE;
@@ -59,7 +59,7 @@ abstract class BatchAbstract implements BatchInterface
             );
         }
 
-        $dto->setStopProcess(ProcessDto::STOP_AND_FAILED, $message);
+        $dto->setStopProcess(ProcessDtoAbstract::STOP_AND_FAILED, $message);
 
         return FALSE;
     }
@@ -99,27 +99,6 @@ abstract class BatchAbstract implements BatchInterface
         }
 
         return NULL;
-    }
-
-    /**
-     * @param ProcessDto $dto
-     *
-     * @return mixed[]
-     */
-    protected function getJsonContent(ProcessDto $dto): array
-    {
-        return Json::decode($dto->getData());
-    }
-
-    /**
-     * @param ProcessDto $dto
-     * @param mixed[]    $content
-     *
-     * @return ProcessDto
-     */
-    protected function setJsonContent(ProcessDto $dto, array $content): ProcessDto
-    {
-        return $dto->setData(Json::encode($content));
     }
 
 }

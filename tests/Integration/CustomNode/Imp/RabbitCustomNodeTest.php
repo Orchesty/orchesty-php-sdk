@@ -69,7 +69,7 @@ final class RabbitCustomNodeTest extends DatabaseTestCaseAbstract
     {
         $dto = new ProcessDto();
         self::expectException(InvalidArgumentException::class);
-        self::expectExceptionMessage('Missing "pf-node-id" in the message header.');
+        self::expectExceptionMessage('Missing "node-id" in the message header.');
         $this->invokeMethod($this->nullConnector, 'validate', [$dto]);
     }
 
@@ -81,9 +81,9 @@ final class RabbitCustomNodeTest extends DatabaseTestCaseAbstract
      */
     public function testValidateEmptyTopologyId(): void
     {
-        $dto = (new ProcessDto())->setHeaders([PipesHeaders::createKey(PipesHeaders::NODE_ID) => '123']);
+        $dto = (new ProcessDto())->setHeaders([PipesHeaders::NODE_ID => '123']);
         self::expectException(InvalidArgumentException::class);
-        self::expectExceptionMessage('Missing "pf-topology-id" in the message header.');
+        self::expectExceptionMessage('Missing "topology-id" in the message header.');
         $this->invokeMethod($this->nullConnector, 'validate', [$dto]);
     }
 
@@ -97,12 +97,12 @@ final class RabbitCustomNodeTest extends DatabaseTestCaseAbstract
     {
         $dto = (new ProcessDto())->setHeaders(
             [
-                PipesHeaders::createKey(PipesHeaders::NODE_ID)     => '123',
-                PipesHeaders::createKey(PipesHeaders::TOPOLOGY_ID) => '456',
+                PipesHeaders::NODE_ID     => '123',
+                PipesHeaders::TOPOLOGY_ID => '456',
             ],
         );
         self::expectException(InvalidArgumentException::class);
-        self::expectExceptionMessage('Missing "pf-correlation-id" in the message header.');
+        self::expectExceptionMessage('Missing "correlation-id" in the message header.');
         $this->invokeMethod($this->nullConnector, 'validate', [$dto]);
     }
 
@@ -116,13 +116,13 @@ final class RabbitCustomNodeTest extends DatabaseTestCaseAbstract
     {
         $dto = (new ProcessDto())->setHeaders(
             [
-                PipesHeaders::createKey(PipesHeaders::NODE_ID)        => '123',
-                PipesHeaders::createKey(PipesHeaders::TOPOLOGY_ID)    => '456',
-                PipesHeaders::createKey(PipesHeaders::CORRELATION_ID) => '789',
+                PipesHeaders::NODE_ID        => '123',
+                PipesHeaders::TOPOLOGY_ID    => '456',
+                PipesHeaders::CORRELATION_ID => '789',
             ],
         );
         self::expectException(InvalidArgumentException::class);
-        self::expectExceptionMessage('Missing "pf-process-id" in the message header.');
+        self::expectExceptionMessage('Missing "process-id" in the message header.');
         $this->invokeMethod($this->nullConnector, 'validate', [$dto]);
     }
 
@@ -136,14 +136,14 @@ final class RabbitCustomNodeTest extends DatabaseTestCaseAbstract
     {
         $dto = (new ProcessDto())->setHeaders(
             [
-                PipesHeaders::createKey(PipesHeaders::NODE_ID)        => '123',
-                PipesHeaders::createKey(PipesHeaders::TOPOLOGY_ID)    => '456',
-                PipesHeaders::createKey(PipesHeaders::CORRELATION_ID) => '789',
-                PipesHeaders::createKey(PipesHeaders::PROCESS_ID)     => '147',
+                PipesHeaders::NODE_ID        => '123',
+                PipesHeaders::TOPOLOGY_ID    => '456',
+                PipesHeaders::CORRELATION_ID => '789',
+                PipesHeaders::PROCESS_ID     => '147',
             ],
         );
         self::expectException(InvalidArgumentException::class);
-        self::expectExceptionMessage('Missing "pf-parent-id" in the message header.');
+        self::expectExceptionMessage('Missing "parent-id" in the message header.');
         $this->invokeMethod($this->nullConnector, 'validate', [$dto]);
     }
 
@@ -157,11 +157,11 @@ final class RabbitCustomNodeTest extends DatabaseTestCaseAbstract
     {
         $dto = (new ProcessDto())->setHeaders(
             [
-                PipesHeaders::createKey(PipesHeaders::NODE_ID)        => '123',
-                PipesHeaders::createKey(PipesHeaders::TOPOLOGY_ID)    => '456',
-                PipesHeaders::createKey(PipesHeaders::CORRELATION_ID) => '789',
-                PipesHeaders::createKey(PipesHeaders::PROCESS_ID)     => '147',
-                PipesHeaders::createKey(PipesHeaders::PARENT_ID)      => '369',
+                PipesHeaders::NODE_ID        => '123',
+                PipesHeaders::TOPOLOGY_ID    => '456',
+                PipesHeaders::CORRELATION_ID => '789',
+                PipesHeaders::PROCESS_ID     => '147',
+                PipesHeaders::PARENT_ID      => '369',
             ],
         );
         $this->invokeMethod($this->nullConnector, 'validate', [$dto]);
@@ -177,9 +177,9 @@ final class RabbitCustomNodeTest extends DatabaseTestCaseAbstract
     {
         $dto = (new ProcessDto())->setHeaders(
             [
-                PipesHeaders::createKey(PipesHeaders::NODE_ID)     => [1 => ['a']],
-                PipesHeaders::createKey(PipesHeaders::TOPOLOGY_ID) => '456',
-                PipesHeaders::createKey(PipesHeaders::PARENT_ID)   => '369',
+                PipesHeaders::NODE_ID     => [1 => ['a']],
+                PipesHeaders::TOPOLOGY_ID => '456',
+                PipesHeaders::PARENT_ID   => '369',
             ],
         );
 
@@ -205,11 +205,11 @@ final class RabbitCustomNodeTest extends DatabaseTestCaseAbstract
 
         $dto = (new ProcessDto())->setHeaders(
             [
-                PipesHeaders::createKey(PipesHeaders::NODE_ID)        => $node->getId(),
-                PipesHeaders::createKey(PipesHeaders::TOPOLOGY_ID)    => '456',
-                PipesHeaders::createKey(PipesHeaders::CORRELATION_ID) => '789',
-                PipesHeaders::createKey(PipesHeaders::PROCESS_ID)     => '147',
-                PipesHeaders::createKey(PipesHeaders::PARENT_ID)      => '369',
+                PipesHeaders::NODE_ID        => $node->getId(),
+                PipesHeaders::TOPOLOGY_ID    => '456',
+                PipesHeaders::CORRELATION_ID => '789',
+                PipesHeaders::PROCESS_ID     => '147',
+                PipesHeaders::PARENT_ID      => '369',
             ],
         );
 
@@ -248,17 +248,17 @@ final class RabbitCustomNodeTest extends DatabaseTestCaseAbstract
 
         $dto = (new ProcessDto())->setHeaders(
             [
-                PipesHeaders::createKey(PipesHeaders::NODE_ID)        => $node->getId(),
-                PipesHeaders::createKey(PipesHeaders::TOPOLOGY_ID)    => '456',
-                PipesHeaders::createKey(PipesHeaders::CORRELATION_ID) => '789',
-                PipesHeaders::createKey(PipesHeaders::PROCESS_ID)     => '147',
-                PipesHeaders::createKey(PipesHeaders::PARENT_ID)      => '369',
+                PipesHeaders::NODE_ID        => $node->getId(),
+                PipesHeaders::TOPOLOGY_ID    => '456',
+                PipesHeaders::CORRELATION_ID => '789',
+                PipesHeaders::PROCESS_ID     => '147',
+                PipesHeaders::PARENT_ID      => '369',
                 'test'                                                => ['a' => 'a'],
             ],
         );
 
         $dto = $this->nullConnector->processAction($dto);
-        self::assertEquals(5, count($dto->getHeaders()));
+        self::assertEquals(6, count($dto->getHeaders()));
     }
 
     /**
