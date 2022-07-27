@@ -1,20 +1,17 @@
 <?php declare(strict_types=1);
 
-namespace PipesPhpSdkTests\Unit\Batch\Traits;
+namespace PipesPhpSdkTests\Unit\Batch;
 
 use Hanaboso\CommonsBundle\Process\BatchProcessDto;
 use Hanaboso\PipesPhpSdk\Batch\BatchAbstract;
-use Hanaboso\PipesPhpSdk\Batch\Traits\ProcessExceptionTrait;
 
 /**
  * Class TestNullBatch
  *
- * @package PipesPhpSdkTests\Unit\Batch\Traits
+ * @package PipesPhpSdkTests\Unit\Batch
  */
 final class TestNullBatch extends BatchAbstract
 {
-
-    use ProcessExceptionTrait;
 
     /**
      * @return string

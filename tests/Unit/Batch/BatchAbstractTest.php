@@ -5,10 +5,9 @@ namespace PipesPhpSdkTests\Unit\Batch;
 use Exception;
 use Hanaboso\CommonsBundle\Process\BatchProcessDto;
 use Hanaboso\PhpCheckUtils\PhpUnit\Traits\PrivateTrait;
-use Hanaboso\PipesPhpSdk\Batch\Exception\BatchException;
+use Hanaboso\PipesPhpSdk\CustomNode\Exception\CustomNodeException;
 use PipesPhpSdkTests\Integration\Application\TestNullApplication;
 use PipesPhpSdkTests\KernelTestCaseAbstract;
-use PipesPhpSdkTests\Unit\Batch\Traits\TestNullBatch;
 
 /**
  * Class BatchAbstractTest
@@ -50,22 +49,13 @@ final class BatchAbstractTest extends KernelTestCaseAbstract
     }
 
     /**
-     * @covers \Hanaboso\PipesPhpSdk\Batch\BatchAbstract::getApplicationKey
-     */
-    public function testGetApplicationKey(): void
-    {
-        self::assertNull($this->nullBatchConnector->getApplicationKey());
-    }
-
-    /**
      * @covers \Hanaboso\PipesPhpSdk\Batch\BatchAbstract::getApplication
 
      * @throws Exception
      */
     public function testGetApplicationException(): void
     {
-        self::expectException(BatchException::class);
-        self::expectExceptionCode(BatchException::MISSING_APPLICATION);
+        self::expectException(CustomNodeException::class);
         $this->nullBatchConnector->getApplication();
     }
 

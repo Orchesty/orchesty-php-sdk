@@ -20,3 +20,6 @@ services:
         class: PipesPhpSdkTests\Unit\HbPFBatchBundle\Loader\NullBatch
         calls:
             - [ setApplication, [ '@hbpf.application.null' ] ]
+
+    hbpf.custom_node.null:
+        class: PipesPhpSdkTests\Integration\HbPFCustomNodeBundle\TestNullCustomNode

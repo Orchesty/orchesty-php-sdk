@@ -137,7 +137,7 @@ final class CustomNodeControllerTest extends ControllerTestCaseAbstract
 
         self::assertTrue(
             in_array(
-                'microsleep500000',
+                'null',
                 Json::decode((string) $response->getContent()),
                 TRUE,
             ),

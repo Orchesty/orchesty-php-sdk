@@ -1,16 +1,17 @@
 <?php declare(strict_types=1);
 
-namespace Hanaboso\PipesPhpSdk\CustomNode\Impl;
+namespace PipesPhpSdkTests\Integration\HbPFCustomNodeBundle;
 
 use Hanaboso\CommonsBundle\Process\ProcessDto;
 use Hanaboso\PipesPhpSdk\CustomNode\CommonNodeAbstract;
+use Hanaboso\Utils\System\PipesHeaders;
 
 /**
- * Class Sleep07CustomNode
+ * Class TestNullCustomNode
  *
- * @package Hanaboso\PipesPhpSdk\CustomNode\Impl
+ * @package PipesPhpSdkTests\Integration\HbPFCustomNodeBundle
  */
-final class Sleep07CustomNode extends CommonNodeAbstract
+final class TestNullCustomNode extends CommonNodeAbstract
 {
 
     /**
@@ -20,7 +21,7 @@ final class Sleep07CustomNode extends CommonNodeAbstract
      */
     public function processAction(ProcessDto $dto): ProcessDto
     {
-        usleep(700_000);
+        $dto->addHeader(PipesHeaders::RESULT_MESSAGE, 'Null worker resending data.');
 
         return $dto;
     }
@@ -30,7 +31,7 @@ final class Sleep07CustomNode extends CommonNodeAbstract
      */
     public function getName(): string
     {
-        return 'sleep07-custom-node';
+        return 'null';
     }
 
 }

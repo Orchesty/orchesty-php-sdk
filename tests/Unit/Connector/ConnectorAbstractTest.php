@@ -7,11 +7,9 @@ use Hanaboso\CommonsBundle\Process\ProcessDto;
 use Hanaboso\CommonsBundle\Transport\Curl\CurlClientFactory;
 use Hanaboso\CommonsBundle\Transport\Curl\CurlManager;
 use Hanaboso\PhpCheckUtils\PhpUnit\Traits\PrivateTrait;
-use Hanaboso\PipesPhpSdk\Connector\Exception\ConnectorException;
-use LogicException;
+use Hanaboso\PipesPhpSdk\CustomNode\Exception\CustomNodeException;
 use PipesPhpSdkTests\Integration\Application\TestNullApplication;
 use PipesPhpSdkTests\KernelTestCaseAbstract;
-use PipesPhpSdkTests\Unit\Connector\Traits\TestNullConnector;
 
 /**
  * Class ConnectorAbstractTest
@@ -57,7 +55,7 @@ final class ConnectorAbstractTest extends KernelTestCaseAbstract
      */
     public function testGetApplicationKey(): void
     {
-        self::expectException(LogicException::class);
+        self::expectException(CustomNodeException::class);
         self::expectExceptionMessage('Application has not set.');
         $this->nullConnector->getApplicationKey();
     }
@@ -69,8 +67,7 @@ final class ConnectorAbstractTest extends KernelTestCaseAbstract
      */
     public function testGetApplicationException(): void
     {
-        self::expectException(ConnectorException::class);
-        self::expectExceptionCode(ConnectorException::MISSING_APPLICATION);
+        self::expectException(CustomNodeException::class);
         $this->nullConnector->getApplication();
     }
 
