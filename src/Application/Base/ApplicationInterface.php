@@ -2,6 +2,7 @@
 
 namespace Hanaboso\PipesPhpSdk\Application\Base;
 
+use Hanaboso\CommonsBundle\Process\ProcessDtoAbstract;
 use Hanaboso\CommonsBundle\Transport\Curl\Dto\RequestDto;
 use Hanaboso\PipesPhpSdk\Application\Document\ApplicationInstall;
 use Hanaboso\PipesPhpSdk\Application\Model\Form\FormStack;
@@ -50,6 +51,7 @@ interface ApplicationInterface
     public function getLogo(): ?string;
 
     /**
+     * @param ProcessDtoAbstract $dto
      * @param ApplicationInstall $applicationInstall
      * @param string             $method
      * @param string|null        $url
@@ -59,6 +61,7 @@ interface ApplicationInterface
      */
     public function getRequestDto
     (
+        ProcessDtoAbstract $dto,
         ApplicationInstall $applicationInstall,
         string $method,
         ?string $url = NULL,

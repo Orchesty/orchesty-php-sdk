@@ -4,6 +4,7 @@ namespace PipesPhpSdkTests\Integration\Command;
 
 use GuzzleHttp\Psr7\Uri;
 use Hanaboso\CommonsBundle\Enum\ApplicationTypeEnum;
+use Hanaboso\CommonsBundle\Process\ProcessDtoAbstract;
 use Hanaboso\CommonsBundle\Transport\Curl\CurlException;
 use Hanaboso\CommonsBundle\Transport\Curl\Dto\RequestDto;
 use Hanaboso\PipesPhpSdk\Application\Base\ApplicationInterface;
@@ -66,6 +67,7 @@ final class NullOAuth1Application extends OAuth1ApplicationAbstract implements O
     }
 
     /**
+     * @param ProcessDtoAbstract $dto
      * @param ApplicationInstall $applicationInstall
      * @param string             $method
      * @param string|null        $url
@@ -76,6 +78,7 @@ final class NullOAuth1Application extends OAuth1ApplicationAbstract implements O
      */
     public function getRequestDto
     (
+        ProcessDtoAbstract $dto,
         ApplicationInstall $applicationInstall,
         string $method,
         ?string $url = NULL,
@@ -86,7 +89,7 @@ final class NullOAuth1Application extends OAuth1ApplicationAbstract implements O
         $url;
         $data;
 
-        return new RequestDto($method, new Uri(''));
+        return new RequestDto(new Uri(''), $method, $dto);
     }
 
     /**

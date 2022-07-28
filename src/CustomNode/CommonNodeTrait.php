@@ -3,12 +3,11 @@
 namespace Hanaboso\PipesPhpSdk\CustomNode;
 
 use Doctrine\ODM\MongoDB\DocumentManager;
-use Hanaboso\CommonsBundle\Process\ProcessDto;
+use Hanaboso\CommonsBundle\Process\ProcessDtoAbstract;
 use Hanaboso\PipesPhpSdk\Application\Base\ApplicationInterface;
 use Hanaboso\PipesPhpSdk\Application\Document\ApplicationInstall;
 use Hanaboso\PipesPhpSdk\Application\Exception\ApplicationInstallException;
 use Hanaboso\PipesPhpSdk\Application\Repository\ApplicationInstallRepository;
-use Hanaboso\PipesPhpSdk\Connector\Exception\ConnectorException;
 use Hanaboso\PipesPhpSdk\CustomNode\Exception\CustomNodeException;
 
 /**
@@ -48,7 +47,7 @@ trait CommonNodeTrait
 
     /**
      * @return ApplicationInterface
-     * @throws ConnectorException
+     * @throws CustomNodeException
      */
     public function getApplication(): ApplicationInterface
     {
@@ -61,6 +60,7 @@ trait CommonNodeTrait
 
     /**
      * @return string
+     * @throws CustomNodeException
      */
     public function getApplicationKey(): string
     {
@@ -73,6 +73,7 @@ trait CommonNodeTrait
 
     /**
      * @return DocumentManager
+     * @throws CustomNodeException
      */
     public function getDb(): DocumentManager
     {
@@ -86,7 +87,7 @@ trait CommonNodeTrait
     /**
      * @param DocumentManager|null $db
      *
-     * @return $this
+     * @return self
      */
     public function setDb(?DocumentManager $db): self
     {
@@ -100,6 +101,7 @@ trait CommonNodeTrait
      *
      * @return ApplicationInstall
      * @throws ApplicationInstallException
+     * @throws CustomNodeException
      */
     protected function getApplicationInstall(?string $user): ApplicationInstall {
         /** @var ApplicationInstallRepository $repo */
@@ -112,12 +114,13 @@ trait CommonNodeTrait
     }
 
     /**
-     * @param ProcessDto $dto
+     * @param ProcessDtoAbstract $dto
      *
      * @return ApplicationInstall
      * @throws ApplicationInstallException
+     * @throws CustomNodeException
      */
-    protected function getApplicationInstallFromProcess(ProcessDto $dto): ApplicationInstall {
+    protected function getApplicationInstallFromProcess(ProcessDtoAbstract $dto): ApplicationInstall {
         $user = $dto->getUser();
         if (!$user) {
             throw new CustomNodeException('User not defined');

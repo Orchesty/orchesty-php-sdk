@@ -2,6 +2,7 @@
 
 namespace PipesPhpSdkTests\Integration\Application;
 
+use Hanaboso\CommonsBundle\Process\ProcessDtoAbstract;
 use Hanaboso\CommonsBundle\Transport\Curl\CurlException;
 use Hanaboso\CommonsBundle\Transport\Curl\Dto\RequestDto;
 use Hanaboso\PipesPhpSdk\Application\Base\ApplicationInterface;
@@ -45,6 +46,7 @@ final class TestOAuth2NullApplication extends OAuth2ApplicationAbstract
     }
 
     /**
+     * @param ProcessDtoAbstract $dto
      * @param ApplicationInstall $applicationInstall
      * @param string             $method
      * @param string|null        $url
@@ -54,6 +56,7 @@ final class TestOAuth2NullApplication extends OAuth2ApplicationAbstract
      * @throws CurlException
      */
     public function getRequestDto(
+        ProcessDtoAbstract $dto,
         ApplicationInstall $applicationInstall,
         string $method,
         ?string $url = NULL,
@@ -62,7 +65,7 @@ final class TestOAuth2NullApplication extends OAuth2ApplicationAbstract
     {
         $applicationInstall;
 
-        $request = new RequestDto($method, $this->getUri($url));
+        $request = new RequestDto($this->getUri($url), $method, $dto);
         $request->setHeaders(
             [
                 'Content-Type' => 'application/vnd.shoptet.v1.0',
