@@ -2,4 +2,4 @@
 rabbit_mq:
     connections:
         default:
-            dsn: '%env(string:RABBIT_DSN)%'
+            dsn: '%env(string:RABBITMQ_DSN)%'
