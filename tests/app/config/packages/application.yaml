@@ -1,0 +1,3 @@
+parameters:
+    applications:
+        - '%kernel.project_dir%/src/Resources/config/'
