@@ -1,37 +1,59 @@
 <?php declare(strict_types=1);
 
-namespace PipesPhpSdkTests\Controller\HbPFApplicationBundle\Controller;
+namespace PipesPhpSdkTests\Controller\HbPFBatchBundle;
 
 use Exception;
+use GuzzleHttp\Psr7\Response;
+use Hanaboso\CommonsBundle\Transport\Curl\CurlManager;
 use Hanaboso\PipesPhpSdk\Application\Document\ApplicationInstall;
 use Hanaboso\PipesPhpSdk\Application\Exception\ApplicationInstallException;
 use Hanaboso\PipesPhpSdk\HbPFApplicationBundle\Handler\WebhookHandler;
+use Hanaboso\Utils\String\Json;
 use PipesPhpSdkTests\ControllerTestCaseAbstract;
+use PipesPhpSdkTests\MockServer\Mock;
+use PipesPhpSdkTests\MockServer\MockServer;
 
 /**
  * Class WebhookControllerTest
  *
- * @package PipesPhpSdkTests\Controller\HbPFApplicationBundle\Controller
+ * @package PipesPhpSdkTests\Controller\HbPFBatchBundle
  *
- * @covers \Hanaboso\PipesPhpSdk\HbPFApplicationBundle\Controller\WebhookController
- * @covers \Hanaboso\PipesPhpSdk\HbPFApplicationBundle\Handler\WebhookHandler
- * @covers \Hanaboso\PipesPhpSdk\Application\Manager\Webhook\WebhookManager
+ * @covers  \Hanaboso\PipesPhpSdk\HbPFApplicationBundle\Controller\WebhookController
+ * @covers  \Hanaboso\PipesPhpSdk\HbPFApplicationBundle\Handler\WebhookHandler
+ * @covers  \Hanaboso\PipesPhpSdk\Application\Manager\Webhook\WebhookManager
  */
 final class WebhookControllerTest extends ControllerTestCaseAbstract
 {
 
     /**
+     * @var MockServer $mockServer
+     */
+    private MockServer $mockServer;
+
+    /**
      * @covers \Hanaboso\PipesPhpSdk\HbPFApplicationBundle\Controller\WebhookController::subscribeWebhooksAction
      * @covers \Hanaboso\PipesPhpSdk\HbPFApplicationBundle\Handler\WebhookHandler::subscribeWebhooks
-     * @covers \Hanaboso\PipesPhpSdk\Application\Manager\Webhook\WebhookManager
-     * @covers \Hanaboso\PipesPhpSdk\Application\Manager\Webhook\WebhookManager::subscribeWebhooks
+     * @covers \Hanaboso\PipesPhpSdk\Application\Document\ApplicationInstall::fromArray
+     * @covers \Hanaboso\PipesPhpSdk\Application\Document\ApplicationInstall::toArray
      *
      * @throws Exception
      */
     public function testSubscribeWebhooksAction(): void
     {
+        $this->privateSetUp();
         $this->mockApplicationHandler();
-        $this->insertApp();
+        $this->mockServer->addMock(
+            new Mock(
+                '/document/ApplicationInstall?filter={"names":["null"],"users":["bar"]}',
+                NULL,
+                CurlManager::METHOD_GET,
+                new Response(
+                    200,
+                    [],
+                    Json::encode((new ApplicationInstall(['name' => 'null', 'user' => 'bar']))->toArray()),
+                ),
+            ),
+        );
 
         $this->client->request('POST', '/webhook/applications/null/users/bar/subscribe');
         $response = $this->client->getResponse();
@@ -74,8 +96,20 @@ final class WebhookControllerTest extends ControllerTestCaseAbstract
      */
     public function testUnsubscribeWebhooksAction(): void
     {
+        $this->privateSetUp();
         $this->mockApplicationHandler();
-        $this->insertApp();
+        $this->mockServer->addMock(
+            new Mock(
+                '/document/ApplicationInstall?filter={"names":["null"],"users":["bar"]}',
+                NULL,
+                CurlManager::METHOD_GET,
+                new Response(
+                    200,
+                    [],
+                    Json::encode((new ApplicationInstall(['name' => 'null', 'user' => 'bar']))->toArray()),
+                ),
+            ),
+        );
 
         $this->client->request('POST', '/webhook/applications/null/users/bar/unsubscribe');
         $response = $this->client->getResponse();
@@ -145,15 +179,12 @@ final class WebhookControllerTest extends ControllerTestCaseAbstract
     }
 
     /**
-     * @throws Exception
+     * @return void
      */
-    private function insertApp(): void
+    private function privateSetUp(): void
     {
-        $dto = new ApplicationInstall();
-        $dto->setKey('null')
-            ->setUser('bar');
-
-        $this->pfd($dto);
+        $this->mockServer = new MockServer();
+        self::getContainer()->set('hbpf.worker-api', $this->mockServer);
     }
 
 }

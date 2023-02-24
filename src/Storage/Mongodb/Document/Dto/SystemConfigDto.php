@@ -1,13 +1,13 @@
 <?php declare(strict_types=1);
 
-namespace Hanaboso\PipesPhpSdk\Database\Document\Dto;
+namespace Hanaboso\PipesPhpSdk\Storage\Mongodb\Document\Dto;
 
 use Hanaboso\Utils\String\Json;
 
 /**
  * Class SystemConfigDto
  *
- * @package Hanaboso\PipesPhpSdk\Database\Document\Dto
+ * @package Hanaboso\PipesPhpSdk\Storage\Mongodb\Document\Dto
  */
 final class SystemConfigDto
 {
