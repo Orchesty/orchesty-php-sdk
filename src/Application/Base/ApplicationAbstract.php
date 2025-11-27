@@ -46,7 +46,7 @@ abstract class ApplicationAbstract implements ApplicationInterface
             if (file_exists($this->logoFilename)) {
                 return sprintf(
                     'data:%s;base64, %s',
-                    mime_content_type($this->logoFilename),
+                    (string) mime_content_type($this->logoFilename),
                     base64_encode(File::getContent($this->logoFilename)),
                 );
             }

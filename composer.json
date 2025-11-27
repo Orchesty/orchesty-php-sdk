@@ -11,7 +11,7 @@
         "ext-oauth": "*",
         "hanaboso/commons-bundle": "^2.12",
         "hanaboso/mongo-data-grid": "^1.9",
-        "league/oauth2-client": "^2.8",
+        "league/oauth2-client": "^2.9",
         "phpoffice/phpspreadsheet": "^4.5",
         "symfony/monolog-bundle": "^3.10",
         "symfony/yaml": "^7.3"
