@@ -42,7 +42,7 @@ final class TableParserHandler
 
     /**
      */
-    public function parseToJsonTest(): bool
+    public function parseToJsonTest(): true
     {
         return TRUE;
     }
@@ -67,10 +67,10 @@ final class TableParserHandler
     /**
      * @param string $type
      *
-     * @return bool
+     * @return true
      * @throws TableParserException
      */
-    public function parseFromJsonTest(string $type): bool
+    public function parseFromJsonTest(string $type): true
     {
         $this->tableParser->createWriter(new Spreadsheet(), $type);
 
