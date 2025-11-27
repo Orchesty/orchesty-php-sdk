@@ -14,14 +14,15 @@ jobs:
   check-changes:
     runs-on: ubuntu-latest
     outputs:
-      ci_changed: ${{ steps.changes.outputs.ci == 'true' }}
-      makefile_changed: ${{ steps.changes.outputs.makefile == 'true' }}
-      risky_changes: ${{ (steps.changes.outputs.ci == 'true' || steps.changes.outputs.makefile == 'true') && github.event_name != 'workflow_dispatch' }}
+      ci_changed: ${{ steps.final.outputs.ci_changed }}
+      makefile_changed: ${{ steps.final.outputs.makefile_changed }}
+      risky_changes: ${{ steps.final.outputs.risky }}
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
 
       - name: Check for CI workflow changes
+        if: github.event_name != 'workflow_dispatch'
         uses: dorny/paths-filter@v2
         id: changes
         with:
@@ -31,8 +32,30 @@ jobs:
             makefile:
               - 'Makefile'
 
-      - name: Fail if risky changes detected (unless manual dispatch)
-        if: ${{ (steps.changes.outputs.ci == 'true' || steps.changes.outputs.makefile == 'true') && github.event_name != 'workflow_dispatch' }}
+      - name: Set defaults for manual dispatch
+        if: github.event_name == 'workflow_dispatch'
+        id: defaults
+        run: |
+          echo "No changes detected for manual dispatch - allowing test run."
+          echo "ci=false" >> $GITHUB_OUTPUT
+          echo "makefile=false" >> $GITHUB_OUTPUT
+
+      - name: Determine changes
+        id: final
+        run: |
+          if [ "${{ github.event_name }}" == "workflow_dispatch" ]; then
+            echo "ci_changed=false" >> $GITHUB_OUTPUT
+            echo "makefile_changed=false" >> $GITHUB_OUTPUT
+            echo "risky=false" >> $GITHUB_OUTPUT
+          else
+            echo "ci_changed=${{ steps.changes.outputs.ci }}" >> $GITHUB_OUTPUT
+            echo "makefile_changed=${{ steps.changes.outputs.makefile }}" >> $GITHUB_OUTPUT
+            echo "risky=${{ (steps.changes.outputs.ci == 'true' || steps.changes.outputs.makefile == 'true') }}" >> $GITHUB_OUTPUT
+          fi
+          echo "Debug: event_name=${{ github.event_name }}, ci_changed=$CI_CHANGED, makefile_changed=$MAKEFILE_CHANGED, risky=$RISKY"
+
+      - name: Fail if risky changes detected
+        if: steps.final.outputs.risky == 'true'
         run: |
           echo "Risky changes detected in .github/workflows/ci.yml or Makefile."
           echo "For security, this PR cannot be merged automatically."
@@ -42,7 +65,7 @@ jobs:
   test:
     runs-on: self-hosted
     needs: check-changes
-    if: ${{ !needs.check-changes.outputs.risky_changes }}
+    if: ${{ needs.check-changes.outputs.risky_changes != 'true' }}
     services:
       dind:
         image: docker:dind
@@ -51,6 +74,10 @@ jobs:
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
+
+      - name: Debug test condition
+        run: |
+          echo "Running test: risky_changes = ${{ needs.check-changes.outputs.risky_changes }}, event_name = ${{ github.event_name }}"
       
       - name: Setup and run tests
         env:
