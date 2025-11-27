@@ -69,6 +69,7 @@ final class TableParserHandlerTest extends KernelTestCaseAbstract
      */
     public function testParseToJsonTest(): void
     {
+        // @phpstan-ignore-next-line
         self::assertTrue($this->handler->parseToJsonTest());
     }
 
@@ -115,6 +116,7 @@ final class TableParserHandlerTest extends KernelTestCaseAbstract
      */
     public function testParseFromJsonTest(): void
     {
+        // @phpstan-ignore-next-line
         self::assertTrue($this->handler->parseFromJsonTest(TableParserInterface::XLSX));
     }
 
