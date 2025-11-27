@@ -1,0 +1,68 @@
+name: CI
+
+permissions:
+  contents: read
+
+on:
+  push:
+    branches: [ master ]
+  pull_request:
+    branches: [ master ]
+  workflow_dispatch:
+
+jobs:
+  check-changes:
+    runs-on: ubuntu-latest
+    outputs:
+      ci_changed: ${{ steps.changes.outputs.ci == 'true' }}
+      makefile_changed: ${{ steps.changes.outputs.makefile == 'true' }}
+      risky_changes: ${{ (steps.changes.outputs.ci == 'true' || steps.changes.outputs.makefile == 'true') && github.event_name != 'workflow_dispatch' }}
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Check for CI workflow changes
+        uses: dorny/paths-filter@v2
+        id: changes
+        with:
+          filters: |
+            ci:
+              - '.github/workflows/ci.yml'
+            makefile:
+              - 'Makefile'
+
+      - name: Fail if risky changes detected (unless manual dispatch)
+        if: ${{ (steps.changes.outputs.ci == 'true' || steps.changes.outputs.makefile == 'true') && github.event_name != 'workflow_dispatch' }}
+        run: |
+          echo "Risky changes detected in .github/workflows/ci.yml or Makefile."
+          echo "For security, this PR cannot be merged automatically."
+          echo "Review changes manually and use workflow_dispatch for testing, or remove risky changes."
+          exit 1
+
+  test:
+    runs-on: self-hosted
+    needs: check-changes
+    if: ${{ !needs.check-changes.outputs.risky_changes }}
+    services:
+      dind:
+        image: docker:dind
+    env:
+      DOCKER_HOST: tcp://localhost:2375
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+      
+      - name: Setup and run tests
+        env:
+          COMPOSE_PROJECT_NAME: ${{ github.run_id }}-orchesty-php-sdk
+          COMPOSE_FILE: docker-compose.ci.yml
+        run: |
+          make docker-compose.ci.yml test
+      
+      - name: Cleanup
+        if: always()
+        env:
+          COMPOSE_PROJECT_NAME: ${{ github.run_id }}-orchesty-php-sdk
+          COMPOSE_FILE: docker-compose.ci.yml
+        run: |
+          make docker-compose.ci.yml docker-down-clean
