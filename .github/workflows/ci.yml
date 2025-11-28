@@ -66,27 +66,21 @@ jobs:
     runs-on: self-hosted
     needs: check-changes
     if: ${{ needs.check-changes.outputs.risky_changes != 'true' }}
-    services:
-      dind:
-        image: docker:dind
-        options: --privileged
-    env:
-      DOCKER_HOST: tcp://localhost:2375
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
 
-      - name: Debug test condition
+      - name: Set docker host
         run: |
-          echo "Running test: risky_changes = ${{ needs.check-changes.outputs.risky_changes }}, event_name = ${{ github.event_name }}"
-      
+          echo "DOCKER_HOST=unix:///var/run/docker.sock" >> $GITHUB_ENV
+
       - name: Setup and run tests
         env:
           COMPOSE_PROJECT_NAME: ${{ github.run_id }}-orchesty-php-sdk
           COMPOSE_FILE: docker-compose.ci.yml
         run: |
           make docker-compose.ci.yml test
-      
+
       - name: Cleanup
         if: always()
         env:

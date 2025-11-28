@@ -24,6 +24,3 @@ services:
             - ./openapi.yaml:/api.yaml
         environment:
             SWAGGER_JSON: /api.yaml
-
-volumes:
-    mongo: {}
