@@ -8,6 +8,7 @@ use Hanaboso\PipesPhpSdk\Application\Document\Dto\CommonObjectDto;
 use Hanaboso\PipesPhpSdk\HbPFConnectorBundle\Controller\ConnectorController;
 use Hanaboso\PipesPhpSdk\HbPFConnectorBundle\Handler\ConnectorHandler;
 use Hanaboso\Utils\String\Json;
+use PHPUnit\Framework\Attributes\AllowMockObjectsWithoutExpectations;
 use PHPUnit\Framework\Attributes\CoversClass;
 use PipesPhpSdkTests\ControllerTestCaseAbstract;
 
@@ -16,6 +17,7 @@ use PipesPhpSdkTests\ControllerTestCaseAbstract;
  *
  * @package PipesPhpSdkTests\Controller\HbPFConnectorBundle\Controller
  */
+#[AllowMockObjectsWithoutExpectations]
 #[CoversClass(ConnectorController::class)]
 final class ConnectorControllerTest extends ControllerTestCaseAbstract
 {

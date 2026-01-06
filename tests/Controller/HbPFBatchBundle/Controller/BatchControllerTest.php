@@ -7,6 +7,7 @@ use Hanaboso\CommonsBundle\Process\BatchProcessDto;
 use Hanaboso\PipesPhpSdk\HbPFBatchBundle\Controller\BatchController;
 use Hanaboso\PipesPhpSdk\HbPFBatchBundle\Handler\BatchHandler;
 use Hanaboso\Utils\String\Json;
+use PHPUnit\Framework\Attributes\AllowMockObjectsWithoutExpectations;
 use PHPUnit\Framework\Attributes\CoversClass;
 use PipesPhpSdkTests\ControllerTestCaseAbstract;
 
@@ -17,6 +18,7 @@ use PipesPhpSdkTests\ControllerTestCaseAbstract;
  *
  * @covers  \Hanaboso\PipesPhpSdk\HbPFBatchBundle\Controller\BatchController
  */
+#[AllowMockObjectsWithoutExpectations]
 #[CoversClass(BatchController::class)]
 final class BatchControllerTest extends ControllerTestCaseAbstract
 {

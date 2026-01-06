@@ -140,7 +140,7 @@ final class OAuth1Provider extends OAuthProviderAbstract implements OAuth1Provid
         return (string) $client->getRequestHeader($method, $url);
     }
 
-    /**
+    /*
      * ------------------------------------ HELPERS ----------------------------------------
      */
 

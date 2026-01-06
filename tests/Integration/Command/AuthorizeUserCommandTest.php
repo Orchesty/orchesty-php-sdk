@@ -18,6 +18,7 @@ use Hanaboso\PipesPhpSdk\Authorization\Provider\OAuth2Provider;
 use Hanaboso\PipesPhpSdk\Command\AuthorizeUserCommand;
 use Hanaboso\Utils\String\Json;
 use OAuth;
+use PHPUnit\Framework\Attributes\AllowMockObjectsWithoutExpectations;
 use PHPUnit\Framework\Attributes\CoversClass;
 use PipesPhpSdkTests\KernelTestCaseAbstract;
 use PipesPhpSdkTests\MockServer\Mock;
@@ -32,6 +33,7 @@ use TypeError;
  *
  * @package PipesPhpSdkTests\Integration\Command
  */
+#[AllowMockObjectsWithoutExpectations]
 #[CoversClass(ApplicationLoader::class)]
 #[CoversClass(ApplicationManager::class)]
 #[CoversClass(ApplicationUtils::class)]

@@ -18,6 +18,7 @@ use Hanaboso\PipesPhpSdk\Application\Manager\Webhook\WebhookManager;
 use Hanaboso\PipesPhpSdk\Application\Repository\ApplicationInstallRepository;
 use Hanaboso\PipesPhpSdk\Authorization\Base\Basic\BasicApplicationInterface;
 use Hanaboso\Utils\String\Json;
+use PHPUnit\Framework\Attributes\AllowMockObjectsWithoutExpectations;
 use PHPUnit\Framework\Attributes\CoversClass;
 use PipesPhpSdkTests\Integration\Application\TestOAuth2NullApplication;
 use PipesPhpSdkTests\KernelTestCaseAbstract;
@@ -30,6 +31,7 @@ use Symfony\Component\HttpFoundation\Request;
  *
  * @package PipesPhpSdkTests\Integration\Application\Manager
  */
+#[AllowMockObjectsWithoutExpectations]
 #[CoversClass(ApplicationManager::class)]
 final class ApplicationManagerTest extends KernelTestCaseAbstract
 {

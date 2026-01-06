@@ -16,6 +16,7 @@ use Hanaboso\PipesPhpSdk\Storage\Mongodb\Repository\NodeRepository;
 use Hanaboso\Utils\Exception\PipesFrameworkException;
 use Hanaboso\Utils\String\Json;
 use Hanaboso\Utils\System\PipesHeaders;
+use PHPUnit\Framework\Attributes\AllowMockObjectsWithoutExpectations;
 use PHPUnit\Framework\Attributes\CoversClass;
 use PipesPhpSdkTests\ControllerTestCaseAbstract;
 use PipesPhpSdkTests\MockServer\Mock;
@@ -30,6 +31,7 @@ use Throwable;
  *
  * @package PipesPhpSdkTests\Controller\Listener
  */
+#[AllowMockObjectsWithoutExpectations]
 #[CoversClass(RepeaterListener::class)]
 #[CoversClass(Node::class)]
 #[CoversClass(NodeRepository::class)]

@@ -10,6 +10,7 @@ use Hanaboso\PipesPhpSdk\HbPFCustomNodeBundle\Exception\CustomNodeException;
 use Hanaboso\PipesPhpSdk\HbPFCustomNodeBundle\Handler\CustomNodeHandler;
 use Hanaboso\Utils\Exception\PipesFrameworkException;
 use Hanaboso\Utils\String\Json;
+use PHPUnit\Framework\Attributes\AllowMockObjectsWithoutExpectations;
 use PHPUnit\Framework\Attributes\CoversClass;
 use PipesPhpSdkTests\ControllerTestCaseAbstract;
 
@@ -18,6 +19,7 @@ use PipesPhpSdkTests\ControllerTestCaseAbstract;
  *
  * @package PipesPhpSdkTests\Controller\HbPfCustomNodeBundle\Controller
  */
+#[AllowMockObjectsWithoutExpectations]
 #[CoversClass(CustomNodeController::class)]
 final class CustomNodeControllerTest extends ControllerTestCaseAbstract
 {

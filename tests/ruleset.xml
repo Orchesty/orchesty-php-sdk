@@ -6,11 +6,12 @@
     </rule>
     <rule ref="SlevomatCodingStandard.Files.TypeNameMatchesFileName">
         <properties>
-            <property name="rootNamespaces" type="array" value="
-                src=>Hanaboso\PipesPhpSdk,
-                tests=>PipesPhpSdkTests
-            "/>
+            <property name="rootNamespaces" type="array">
+                <element key="src" value="Hanaboso\PipesPhpSdk"/>
+                <element key="tests" value="PipesPhpSdkTests"/>
+            </property>
         </properties>
     </rule>
 
+    <exclude-pattern>tests/app/config/reference.php</exclude-pattern>
 </ruleset>
