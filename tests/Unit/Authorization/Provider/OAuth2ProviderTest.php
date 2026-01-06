@@ -12,6 +12,7 @@ use Hanaboso\PipesPhpSdk\Authorization\Wrapper\OAuth2Wrapper;
 use League\OAuth2\Client\Provider\Exception\IdentityProviderException;
 use League\OAuth2\Client\Token\AccessToken;
 use Monolog\Logger;
+use PHPUnit\Framework\Attributes\AllowMockObjectsWithoutExpectations;
 use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\Attributes\DataProvider;
 use PipesPhpSdkTests\KernelTestCaseAbstract;
@@ -21,6 +22,7 @@ use PipesPhpSdkTests\KernelTestCaseAbstract;
  *
  * @package PipesPhpSdkTests\Unit\Authorization\Provider
  */
+#[AllowMockObjectsWithoutExpectations]
 #[CoversClass(OAuth2Provider::class)]
 #[CoversClass(OAuthProviderAbstract::class)]
 final class OAuth2ProviderTest extends KernelTestCaseAbstract
@@ -176,7 +178,7 @@ final class OAuth2ProviderTest extends KernelTestCaseAbstract
     }
 
 
-    /**
+    /*
      * ---------------------------------------- HELPERS ------------------------------------
      */
 

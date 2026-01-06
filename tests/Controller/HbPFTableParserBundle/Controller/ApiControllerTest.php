@@ -11,6 +11,7 @@ use Hanaboso\PipesPhpSdk\Parser\TableParser;
 use Hanaboso\Utils\Exception\PipesFrameworkException;
 use Hanaboso\Utils\File\File;
 use Hanaboso\Utils\String\Json;
+use PHPUnit\Framework\Attributes\AllowMockObjectsWithoutExpectations;
 use PHPUnit\Framework\Attributes\CoversClass;
 use PipesPhpSdkTests\ControllerTestCaseAbstract;
 use Throwable;
@@ -20,6 +21,7 @@ use Throwable;
  *
  * @package PipesPhpSdkTests\Controller\HbPFTableParserBundle\Controller
  */
+#[AllowMockObjectsWithoutExpectations]
 #[CoversClass(TableParserController::class)]
 #[CoversClass(TableParserHandler::class)]
 #[CoversClass(TableParser::class)]

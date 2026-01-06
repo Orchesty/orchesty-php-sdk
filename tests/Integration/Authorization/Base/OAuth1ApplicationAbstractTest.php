@@ -15,6 +15,7 @@ use Hanaboso\PipesPhpSdk\Authorization\Provider\OAuth1Provider;
 use Hanaboso\PipesPhpSdk\Authorization\Provider\OAuth2Provider;
 use Hanaboso\Utils\Date\DateTimeUtils;
 use Hanaboso\Utils\String\Json;
+use PHPUnit\Framework\Attributes\AllowMockObjectsWithoutExpectations;
 use PHPUnit\Framework\Attributes\CoversClass;
 use PipesPhpSdkTests\Integration\Command\NullOAuth1Application;
 use PipesPhpSdkTests\KernelTestCaseAbstract;
@@ -26,6 +27,7 @@ use PipesPhpSdkTests\MockServer\MockServer;
  *
  * @package PipesPhpSdkTests\Integration\Authorization\Base
  */
+#[AllowMockObjectsWithoutExpectations]
 #[CoversClass(OAuth1ApplicationAbstract::class)]
 final class OAuth1ApplicationAbstractTest extends KernelTestCaseAbstract
 {

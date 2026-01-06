@@ -11,6 +11,7 @@ use Hanaboso\PipesPhpSdk\Application\Manager\Webhook\WebhookManager;
 use Hanaboso\PipesPhpSdk\HbPFApplicationBundle\Controller\WebhookController;
 use Hanaboso\PipesPhpSdk\HbPFApplicationBundle\Handler\WebhookHandler;
 use Hanaboso\Utils\String\Json;
+use PHPUnit\Framework\Attributes\AllowMockObjectsWithoutExpectations;
 use PHPUnit\Framework\Attributes\CoversClass;
 use PipesPhpSdkTests\ControllerTestCaseAbstract;
 use PipesPhpSdkTests\MockServer\Mock;
@@ -21,6 +22,7 @@ use PipesPhpSdkTests\MockServer\MockServer;
  *
  * @package PipesPhpSdkTests\Controller\HbPFBatchBundle
  */
+#[AllowMockObjectsWithoutExpectations]
 #[CoversClass(WebhookController::class)]
 #[CoversClass(WebhookHandler::class)]
 #[CoversClass(WebhookManager::class)]

@@ -15,6 +15,7 @@ use Hanaboso\PipesPhpSdk\Authorization\Base\Basic\BasicApplicationInterface;
 use Hanaboso\PipesPhpSdk\HbPFApplicationBundle\Handler\ApplicationHandler;
 use Hanaboso\Utils\String\Json;
 use InvalidArgumentException;
+use PHPUnit\Framework\Attributes\AllowMockObjectsWithoutExpectations;
 use PHPUnit\Framework\Attributes\CoversClass;
 use PipesPhpSdkTests\KernelTestCaseAbstract;
 use PipesPhpSdkTests\MockServer\Mock;
@@ -26,6 +27,7 @@ use Symfony\Component\HttpFoundation\Request;
  *
  * @package PipesPhpSdkTests\Integration\HbPFApplicationBundle\Handler
  */
+#[AllowMockObjectsWithoutExpectations]
 #[CoversClass(ApplicationHandler::class)]
 #[CoversClass(ApplicationManager::class)]
 final class ApplicationHandlerTest extends KernelTestCaseAbstract

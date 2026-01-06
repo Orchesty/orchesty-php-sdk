@@ -42,7 +42,7 @@ final class ProcessDtoFactory
         return self::createBatchDto($data[self::BODY] ?? '', $data[self::HEADERS] ?? []);
     }
 
-    /**
+    /*
      * ---------------------------------------- HELPERS -----------------------------------------
      */
 

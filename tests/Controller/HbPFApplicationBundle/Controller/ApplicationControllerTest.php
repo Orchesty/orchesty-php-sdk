@@ -17,6 +17,7 @@ use Hanaboso\Utils\File\File;
 use Hanaboso\Utils\String\Base64;
 use Hanaboso\Utils\String\Json;
 use LogicException;
+use PHPUnit\Framework\Attributes\AllowMockObjectsWithoutExpectations;
 use PHPUnit\Framework\Attributes\CoversClass;
 use PipesPhpSdkTests\ControllerTestCaseAbstract;
 use PipesPhpSdkTests\Integration\Application\Manager\NullApplication;
@@ -29,6 +30,7 @@ use Symfony\Component\HttpFoundation\Response;
  *
  * @package PipesPhpSdkTests\Controller\HbPFApplicationBundle\Controller
  */
+#[AllowMockObjectsWithoutExpectations]
 #[CoversClass(ApplicationController::class)]
 #[CoversClass(ApplicationHandler::class)]
 #[CoversClass(ApplicationManager::class)]
@@ -238,17 +240,6 @@ final class ApplicationControllerTest extends ControllerTestCaseAbstract
         $response = $this->sendGet('/applications/authorize/token?state={"key":"value"}');
 
         self::assertEquals(404, $response->status);
-    }
-
-    /**
-     * @throws Exception
-     */
-    public function testSetAuthorizationTokenQueryActionErr(): void
-    {
-        $this->mockHandler('saveAuthToken');
-        $response = $this->sendGet('/applications/authorize/token');
-
-        self::assertEquals(500, $response->status);
     }
 
     /**

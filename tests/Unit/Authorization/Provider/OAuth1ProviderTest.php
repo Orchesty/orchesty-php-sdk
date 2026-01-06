@@ -12,6 +12,7 @@ use Hanaboso\PipesPhpSdk\Authorization\Provider\OAuth1Provider;
 use Monolog\Logger;
 use OAuth;
 use OAuthException;
+use PHPUnit\Framework\Attributes\AllowMockObjectsWithoutExpectations;
 use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\Attributes\DataProvider;
 use PipesPhpSdkTests\KernelTestCaseAbstract;
@@ -21,6 +22,7 @@ use PipesPhpSdkTests\KernelTestCaseAbstract;
  *
  * @package PipesPhpSdkTests\Unit\Authorization\Provider
  */
+#[AllowMockObjectsWithoutExpectations]
 #[CoversClass(OAuth1Provider::class)]
 final class OAuth1ProviderTest extends KernelTestCaseAbstract
 {
@@ -213,7 +215,7 @@ final class OAuth1ProviderTest extends KernelTestCaseAbstract
         ];
     }
 
-    /**
+    /*
      * ---------------------------------------- HELPERS ------------------------------------
      */
 

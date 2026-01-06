@@ -19,6 +19,7 @@ use Hanaboso\PipesPhpSdk\Application\Repository\ApplicationInstallRepository;
 use Hanaboso\PipesPhpSdk\Application\Repository\WebhookRepository;
 use Hanaboso\Utils\Exception\DateTimeException;
 use Hanaboso\Utils\String\Json;
+use PHPUnit\Framework\Attributes\AllowMockObjectsWithoutExpectations;
 use PHPUnit\Framework\Attributes\CoversClass;
 use PipesPhpSdkTests\KernelTestCaseAbstract;
 use PipesPhpSdkTests\MockServer\Mock;
@@ -29,6 +30,7 @@ use PipesPhpSdkTests\MockServer\MockServer;
  *
  * @package PipesPhpSdkTests\Integration\Application\Manager\Webhook
  */
+#[AllowMockObjectsWithoutExpectations]
 #[CoversClass(WebhookManager::class)]
 #[CoversClass(WebhookSubscription::class)]
 #[CoversClass(Webhook::class)]

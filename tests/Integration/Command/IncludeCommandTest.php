@@ -26,7 +26,7 @@ final class IncludeCommandTest extends KernelTestCaseAbstract
         $kernel   = self::$kernel;
         $commands = new IncludeCommands($kernel);
         $commands->addIncludedCommand('test:command');
-        $commands->add(new Command('test'));
+        $commands->addCommand(new Command('test'));
 
         $commands = $commands->getIncludedCommands();
         self::assertEquals(

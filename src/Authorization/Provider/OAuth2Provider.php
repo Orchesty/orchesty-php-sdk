@@ -121,7 +121,7 @@ final class OAuth2Provider extends OAuthProviderAbstract implements OAuth2Provid
         return [$params[0], $params[1] ?? ''];
     }
 
-    /**
+    /*
      * -------------------------------------------- HELPERS --------------------------------------
      */
 

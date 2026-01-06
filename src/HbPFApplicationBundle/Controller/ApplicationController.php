@@ -11,7 +11,7 @@ use Hanaboso\Utils\Traits\ControllerTrait;
 use InvalidArgumentException;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\Routing\Attribute\Route;
 use Throwable;
 
 /**
@@ -186,8 +186,7 @@ final class ApplicationController
     public function setAuthorizationTokenQueryAction(Request $request): Response
     {
         try {
-            // @phpstan-ignore-next-line
-            [$user, $key] = OAuth2Provider::stateDecode($request->get('state'));
+            [$user, $key] = OAuth2Provider::stateDecode($request->query->getString('state'));
 
             $url = $this->applicationHandler->saveAuthToken($key, $user, $request->query->all());
 
@@ -282,8 +281,7 @@ final class ApplicationController
             return $this->getResponse($this->applicationHandler->changeStateOfApplication(
                 $key,
                 $user,
-                // @phpstan-ignore-next-line
-                $request->get('enabled'),
+                $request->request->getBoolean('enabled'),
             ));
         } catch (ApplicationInstallException $e) {
             return $this->getErrorResponse($e, 404, ControllerUtils::NOT_FOUND);
