@@ -15,6 +15,7 @@ use Hanaboso\PipesPhpSdk\Authorization\Base\Basic\BasicApplicationAbstract;
 use Hanaboso\PipesPhpSdk\Authorization\Base\Basic\BasicApplicationInterface;
 use InvalidArgumentException;
 use Symfony\Component\HttpFoundation\Request;
+use Throwable;
 
 /**
  * Class ApplicationHandler
@@ -122,13 +123,19 @@ final class ApplicationHandler
         return [
             'items' => array_map(
                 function (ApplicationInstall $applicationInstall): array {
-                    $key         = $applicationInstall->getKey();
-                    $application = $this->applicationManager->getApplication($key ?? '');
+                    $key        = $applicationInstall->getKey();
+                    $authorized = FALSE;
+
+                    try {
+                        $application = $this->applicationManager->getApplication($key ?? '');
+                        $authorized  = $application->isAuthorized($applicationInstall);
+                    } catch (Throwable) {
+                    }
 
                     return array_merge(
                         $applicationInstall->toArray(),
                         [
-                            self::AUTHORIZED => $application->isAuthorized($applicationInstall),
+                            self::AUTHORIZED => $authorized,
                         ],
                     );
                 },

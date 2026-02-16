@@ -283,7 +283,7 @@ final class ApplicationManagerTest extends KernelTestCaseAbstract
         self::getContainer()->set('hbpf.worker-api', $this->mockServer);
         $this->mockServer->addMock(
             new Mock(
-                '/document/ApplicationInstall?filter={"users":["user"]}',
+                '/document/ApplicationInstall?filter={"enabled":null,"users":["user"]}',
                 NULL,
                 CurlManager::METHOD_GET,
                 new Response(200, [], '[{}]'),
@@ -333,7 +333,7 @@ final class ApplicationManagerTest extends KernelTestCaseAbstract
         self::getContainer()->set('hbpf.worker-api', $this->mockServer);
         $this->mockServer->addMock(
             new Mock(
-                '/document/ApplicationInstall?filter={"names":["some app"],"users":["example5"]}',
+                '/document/ApplicationInstall?filter={"enabled":null,"names":["some app"],"users":["example5"]}',
                 NULL,
                 CurlManager::METHOD_GET,
                 new Response(200, [], '{}'),
@@ -356,7 +356,7 @@ final class ApplicationManagerTest extends KernelTestCaseAbstract
         self::getContainer()->set('hbpf.worker-api', $this->mockServer);
         $this->mockServer->addMock(
             new Mock(
-                '/document/ApplicationInstall?filter={"names":["something"],"users":["example3"]}',
+                '/document/ApplicationInstall?filter={"enabled":null,"names":["something"],"users":["example3"]}',
                 NULL,
                 CurlManager::METHOD_GET,
                 new Response(200, [], '{}'),
@@ -447,7 +447,7 @@ final class ApplicationManagerTest extends KernelTestCaseAbstract
         );
         $this->mockServer->addMock(
             new Mock(
-                '/document/ApplicationInstall?filter={"names":["null"]}',
+                '/document/ApplicationInstall?filter={"enabled":null,"names":["null"]}',
                 NULL,
                 CurlManager::METHOD_GET,
                 new Response(
@@ -501,7 +501,7 @@ final class ApplicationManagerTest extends KernelTestCaseAbstract
         );
         $this->mockServer->addMock(
             new Mock(
-                '/document/ApplicationInstall?filter={"names":["null"]}',
+                '/document/ApplicationInstall?filter={"enabled":null,"names":["null"]}',
                 NULL,
                 CurlManager::METHOD_GET,
                 new Response(
@@ -563,7 +563,7 @@ final class ApplicationManagerTest extends KernelTestCaseAbstract
         );
         $this->mockServer->addMock(
             new Mock(
-                '/document/ApplicationInstall?filter={"names":["null"],"users":["example1"]}',
+                '/document/ApplicationInstall?filter={"enabled":null,"names":["null"],"users":["example1"]}',
                 NULL,
                 CurlManager::METHOD_GET,
                 new Response(
@@ -624,7 +624,7 @@ final class ApplicationManagerTest extends KernelTestCaseAbstract
         );
         $this->mockServer->addMock(
             new Mock(
-                '/document/ApplicationInstall?filter={"names":["null"]}',
+                '/document/ApplicationInstall?filter={"enabled":null,"names":["null"]}',
                 NULL,
                 CurlManager::METHOD_GET,
                 new Response(
@@ -720,7 +720,11 @@ final class ApplicationManagerTest extends KernelTestCaseAbstract
 
         $this->mockServer->addMock(
             new Mock(
-                sprintf('/document/ApplicationInstall?filter={"names":["%s"],"users":["%s"]}', $key, $user),
+                sprintf(
+                    '/document/ApplicationInstall?filter={"enabled":null,"names":["%s"],"users":["%s"]}',
+                    $key,
+                    $user,
+                ),
                 NULL,
                 CurlManager::METHOD_GET,
                 new Response(200, [], Json::encode([$applicationInstall->toArray()])),

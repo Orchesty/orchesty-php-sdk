@@ -167,8 +167,9 @@ final class OAuth2Provider extends OAuthProviderAbstract implements OAuth2Provid
         $scopes = ScopeFormatter::getScopes($scopes, $separator);
         $url    = sprintf('%s%s', $authorizeUrl, $scopes);
         $query  = Query::parse($url);
-        $host   = key($query);
-        $v      = reset($query);
+        /** @var string|int $host */
+        $host = key($query);
+        $v    = reset($query);
         unset($query[$host]);
 
         $host = explode('?', (string) $host);

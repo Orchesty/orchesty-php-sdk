@@ -38,7 +38,7 @@ final class ApplicationInstallRepositoryTest extends KernelTestCaseAbstract
 
         $this->mockServer->addMock(
             new Mock(
-                '/document/ApplicationInstall?filter={"names":["user"],"users":["key"]}',
+                '/document/ApplicationInstall?filter={"enabled":null,"names":["user"],"users":["key"]}',
                 NULL,
                 CurlManager::METHOD_GET,
                 new Response(200, [], Json::encode([])),

@@ -58,7 +58,7 @@ final class AuthorizeUserCommandTest extends KernelTestCaseAbstract
         self::getContainer()->set('hbpf.worker-api', $this->mockServer);
         $this->mockServer->addMock(
             new Mock(
-                '/document/ApplicationInstall?filter={"names":["null2"],"users":["user"]}',
+                '/document/ApplicationInstall?filter={"enabled":null,"names":["null2"],"users":["user"]}',
                 NULL,
                 CurlManager::METHOD_GET,
                 new Response(200, [], '[{"name":"null","user":"user"}]'),

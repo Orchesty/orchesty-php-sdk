@@ -66,7 +66,7 @@ final class WebhookManagerTest extends KernelTestCaseAbstract
         self::getContainer()->set('hbpf.worker-api', $this->mockServer);
         $this->mockServer->addMock(
             new Mock(
-                '/document/ApplicationInstall?filter={"names":["webhook"],"users":["User"]}',
+                '/document/ApplicationInstall?filter={"enabled":null,"names":["webhook"],"users":["User"]}',
                 NULL,
                 CurlManager::METHOD_GET,
                 new Response(
@@ -159,7 +159,7 @@ final class WebhookManagerTest extends KernelTestCaseAbstract
         self::getContainer()->set('hbpf.worker-api', $this->mockServer);
         $this->mockServer->addMock(
             new Mock(
-                '/document/ApplicationInstall?filter={"names":["webhook"],"users":["User"]}',
+                '/document/ApplicationInstall?filter={"enabled":null,"names":["webhook"],"users":["User"]}',
                 NULL,
                 CurlManager::METHOD_GET,
                 new Response(200, [], '[{}]'),
@@ -190,7 +190,7 @@ final class WebhookManagerTest extends KernelTestCaseAbstract
         );
         $this->mockServer->addMock(
             new Mock(
-                '/document/ApplicationInstall?filter={"names":["webhook"],"users":["User"]}',
+                '/document/ApplicationInstall?filter={"enabled":null,"names":["webhook"],"users":["User"]}',
                 NULL,
                 CurlManager::METHOD_GET,
                 new Response(200, [], '[{}]'),
@@ -236,7 +236,7 @@ final class WebhookManagerTest extends KernelTestCaseAbstract
         self::getContainer()->set('hbpf.worker-api', $this->mockServer);
         $this->mockServer->addMock(
             new Mock(
-                '/document/ApplicationInstall?filter={"names":["webhook"],"users":["User"]}',
+                '/document/ApplicationInstall?filter={"enabled":null,"names":["webhook"],"users":["User"]}',
                 NULL,
                 CurlManager::METHOD_GET,
                 new Response(200, [], '[]'),
