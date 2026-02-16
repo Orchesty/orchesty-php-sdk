@@ -44,13 +44,13 @@ final class WebhookControllerTest extends ControllerTestCaseAbstract
         $this->mockApplicationHandler();
         $this->mockServer->addMock(
             new Mock(
-                '/document/ApplicationInstall?filter={"names":["null"],"users":["bar"]}',
+                '/document/ApplicationInstall?filter={"enabled":null,"names":["null"],"users":["bar"]}',
                 NULL,
                 CurlManager::METHOD_GET,
                 new Response(
                     200,
                     [],
-                    Json::encode((new ApplicationInstall(['name' => 'null', 'user' => 'bar']))->toArray()),
+                    Json::encode((new ApplicationInstall(['key' => 'null', 'user' => 'bar']))->toArray()),
                 ),
             ),
         );
@@ -92,13 +92,13 @@ final class WebhookControllerTest extends ControllerTestCaseAbstract
         $this->mockApplicationHandler();
         $this->mockServer->addMock(
             new Mock(
-                '/document/ApplicationInstall?filter={"names":["null"],"users":["bar"]}',
+                '/document/ApplicationInstall?filter={"enabled":null,"names":["null"],"users":["bar"]}',
                 NULL,
                 CurlManager::METHOD_GET,
                 new Response(
                     200,
                     [],
-                    Json::encode((new ApplicationInstall(['name' => 'null', 'user' => 'bar']))->toArray()),
+                    Json::encode((new ApplicationInstall(['key' => 'null', 'user' => 'bar']))->toArray()),
                 ),
             ),
         );

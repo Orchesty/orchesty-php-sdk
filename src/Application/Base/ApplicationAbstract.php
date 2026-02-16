@@ -123,8 +123,11 @@ abstract class ApplicationAbstract implements ApplicationInterface
      */
     public function saveApplicationForms(ApplicationInstall $applicationInstall, array $settings): ApplicationInstall
     {
+        $formStack = $this->getFormStack();
+        self::autoInjectLimitForm($formStack, $applicationInstall);
+
         $preparedSetting = [];
-        foreach ($this->getFormStack()->getForms() as $form) {
+        foreach ($formStack->getForms() as $form) {
             foreach ($form->getFields() as $field) {
                 if (array_key_exists($form->getKey(), $settings) &&
                     array_key_exists($field->getKey(), $settings[$form->getKey()])) {

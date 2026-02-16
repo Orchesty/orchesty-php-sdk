@@ -17,7 +17,7 @@ class ApplicationInstall extends DocumentAbstract
 {
 
     public const string USER = 'user';
-    public const string NAME = 'name';
+    public const string KEY  = 'key';
 
     /**
      * @var DateTime|null
@@ -327,14 +327,15 @@ class ApplicationInstall extends DocumentAbstract
 
         return [
             'created'              => $this->getCreated()?->format(DateTimeUtils::DATE_TIME),
+            'deleted'              => $this->isDeleted(),
             'enabled'              => $this->isEnabled(),
             'encryptedSettings'    => $this->getEncryptedSettings(),
             'expires'              => $expires?->format(DateTimeUtils::DATE_TIME),
-            'id'                   => $this->getId(),
             'nonEncryptedSettings' => $this->getNonEncryptedSettings(),
             'settings'             => $this->getSettings(),
             'updated'              => $this->getUpdated()?->format(DateTimeUtils::DATE_TIME),
-            self::NAME             => $this->getKey(),
+            '_id'                  => $this->getId(),
+            self::KEY              => $this->getKey(),
             self::USER             => $this->getUser(),
         ];
     }
@@ -355,12 +356,12 @@ class ApplicationInstall extends DocumentAbstract
      */
     protected function fromArray(array $data): self
     {
-        if (array_key_exists('id', $data))
-            $this->setId($data['id']);
+        if (array_key_exists('_id', $data))
+            $this->setId($data['_id']);
         if (array_key_exists(self::USER, $data))
             $this->setUser($data[self::USER]);
-        if (array_key_exists(self::NAME, $data))
-            $this->setKey($data[self::NAME]);
+        if (array_key_exists(self::KEY, $data))
+            $this->setKey($data[self::KEY]);
         if (array_key_exists('nonEncryptedSettings', $data))
             $this->setNonEncryptedSettings($data['nonEncryptedSettings']);
         if (array_key_exists('encryptedSettings', $data))

@@ -43,7 +43,7 @@ final class ApplicationInstallFilter extends Filter
     {
         $retArray = parent::toArray();
 
-        if ($this->enabled) $retArray['enabled']            = $this->enabled;
+        $retArray['enabled']                                = $this->enabled;
         if ($this->names) $retArray['names']                = $this->names;
         if ($this->users) $retArray['users']                = $this->users;
         if ($this->expires) $retArray['expires']            = $this->expires;

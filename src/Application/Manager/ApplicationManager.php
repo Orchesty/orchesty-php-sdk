@@ -13,7 +13,6 @@ use Hanaboso\PipesPhpSdk\Application\Exception\ApplicationInstallException;
 use Hanaboso\PipesPhpSdk\Application\Loader\ApplicationLoader;
 use Hanaboso\PipesPhpSdk\Application\Manager\Webhook\WebhookApplicationInterface;
 use Hanaboso\PipesPhpSdk\Application\Manager\Webhook\WebhookManager;
-use Hanaboso\PipesPhpSdk\Application\Model\Form\Form;
 use Hanaboso\PipesPhpSdk\Application\Repository\ApplicationInstallFilter;
 use Hanaboso\PipesPhpSdk\Application\Repository\ApplicationInstallRepository;
 use Hanaboso\PipesPhpSdk\Authorization\Base\Basic\BasicApplicationInterface;
@@ -350,20 +349,17 @@ final class ApplicationManager
         $applicationInstalls = $this->applicationInstallRepository->findUserApps($user, $applications);
 
         $appLimits = array_map(static function(ApplicationInstall $appInstall) {
-            /** @var Form|null $limiterForm */
             $limiterForm = $appInstall->getSettings()[ApplicationInterface::LIMITER_FORM] ?? NULL;
             if (!$limiterForm) {
                 return NULL;
             }
 
-            $fields = $limiterForm->getFields();
+            $useLimit = $limiterForm[ApplicationInterface::USE_LIMIT] ?? NULL;
+            $time     = $limiterForm[ApplicationInterface::TIME] ?? NULL;
+            $value    = $limiterForm[ApplicationInterface::VALUE] ?? NULL;
 
-            $useLimit = $fields[ApplicationInterface::USE_LIMIT] ?? NULL;
-            $time     = $fields[ApplicationInterface::TIME] ?? NULL;
-            $value    = $fields[ApplicationInterface::VALUE] ?? NULL;
-
-            $groupTime  = $fields[ApplicationInterface::GROUP_TIME] ?? NULL;
-            $groupValue = $fields[ApplicationInterface::GROUP_VALUE] ?? NULL;
+            $groupTime  = $limiterForm[ApplicationInterface::GROUP_TIME] ?? NULL;
+            $groupValue = $limiterForm[ApplicationInterface::GROUP_VALUE] ?? NULL;
 
             if (!$useLimit || !$time || !$value) {
                 return NULL;
@@ -372,18 +368,18 @@ final class ApplicationManager
             if($groupTime && $groupValue){
                 return PipesHeaders::getLimiterKeyWithGroup(
                     sprintf('%s|%s', $appInstall->getUser(), $appInstall->getKey()),
-                    (int) $time->getValue(),
-                    (int) $value->getValue(),
+                    (int) $time,
+                    (int) $value,
                     sprintf('|%s', $appInstall->getKey()),
-                    (int) $groupTime->getValue(),
-                    (int) $groupValue->getValue(),
+                    (int) $groupTime,
+                    (int) $groupValue,
                 );
             }
 
             return PipesHeaders::getLimiterKey(
                 sprintf('%s|%s', $appInstall->getUser(), $appInstall->getKey()),
-                (int) $time->getValue(),
-                (int) $value->getValue(),
+                (int) $time,
+                (int) $value,
             );
         }, $applicationInstalls);
 

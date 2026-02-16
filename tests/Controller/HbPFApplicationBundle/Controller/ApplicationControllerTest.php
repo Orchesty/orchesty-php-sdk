@@ -282,7 +282,7 @@ final class ApplicationControllerTest extends ControllerTestCaseAbstract
         self::getContainer()->set('hbpf.worker-api', $this->mockServer);
         $this->mockServer->addMock(
             new Mock(
-                '/document/ApplicationInstall?filter={"names":["someApp"],"users":["bar"]}',
+                '/document/ApplicationInstall?filter={"enabled":null,"names":["someApp"],"users":["bar"]}',
                 NULL,
                 CurlManager::METHOD_GET,
                 new GuzzleResponse(200, [], '[{"name":"someApp","user":"bar"}]'),
@@ -321,7 +321,7 @@ final class ApplicationControllerTest extends ControllerTestCaseAbstract
         self::getContainer()->set('hbpf.worker-api', $this->mockServer);
         $this->mockServer->addMock(
             new Mock(
-                '/document/ApplicationInstall?filter={"names":["example"],"users":["bar"]}',
+                '/document/ApplicationInstall?filter={"enabled":null,"names":["example"],"users":["bar"]}',
                 NULL,
                 CurlManager::METHOD_GET,
                 new GuzzleResponse(200, [], '[]'),
@@ -340,7 +340,7 @@ final class ApplicationControllerTest extends ControllerTestCaseAbstract
         );
         $this->mockServer->addMock(
             new Mock(
-                '/document/ApplicationInstall?filter={"names":["example"],"users":["bar"]}',
+                '/document/ApplicationInstall?filter={"enabled":null,"names":["example"],"users":["bar"]}',
                 NULL,
                 CurlManager::METHOD_GET,
                 new GuzzleResponse(200, [], '[{}]'),
@@ -377,10 +377,10 @@ final class ApplicationControllerTest extends ControllerTestCaseAbstract
         self::getContainer()->set('hbpf.worker-api', $this->mockServer);
         $this->mockServer->addMock(
             new Mock(
-                '/document/ApplicationInstall?filter={"names":["null"],"users":["bar"]}',
+                '/document/ApplicationInstall?filter={"enabled":null,"names":["null"],"users":["bar"]}',
                 NULL,
                 CurlManager::METHOD_GET,
-                new GuzzleResponse(200, [], '[{"name":"null","user":"bar"}]'),
+                new GuzzleResponse(200, [], '[{"key":"null","user":"bar"}]'),
             ),
         );
         $this->client->request('DELETE', '/applications/null/users/bar/uninstall');
@@ -464,7 +464,7 @@ final class ApplicationControllerTest extends ControllerTestCaseAbstract
         self::getContainer()->set('hbpf.worker-api', $this->mockServer);
         $this->mockServer->addMock(
             new Mock(
-                '/document/ApplicationInstall?filter={"names":["application"],"users":["user"]}',
+                '/document/ApplicationInstall?filter={"enabled":null,"names":["application"],"users":["user"]}',
                 NULL,
                 CurlManager::METHOD_GET,
                 new GuzzleResponse(200, [], '[]'),
