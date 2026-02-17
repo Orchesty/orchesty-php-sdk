@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "f2ae1b103ddedaffbf1168b3445341d0",
+    "content-hash": "83340d6aac7d35ed38b4f8ff5fdada33",
     "packages": [
         {
             "name": "composer/pcre",
@@ -1000,16 +1000,16 @@
         },
         {
             "name": "hanaboso/commons-bundle",
-            "version": "3.0.2",
+            "version": "3.0.3",
             "source": {
                 "type": "git",
                 "url": "https://github.com/hanaboso/commons-bundle.git",
-                "reference": "a06f0ae73b586bcf2be38cca4c5ef0c49f39dd11"
+                "reference": "905a7ff41cf2e5e9fc728d42db072ee3fb0b5a3c"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/hanaboso/commons-bundle/zipball/a06f0ae73b586bcf2be38cca4c5ef0c49f39dd11",
-                "reference": "a06f0ae73b586bcf2be38cca4c5ef0c49f39dd11",
+                "url": "https://api.github.com/repos/hanaboso/commons-bundle/zipball/905a7ff41cf2e5e9fc728d42db072ee3fb0b5a3c",
+                "reference": "905a7ff41cf2e5e9fc728d42db072ee3fb0b5a3c",
                 "shasum": ""
             },
             "require": {
@@ -1052,9 +1052,9 @@
             ],
             "description": "Hanaboso - commons-bundle",
             "support": {
-                "source": "https://github.com/hanaboso/commons-bundle/tree/3.0.2"
+                "source": "https://github.com/hanaboso/commons-bundle/tree/3.0.3"
             },
-            "time": "2026-02-16T17:16:17+00:00"
+            "time": "2026-02-17T13:24:24+00:00"
         },
         {
             "name": "hanaboso/mongo-data-grid",
