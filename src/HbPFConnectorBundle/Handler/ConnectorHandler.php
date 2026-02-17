@@ -4,6 +4,7 @@ namespace Hanaboso\PipesPhpSdk\HbPFConnectorBundle\Handler;
 
 use Hanaboso\CommonsBundle\Process\ProcessDto;
 use Hanaboso\PipesPhpSdk\Connector\Exception\ConnectorException;
+use Hanaboso\PipesPhpSdk\CustomNode\Exception\CustomNodeException;
 use Hanaboso\PipesPhpSdk\HbPFConnectorBundle\Loader\ConnectorLoader;
 use Hanaboso\PipesPhpSdk\Utils\ProcessDtoFactory;
 use Symfony\Component\HttpFoundation\Request;
@@ -46,8 +47,14 @@ final class ConnectorHandler
     public function processAction(string $id, Request $request): ProcessDto
     {
         $conn = $this->loader->getConnector($id);
+        $dto  = ProcessDtoFactory::createFromRequest($request);
 
-        return $conn->processAction(ProcessDtoFactory::createFromRequest($request));
+        try {
+            $dto->setCurrentApp($conn->getApplicationKey());
+        } catch (CustomNodeException) {
+        }
+
+        return $conn->processAction($dto);
     }
 
     /**
