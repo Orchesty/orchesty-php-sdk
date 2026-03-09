@@ -76,8 +76,8 @@ class RepeaterListener implements EventSubscriberInterface, LoggerAwareInterface
      * @param OnRepeatException $e
      *
      * @return ProcessDtoAbstract
-     * @throws PipesFrameworkException
      * @throws GuzzleException
+     * @throws PipesFrameworkException
      */
     private function getRepeatedDto(OnRepeatException $e): ProcessDtoAbstract
     {

@@ -141,8 +141,8 @@ class Repository
      * @param Paging|NULL $paging
      *
      * @return T[] | array
-     * @throws GuzzleException
      * @throws Exception
+     * @throws GuzzleException
      */
     public function findMany(?Filter $filter = NULL, ?Sorter $sorter = NULL, ?Paging $paging = NULL): array
     {

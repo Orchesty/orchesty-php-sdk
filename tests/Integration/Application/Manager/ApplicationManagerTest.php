@@ -128,8 +128,8 @@ final class ApplicationManagerTest extends KernelTestCaseAbstract
      * @return void
      * @throws ApplicationInstallException
      * @throws CryptException
-     * @throws GuzzleException
      * @throws Exception
+     * @throws GuzzleException
      */
     public function testSaveApplicationSettings(): void
     {
@@ -274,8 +274,8 @@ final class ApplicationManagerTest extends KernelTestCaseAbstract
     /**
      * @return void
      * @throws CryptException
-     * @throws GuzzleException
      * @throws Exception
+     * @throws GuzzleException
      */
     public function testGetInstalledApplications(): void
     {
@@ -299,8 +299,8 @@ final class ApplicationManagerTest extends KernelTestCaseAbstract
     /**
      * @return void
      * @throws ApplicationInstallException
-     * @throws GuzzleException
      * @throws Exception
+     * @throws GuzzleException
      */
     public function testGetInstalledApplicationDetail(): void
     {
@@ -324,8 +324,8 @@ final class ApplicationManagerTest extends KernelTestCaseAbstract
     /**
      * @return void
      * @throws ApplicationInstallException
-     * @throws GuzzleException
      * @throws Exception
+     * @throws GuzzleException
      */
     public function testGetInstalledApplicationDetailNotFound(): void
     {

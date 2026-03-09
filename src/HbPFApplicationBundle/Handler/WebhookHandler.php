@@ -36,9 +36,9 @@ final class WebhookHandler
      * @return void
      * @throws ApplicationInstallException
      * @throws CurlException
-     * @throws PipesFrameworkException
-     * @throws GuzzleException
      * @throws DateTimeException
+     * @throws GuzzleException
+     * @throws PipesFrameworkException
      */
     public function subscribeWebhooks(string $key, string $user, array $data = []): void
     {
