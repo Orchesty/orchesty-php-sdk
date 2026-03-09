@@ -46,9 +46,9 @@ final class RepeaterListenerTest extends ControllerTestCaseAbstract
 
     /**
      * @return void
+     * @throws Exception
      * @throws GuzzleException
      * @throws PipesFrameworkException
-     * @throws Exception
      */
     public function testOnRepeatableException(): void
     {

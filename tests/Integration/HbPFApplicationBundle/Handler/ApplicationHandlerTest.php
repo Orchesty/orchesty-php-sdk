@@ -277,9 +277,9 @@ final class ApplicationHandlerTest extends KernelTestCaseAbstract
 
     /**
      * @return void
-     * @throws GuzzleException
      * @throws ApplicationInstallException
      * @throws Exception
+     * @throws GuzzleException
      */
     public function testUpdateApplicationPassword(): void
     {

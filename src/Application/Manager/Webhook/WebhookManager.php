@@ -94,8 +94,8 @@ final class WebhookManager
      * @return void
      * @throws ApplicationInstallException
      * @throws CurlException
-     * @throws GuzzleException
      * @throws DateTimeException
+     * @throws GuzzleException
      */
     public function subscribeWebhooks(WebhookApplicationInterface $application, string $userId, array $data = []): void
     {

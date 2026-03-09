@@ -55,10 +55,10 @@ final class WebhookManagerTest extends KernelTestCaseAbstract
     /**
      * @return void
      * @throws ApplicationInstallException
-     * @throws GuzzleException
      * @throws CurlException
      * @throws DateTimeException
      * @throws Exception
+     * @throws GuzzleException
      */
     public function testSubscribeAndUnsubscribe(): void
     {
@@ -252,8 +252,8 @@ final class WebhookManagerTest extends KernelTestCaseAbstract
 
     /**
      * @return void
-     * @throws GuzzleException
      * @throws Exception
+     * @throws GuzzleException
      */
     public function testGetWebhooks(): void
     {

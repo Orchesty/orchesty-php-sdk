@@ -284,8 +284,8 @@ final class ApplicationManager
      * @return void
      * @throws ApplicationInstallException
      * @throws CurlException
-     * @throws GuzzleException
      * @throws DateTimeException
+     * @throws GuzzleException
      */
     public function subscribeWebhooks(ApplicationInstall $applicationInstall, array $data = []): void
     {
