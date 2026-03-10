@@ -17,7 +17,7 @@ interface ApplicationInterface
 {
 
     public const string  AUTHORIZATION_FORM    = 'authorization_form';
-    public const string  LIMITER_FORM          = 'limiterForm';
+    public const string  LIMITER_FORM          = 'limiter_form';
     public const string  TOKEN                 = 'token';
     public const string  FIELDS                = 'fields';
     public const string  FRONTEND_REDIRECT_URL = 'frontend_redirect_url';
