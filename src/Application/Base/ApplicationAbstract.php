@@ -273,7 +273,7 @@ abstract class ApplicationAbstract implements ApplicationInterface
         $limiterForm = $formStack->getForms()[self::LIMITER_FORM] ?? NULL;
 
         if (!$limiterForm) {
-            $limiterForm = new Form(self::LIMITER_FORM, 'Limiter form');
+            $limiterForm = new Form(self::LIMITER_FORM, 'Limiter');
             $formStack->addForm($limiterForm);
         }
 
