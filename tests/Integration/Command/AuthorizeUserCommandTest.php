@@ -58,7 +58,7 @@ final class AuthorizeUserCommandTest extends KernelTestCaseAbstract
         self::getContainer()->set('hbpf.worker-api', $this->mockServer);
         $this->mockServer->addMock(
             new Mock(
-                '/document/ApplicationInstall?filter={"enabled":null,"names":["null2"],"users":["user"]}',
+                '/document/ApplicationInstall?filter={"enabled":null,"names":["null2"],"users":["user"],"sdks":["sdk"]}',
                 NULL,
                 CurlManager::METHOD_GET,
                 new Response(200, [], '[{"name":"null","user":"user"}]'),
@@ -82,7 +82,7 @@ final class AuthorizeUserCommandTest extends KernelTestCaseAbstract
         self::expectOutputString('');
         $command       = $application->get('user:authorize');
         $commandTester = new CommandTester($command);
-        $commandTester->setInputs(['null2', 'user']);
+        $commandTester->setInputs(['null2', 'user', 'sdk']);
         $commandTester->execute(['command' => $command->getName(), '--env' => 'oauthconsole']);
     }
 
@@ -141,7 +141,7 @@ final class AuthorizeUserCommandTest extends KernelTestCaseAbstract
         $command       = $application->get('user:authorize');
         $commandTester = new CommandTester($command);
 
-        $commandTester->setInputs(['null2', '']);
+        $commandTester->setInputs(['null2', '', 'sdk']);
         $commandTester->execute(['command' => $command->getName(), '--env' => 'oauthconsole']);
 
         self::assertStringContainsString(

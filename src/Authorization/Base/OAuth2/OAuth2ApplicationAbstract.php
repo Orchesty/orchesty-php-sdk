@@ -222,7 +222,11 @@ abstract class OAuth2ApplicationAbstract extends ApplicationAbstract implements 
     protected function createDto(ApplicationInstall $applicationInstall, ?string $redirectUrl = NULL): OAuth2Dto
     {
         $dto = new OAuth2Dto($applicationInstall, $this->getAuthUrl(), $this->getTokenUrl());
-        $dto->setCustomAppDependencies($applicationInstall->getUser() ?? '', $applicationInstall->getKey() ?? '');
+        $dto->setCustomAppDependencies(
+            $applicationInstall->getUser() ?? '',
+            $applicationInstall->getKey() ?? '',
+            $applicationInstall->getSdk(),
+        );
 
         if ($redirectUrl) {
             $dto->setRedirectUrl($redirectUrl);

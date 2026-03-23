@@ -157,6 +157,7 @@ final class ApplicationManagerTest extends KernelTestCaseAbstract
         $res = $this->manager->saveApplicationSettings(
             'null',
             'user',
+            'sdk',
             ['test' => ['b' => 'bValue']],
         );
 
@@ -209,6 +210,7 @@ final class ApplicationManagerTest extends KernelTestCaseAbstract
         $applicationInstall = $this->manager->saveApplicationPassword(
             'null',
             'user',
+            'sdk',
             ApplicationInterface::AUTHORIZATION_FORM,
             BasicApplicationInterface::PASSWORD,
             'password123',
@@ -260,14 +262,14 @@ final class ApplicationManagerTest extends KernelTestCaseAbstract
         );
 
         $app = self::createPartialMock(TestOAuth2NullApplication::class, ['setAuthorizationToken']);
-        $app->expects(self::any())->method('setAuthorizationToken')->willReturnSelf();
+        $app->expects(self::atLeastOnce())->method('setAuthorizationToken')->willReturnSelf();
         $loader = self::createPartialMock(ApplicationLoader::class, ['getApplication']);
-        $loader->expects(self::any())->method('getApplication')->willReturn($app);
+        $loader->expects(self::atLeastOnce())->method('getApplication')->willReturn($app);
         $manager = new ApplicationManager($this->applicationInstallRepository, $loader, $this->webhookManager);
 
         self::assertSame(
             '/test/redirect',
-            $manager->saveAuthorizationToken('null2', 'user', ['code' => ['token']]),
+            $manager->saveAuthorizationToken('null2', 'user', 'sdk', ['code' => ['token']]),
         );
     }
 
@@ -283,7 +285,7 @@ final class ApplicationManagerTest extends KernelTestCaseAbstract
         self::getContainer()->set('hbpf.worker-api', $this->mockServer);
         $this->mockServer->addMock(
             new Mock(
-                '/document/ApplicationInstall?filter={"enabled":null,"users":["user"]}',
+                '/document/ApplicationInstall?filter={"enabled":null,"users":["user"],"sdks":["sdk"]}',
                 NULL,
                 CurlManager::METHOD_GET,
                 new Response(200, [], '[{}]'),
@@ -291,7 +293,7 @@ final class ApplicationManagerTest extends KernelTestCaseAbstract
         );
         $this->setUpManagers();
 
-        $installedApp = $this->manager->getInstalledApplications('user');
+        $installedApp = $this->manager->getInstalledApplications('user', 'sdk');
 
         self::assertEquals(1, count($installedApp));
     }
@@ -313,7 +315,7 @@ final class ApplicationManagerTest extends KernelTestCaseAbstract
         $originalApplicationInstall->setUpdated($date);
         $originalApplicationInstall->setEncryptedSettings('');
 
-        $applicationInstall = $this->manager->getInstalledApplicationDetail('some app', 'example1');
+        $applicationInstall = $this->manager->getInstalledApplicationDetail('some app', 'example1', 'sdk');
         $applicationInstall->setCreated($date);
         $applicationInstall->setUpdated($date);
         $applicationInstall->setEncryptedSettings('');
@@ -333,7 +335,7 @@ final class ApplicationManagerTest extends KernelTestCaseAbstract
         self::getContainer()->set('hbpf.worker-api', $this->mockServer);
         $this->mockServer->addMock(
             new Mock(
-                '/document/ApplicationInstall?filter={"enabled":null,"names":["some app"],"users":["example5"]}',
+                '/document/ApplicationInstall?filter={"enabled":null,"names":["some app"],"users":["example5"],"sdks":["sdk"]}',
                 NULL,
                 CurlManager::METHOD_GET,
                 new Response(200, [], '{}'),
@@ -343,7 +345,7 @@ final class ApplicationManagerTest extends KernelTestCaseAbstract
 
         self::expectException(ApplicationInstallException::class);
         self::expectExceptionCode(ApplicationInstallException::APP_WAS_NOT_FOUND);
-        $this->manager->getInstalledApplicationDetail('some app', 'example5');
+        $this->manager->getInstalledApplicationDetail('some app', 'example5', 'sdk');
     }
 
     /**
@@ -356,7 +358,7 @@ final class ApplicationManagerTest extends KernelTestCaseAbstract
         self::getContainer()->set('hbpf.worker-api', $this->mockServer);
         $this->mockServer->addMock(
             new Mock(
-                '/document/ApplicationInstall?filter={"enabled":null,"names":["something"],"users":["example3"]}',
+                '/document/ApplicationInstall?filter={"enabled":null,"names":["something"],"users":["example3"],"sdks":["sdk"]}',
                 NULL,
                 CurlManager::METHOD_GET,
                 new Response(200, [], '{}'),
@@ -375,11 +377,11 @@ final class ApplicationManagerTest extends KernelTestCaseAbstract
         );
         $this->createApplicationInstall('something', 'example3');
         $this->setUpManagers();
-        $this->manager->installApplication('something', 'example3');
+        $this->manager->installApplication('something', 'example3', 'sdk');
 
         $failed = FALSE;
         try {
-            $this->applicationInstallRepository->findUserApp('something', 'example3');
+            $this->applicationInstallRepository->findUserApp('something', 'example3', 'sdk');
         } catch (Exception) {
             $failed = TRUE;
         }
@@ -398,7 +400,7 @@ final class ApplicationManagerTest extends KernelTestCaseAbstract
         $this->setUpManagers();
 
         self::expectException(ApplicationInstallException::class);
-        $this->manager->installApplication('key', 'user');
+        $this->manager->installApplication('key', 'user', 'sdk');
     }
 
     /**
@@ -414,7 +416,7 @@ final class ApplicationManagerTest extends KernelTestCaseAbstract
         );
         $this->setUpManagers();
 
-        $this->manager->uninstallApplication('null', 'example1');
+        $this->manager->uninstallApplication('null', 'example1', 'sdk');
 
         $app = $this->applicationInstallRepository->findMany();
 
@@ -447,7 +449,7 @@ final class ApplicationManagerTest extends KernelTestCaseAbstract
         );
         $this->mockServer->addMock(
             new Mock(
-                '/document/ApplicationInstall?filter={"enabled":null,"names":["null"]}',
+                '/document/ApplicationInstall?filter={"enabled":null,"names":["null"],"sdks":["sdk"]}',
                 NULL,
                 CurlManager::METHOD_GET,
                 new Response(
@@ -462,12 +464,13 @@ final class ApplicationManagerTest extends KernelTestCaseAbstract
         $this->manager->saveApplicationPassword(
             'null',
             'example1',
+            'sdk',
             ApplicationInterface::AUTHORIZATION_FORM,
             BasicApplicationInterface::PASSWORD,
             'password123',
         );
         /** @var ApplicationInstall $app */
-        $app = $this->applicationInstallRepository->findOneByName('null');
+        $app = $this->applicationInstallRepository->findOneByName('null', 'sdk');
 
         self::assertEquals(
             'password123',
@@ -501,7 +504,7 @@ final class ApplicationManagerTest extends KernelTestCaseAbstract
         );
         $this->mockServer->addMock(
             new Mock(
-                '/document/ApplicationInstall?filter={"enabled":null,"names":["null"]}',
+                '/document/ApplicationInstall?filter={"enabled":null,"names":["null"],"sdks":["sdk"]}',
                 NULL,
                 CurlManager::METHOD_GET,
                 new Response(
@@ -516,6 +519,7 @@ final class ApplicationManagerTest extends KernelTestCaseAbstract
         $this->manager->saveApplicationSettings(
             'null',
             'example1',
+            'sdk',
             [
                 ApplicationInterface::AUTHORIZATION_FORM => [
                     BasicApplicationInterface::PASSWORD => 'testPass',
@@ -524,7 +528,7 @@ final class ApplicationManagerTest extends KernelTestCaseAbstract
             ],
         );
         /** @var ApplicationInstall $app */
-        $app = $this->applicationInstallRepository->findOneByName('null');
+        $app = $this->applicationInstallRepository->findOneByName('null', 'sdk');
 
         self::assertEquals(
             'testUser',
@@ -563,7 +567,7 @@ final class ApplicationManagerTest extends KernelTestCaseAbstract
         );
         $this->mockServer->addMock(
             new Mock(
-                '/document/ApplicationInstall?filter={"enabled":null,"names":["null"],"users":["example1"]}',
+                '/document/ApplicationInstall?filter={"enabled":null,"names":["null"],"users":["example1"],"sdks":["sdk"]}',
                 NULL,
                 CurlManager::METHOD_GET,
                 new Response(
@@ -578,6 +582,7 @@ final class ApplicationManagerTest extends KernelTestCaseAbstract
         $this->manager->saveApplicationSettings(
             'null',
             'example1',
+            'sdk',
             [
                 ApplicationInterface::AUTHORIZATION_FORM => [
                     'settings3'                         => 'secret',
@@ -586,7 +591,7 @@ final class ApplicationManagerTest extends KernelTestCaseAbstract
                 ],
             ],
         );
-        $values = $this->manager->getApplicationSettings('null', 'example1');
+        $values = $this->manager->getApplicationSettings('null', 'example1', 'sdk');
 
         self::assertEquals(
             BasicApplicationInterface::USER,
@@ -624,7 +629,7 @@ final class ApplicationManagerTest extends KernelTestCaseAbstract
         );
         $this->mockServer->addMock(
             new Mock(
-                '/document/ApplicationInstall?filter={"enabled":null,"names":["null"]}',
+                '/document/ApplicationInstall?filter={"enabled":null,"names":["null"],"sdks":["sdk"]}',
                 NULL,
                 CurlManager::METHOD_GET,
                 new Response(
@@ -639,6 +644,7 @@ final class ApplicationManagerTest extends KernelTestCaseAbstract
         $this->manager->saveApplicationSettings(
             'null',
             'example1',
+            'sdk',
             [
                 ApplicationInterface::AUTHORIZATION_FORM => [
                     BasicApplicationInterface::PASSWORD => 'data2',
@@ -648,7 +654,7 @@ final class ApplicationManagerTest extends KernelTestCaseAbstract
         );
 
         /** @var ApplicationInstall $app */
-        $app = $this->applicationInstallRepository->findOneByName('null');
+        $app = $this->applicationInstallRepository->findOneByName('null', 'sdk');
 
         self::assertEquals(
             'data1',
@@ -671,7 +677,7 @@ final class ApplicationManagerTest extends KernelTestCaseAbstract
         $applicationInstall = $this->createApplicationInstall();
         $this->setUpManagers();
 
-        $this->manager->subscribeWebhooks($applicationInstall);
+        $this->manager->subscribeWebhooks($applicationInstall, 'sdk');
 
         self::assertFake();
     }
@@ -716,12 +722,13 @@ final class ApplicationManagerTest extends KernelTestCaseAbstract
         $applicationInstall = (new ApplicationInstall())
             ->setKey($key)
             ->setUser($user)
+            ->setSdk('sdk')
             ->setEncryptedSettings($cryptManager->encrypt($settings));
 
         $this->mockServer->addMock(
             new Mock(
                 sprintf(
-                    '/document/ApplicationInstall?filter={"enabled":null,"names":["%s"],"users":["%s"]}',
+                    '/document/ApplicationInstall?filter={"enabled":null,"names":["%s"],"users":["%s"],"sdks":["sdk"]}',
                     $key,
                     $user,
                 ),

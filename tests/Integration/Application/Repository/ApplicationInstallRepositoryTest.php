@@ -38,7 +38,7 @@ final class ApplicationInstallRepositoryTest extends KernelTestCaseAbstract
 
         $this->mockServer->addMock(
             new Mock(
-                '/document/ApplicationInstall?filter={"enabled":null,"names":["user"],"users":["key"]}',
+                '/document/ApplicationInstall?filter={"enabled":null,"names":["user"],"users":["key"],"sdks":["sdk"]}',
                 NULL,
                 CurlManager::METHOD_GET,
                 new Response(200, [], Json::encode([])),
@@ -49,7 +49,7 @@ final class ApplicationInstallRepositoryTest extends KernelTestCaseAbstract
         $appInstallRepository = self::getContainer()->get('hbpf.application_install.repository');
 
         self::expectException(ApplicationInstallException::class);
-        $appInstallRepository->findUserApp('user', 'key');
+        $appInstallRepository->findUserApp('user', 'key', 'sdk');
     }
 
     /**

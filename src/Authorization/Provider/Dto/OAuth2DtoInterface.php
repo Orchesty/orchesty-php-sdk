@@ -63,9 +63,15 @@ interface OAuth2DtoInterface
     public function getApplicationKey(): string;
 
     /**
+     * @return string
+     */
+    public function getSdk(): string;
+
+    /**
      * @param string $user
      * @param string $applicationKey
+     * @param string $sdk
      */
-    public function setCustomAppDependencies(string $user, string $applicationKey): void;
+    public function setCustomAppDependencies(string $user, string $applicationKey, string $sdk): void;
 
 }

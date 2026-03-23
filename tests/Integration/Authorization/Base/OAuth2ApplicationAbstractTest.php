@@ -97,7 +97,7 @@ final class OAuth2ApplicationAbstractTest extends KernelTestCaseAbstract
         );
         $provider           = self::createPartialMock(OAuth2Provider::class, ['refreshAccessToken']);
         $provider
-            ->expects(self::any())
+            ->expects(self::atLeastOnce())
             ->method('refreshAccessToken')
             ->willReturn(
                 [
@@ -138,7 +138,7 @@ final class OAuth2ApplicationAbstractTest extends KernelTestCaseAbstract
 
         $provider = self::createPartialMock(OAuth2Provider::class, ['getAccessToken']);
         $provider
-            ->expects(self::any())
+            ->expects(self::atLeastOnce())
             ->method('getAccessToken')
             ->willReturn(
                 [

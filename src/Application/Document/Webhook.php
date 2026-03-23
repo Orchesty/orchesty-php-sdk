@@ -60,6 +60,11 @@ class Webhook extends DocumentAbstract
     private ?string $webhookId = NULL;
 
     /**
+     * @var string|null
+     */
+    private ?string $sdk = NULL;
+
+    /**
      * @var bool
      */
     private bool $unsubscribeFailed = FALSE;
@@ -239,6 +244,26 @@ class Webhook extends DocumentAbstract
     }
 
     /**
+     * @return string|null
+     */
+    public function getSdk(): ?string
+    {
+        return $this->sdk;
+    }
+
+    /**
+     * @param string|null $sdk
+     *
+     * @return self
+     */
+    public function setSdk(?string $sdk): self
+    {
+        $this->sdk = $sdk;
+
+        return $this;
+    }
+
+    /**
      * @return bool
      */
     public function isUnsubscribeFailed(): bool
@@ -268,6 +293,7 @@ class Webhook extends DocumentAbstract
             'id'              => $this->getId(),
             'name'            => $this->getName(),
             'node'            => $this->getNode(),
+            'sdk'             => $this->getSdk(),
             'token'           => $this->getToken(),
             'topology'        => $this->getTopology(),
             'webhookId'       => $this->getWebhookId(),
@@ -302,6 +328,8 @@ class Webhook extends DocumentAbstract
             $this->setToken($data['token']);
         if (array_key_exists('topology', $data))
             $this->setTopology($data['topology']);
+        if (array_key_exists('sdk', $data))
+            $this->setSdk($data['sdk']);
         if (array_key_exists('unsubscribeFailed', $data))
             $this->setUnsubscribeFailed($data['unsubscribeFailed']);
 

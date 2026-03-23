@@ -20,6 +20,7 @@ final class ApplicationInstallFilter extends Filter
      * @param mixed[]|NULL $users
      * @param int|NULL     $expires
      * @param mixed[]|NULL $nonEncrypted
+     * @param mixed[]|NULL $sdks
      * @param mixed[]|null $ids
      * @param bool|null    $deleted
      */
@@ -29,6 +30,7 @@ final class ApplicationInstallFilter extends Filter
         public ?array $users = NULL,
         public ?int $expires = NULL,
         public ?array $nonEncrypted = NULL,
+        public ?array $sdks = NULL,
         ?array $ids = NULL,
         ?bool $deleted = NULL,
     )
@@ -48,6 +50,7 @@ final class ApplicationInstallFilter extends Filter
         if ($this->users) $retArray['users']                = $this->users;
         if ($this->expires) $retArray['expires']            = $this->expires;
         if ($this->nonEncrypted) $retArray['non_encrypted'] = $this->nonEncrypted;
+        if ($this->sdks) $retArray['sdks']                  = $this->sdks;
 
         return $retArray;
     }

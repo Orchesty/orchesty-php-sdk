@@ -49,15 +49,16 @@ final class WebhookManager
     /**
      * @param WebhookApplicationInterface $application
      * @param string                      $userId
+     * @param string                      $sdk
      *
      * @return mixed[]
      * @throws GuzzleException
      */
-    public function getWebhooks(WebhookApplicationInterface $application, string $userId): array
+    public function getWebhooks(WebhookApplicationInterface $application, string $userId, string $sdk): array
     {
         /** @var Webhook[] $webhooks */
         $webhooks = $this->webhookRepository->findMany(
-            new WebhookFilter(applications: [$application->getName()], userIds: [$userId]),
+            new WebhookFilter(applications: [$application->getName()], userIds: [$userId], sdks: [$sdk]),
         );
 
         return array_map(
@@ -89,6 +90,7 @@ final class WebhookManager
     /**
      * @param WebhookApplicationInterface $application
      * @param string                      $userId
+     * @param string                      $sdk
      * @param mixed[]                     $data
      *
      * @return void
@@ -97,7 +99,12 @@ final class WebhookManager
      * @throws DateTimeException
      * @throws GuzzleException
      */
-    public function subscribeWebhooks(WebhookApplicationInterface $application, string $userId, array $data = []): void
+    public function subscribeWebhooks(
+        WebhookApplicationInterface $application,
+        string $userId,
+        string $sdk,
+        array $data = [],
+    ): void
     {
         foreach ($application->getWebhookSubscriptions() as $subscription) {
             if (!$data && !$subscription->getTopology() ||
@@ -108,7 +115,11 @@ final class WebhookManager
 
             $name               = $data[WebhookSubscription::TOPOLOGY] ?? $subscription->getTopology();
             $token              = bin2hex(random_bytes(self::LENGTH));
-            $applicationInstall = $this->applicationInstallRepository->findUserApp($application->getName(), $userId);
+            $applicationInstall = $this->applicationInstallRepository->findUserApp(
+                $application->getName(),
+                $userId,
+                $sdk,
+            );
             $request            = $application->getWebhookSubscribeRequestDto(
                 $applicationInstall,
                 $subscription,
@@ -126,6 +137,7 @@ final class WebhookManager
                         'application' => $application->getName(),
                         'name'        => $subscription->getName(),
                         'node'        => $subscription->getName(),
+                        'sdk'         => $sdk,
                         'token'       => $token,
                         'topology'    => $name,
                         'user'        => $userId,
@@ -139,6 +151,7 @@ final class WebhookManager
     /**
      * @param WebhookApplicationInterface $application
      * @param string                      $userId
+     * @param string                      $sdk
      * @param mixed[]                     $data
      *
      * @return void
@@ -149,12 +162,13 @@ final class WebhookManager
     public function unsubscribeWebhooks(
         WebhookApplicationInterface $application,
         string $userId,
+        string $sdk,
         array $data = [],
     ): void
     {
         /** @var Webhook[] $webhooks */
         $webhooks = $this->webhookRepository->findMany(
-            new WebhookFilter(applications: [$application->getName()], userIds: [$userId]),
+            new WebhookFilter(applications: [$application->getName()], userIds: [$userId], sdks: [$sdk]),
         );
 
         foreach ($webhooks as $webhook) {
@@ -163,7 +177,7 @@ final class WebhookManager
             }
 
             $request = $application->getWebhookUnsubscribeRequestDto(
-                $this->applicationInstallRepository->findUserApp($application->getName(), $userId),
+                $this->applicationInstallRepository->findUserApp($application->getName(), $userId, $sdk),
                 $webhook,
             );
             if ($application->processWebhookUnsubscribeResponse($this->manager->send($request))) {

@@ -94,7 +94,7 @@ final class OAuth1ApplicationAbstractTest extends KernelTestCaseAbstract
         );
 
         $provider = $this->createPartialMock(OAuth1Provider::class, ['authorize']);
-        $provider->expects(self::any())->method('authorize');
+        $provider->expects(self::atLeastOnce())->method('authorize');
 
         $application = new NullOAuth1Application($provider);
         $application->authorize($applicationInstall);
@@ -114,7 +114,7 @@ final class OAuth1ApplicationAbstractTest extends KernelTestCaseAbstract
         $applicationInstall = new ApplicationInstall();
 
         $provider = $this->createPartialMock(OAuth1Provider::class, ['getAccessToken']);
-        $provider->expects(self::any())->method('getAccessToken')->willReturn($token);
+        $provider->expects(self::atLeastOnce())->method('getAccessToken')->willReturn($token);
 
         $application = new NullOAuth1Application($provider);
         $application->setAuthorizationToken($applicationInstall, $token);

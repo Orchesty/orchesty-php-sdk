@@ -35,15 +35,18 @@ final class ApplicationInstallRepository extends Repository
     /**
      * @param string $name
      * @param string $user
+     * @param string $sdk
      *
      * @return ApplicationInstall
      * @throws ApplicationInstallException
      * @throws GuzzleException
      */
-    public function findUserApp(string $name, string $user): ApplicationInstall
+    public function findUserApp(string $name, string $user, string $sdk): ApplicationInstall
     {
         /** @var ApplicationInstall|null $app */
-        $app = $this->findOne(new ApplicationInstallFilter(names: [$name], users: [$user], deleted: FALSE));
+        $app = $this->findOne(
+            new ApplicationInstallFilter(names: [$name], users: [$user], sdks: [$sdk], deleted: FALSE),
+        );
 
         if (!$app) {
             throw new ApplicationInstallException(
@@ -58,26 +61,28 @@ final class ApplicationInstallRepository extends Repository
     /**
      * @param string   $user
      * @param string[] $applications
+     * @param string   $sdk
      *
      * @return ApplicationInstall[]
      * @throws GuzzleException
      */
-    public function findUserApps(string $user, array $applications): array
+    public function findUserApps(string $user, array $applications, string $sdk): array
     {
-        return $this->findMany(new ApplicationInstallFilter(names: $applications, users: [$user]));
+        return $this->findMany(new ApplicationInstallFilter(names: $applications, users: [$user], sdks: [$sdk]));
     }
 
     /**
      * @param string $name
+     * @param string $sdk
      *
      * @return ApplicationInstall
      * @throws ApplicationInstallException
      * @throws GuzzleException
      */
-    public function findOneByName(string $name): ApplicationInstall
+    public function findOneByName(string $name, string $sdk): ApplicationInstall
     {
         /** @var ApplicationInstall|null $app */
-        $app = $this->findOne(new ApplicationInstallFilter(names: [$name]));
+        $app = $this->findOne(new ApplicationInstallFilter(names: [$name], sdks: [$sdk]));
 
         if (!$app) {
             throw new ApplicationInstallException(

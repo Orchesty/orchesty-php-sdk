@@ -56,7 +56,9 @@ final class OAuth2WrapperTest extends KernelTestCaseAbstract
     public function testGetParsedResponseE(): void
     {
         $wrapper = $this->createPartialMock(OAuth2Wrapper::class, ['getResponse']);
-        $wrapper->expects(self::any())->method('getResponse')->willReturn((new Response(200, [], '{"body": "body"}')));
+        $wrapper->expects(self::atLeastOnce())
+            ->method('getResponse')
+            ->willReturn((new Response(200, [], '{"body": "body"}')));
 
         $res = $wrapper->getParsedResponse(new Request('GET', ''));
 

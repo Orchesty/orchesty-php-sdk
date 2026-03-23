@@ -77,18 +77,19 @@ trait CommonNodeTrait
 
     /**
      * @param string|null $user
+     * @param string      $sdk
      *
      * @return ApplicationInstall
      * @throws ApplicationInstallException
      * @throws CustomNodeException
      * @throws GuzzleException
      */
-    protected function getApplicationInstall(?string $user): ApplicationInstall {
+    protected function getApplicationInstall(?string $user, string $sdk): ApplicationInstall {
         if ($user) {
-            return $this->applicationInstallRepository->findUserApp($this->getApplicationKey(), $user);
+            return $this->applicationInstallRepository->findUserApp($this->getApplicationKey(), $user, $sdk);
         }
 
-        return $this->applicationInstallRepository->findOneByName($this->getApplicationKey());
+        return $this->applicationInstallRepository->findOneByName($this->getApplicationKey(), $sdk);
     }
 
     /**
@@ -105,7 +106,12 @@ trait CommonNodeTrait
             throw new CustomNodeException('User not defined');
         }
 
-        return $this->getApplicationInstall($user);
+        $sdk = $dto->getSdk();
+        if (!$sdk) {
+            throw new CustomNodeException('SDK not defined');
+        }
+
+        return $this->getApplicationInstall($user, $sdk);
     }
 
 }

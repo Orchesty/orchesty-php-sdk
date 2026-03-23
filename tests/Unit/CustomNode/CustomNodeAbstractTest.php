@@ -87,7 +87,7 @@ final class CustomNodeAbstractTest extends KernelTestCaseAbstract
     {
         $this->nullConnector->setApplication(new TestNullApplication());
         self::expectExceptionMessage('Application [null-key] was not found');
-        $this->invokeMethod($this->nullConnector, 'getApplicationInstall', [NULL]);
+        $this->invokeMethod($this->nullConnector, 'getApplicationInstall', [NULL, 'sdk']);
     }
 
     /**
@@ -97,6 +97,7 @@ final class CustomNodeAbstractTest extends KernelTestCaseAbstract
     {
         $dto = new ProcessDto();
         $dto->setUser('testUser');
+        $dto->setSdk('sdk');
 
         $this->nullConnector->setApplication(new TestNullApplication());
         self::expectExceptionMessage('Application [null-key] was not found');

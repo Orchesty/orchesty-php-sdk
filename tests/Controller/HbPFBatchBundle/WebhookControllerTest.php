@@ -44,7 +44,7 @@ final class WebhookControllerTest extends ControllerTestCaseAbstract
         $this->mockApplicationHandler();
         $this->mockServer->addMock(
             new Mock(
-                '/document/ApplicationInstall?filter={"enabled":null,"names":["null"],"users":["bar"]}',
+                '/document/ApplicationInstall?filter={"enabled":null,"names":["null"],"users":["bar"],"sdks":["sdk"]}',
                 NULL,
                 CurlManager::METHOD_GET,
                 new Response(
@@ -55,7 +55,7 @@ final class WebhookControllerTest extends ControllerTestCaseAbstract
             ),
         );
 
-        $this->client->request('POST', '/webhook/applications/null/users/bar/subscribe');
+        $this->client->request('POST', '/webhook/applications/null/users/bar/sdk/sdk/subscribe');
         $response = $this->client->getResponse();
 
         self::assertEquals('200', $response->getStatusCode());
@@ -67,7 +67,7 @@ final class WebhookControllerTest extends ControllerTestCaseAbstract
     public function testSubscribeWebhooksErr(): void
     {
         $this->mockWebhookHandlerException('subscribeWebhooks', new ApplicationInstallException());
-        $response = (array) $this->sendPost('/webhook/applications/null/users/bar/subscribe', []);
+        $response = (array) $this->sendPost('/webhook/applications/null/users/bar/sdk/sdk/subscribe', []);
 
         self::assertEquals(404, $response['status']);
     }
@@ -78,7 +78,7 @@ final class WebhookControllerTest extends ControllerTestCaseAbstract
     public function testSubscribeWebhooksErr2(): void
     {
         $this->mockWebhookHandlerException('subscribeWebhooks', new Exception());
-        $response = (array) $this->sendPost('/webhook/applications/null/users/bar/subscribe', []);
+        $response = (array) $this->sendPost('/webhook/applications/null/users/bar/sdk/sdk/subscribe', []);
 
         self::assertEquals(500, $response['status']);
     }
@@ -92,7 +92,7 @@ final class WebhookControllerTest extends ControllerTestCaseAbstract
         $this->mockApplicationHandler();
         $this->mockServer->addMock(
             new Mock(
-                '/document/ApplicationInstall?filter={"enabled":null,"names":["null"],"users":["bar"]}',
+                '/document/ApplicationInstall?filter={"enabled":null,"names":["null"],"users":["bar"],"sdks":["sdk"]}',
                 NULL,
                 CurlManager::METHOD_GET,
                 new Response(
@@ -103,7 +103,7 @@ final class WebhookControllerTest extends ControllerTestCaseAbstract
             ),
         );
 
-        $this->client->request('POST', '/webhook/applications/null/users/bar/unsubscribe');
+        $this->client->request('POST', '/webhook/applications/null/users/bar/sdk/sdk/unsubscribe');
         $response = $this->client->getResponse();
 
         self::assertEquals('200', $response->getStatusCode());
@@ -115,7 +115,7 @@ final class WebhookControllerTest extends ControllerTestCaseAbstract
     public function testUnsubscribeWebhooksErr(): void
     {
         $this->mockWebhookHandlerException('unsubscribeWebhooks', new ApplicationInstallException());
-        $response = (array) $this->sendPost('/webhook/applications/null/users/bar/unsubscribe', []);
+        $response = (array) $this->sendPost('/webhook/applications/null/users/bar/sdk/sdk/unsubscribe', []);
 
         self::assertEquals(404, $response['status']);
     }
@@ -126,7 +126,7 @@ final class WebhookControllerTest extends ControllerTestCaseAbstract
     public function testUnsubscribeWebhooksErr2(): void
     {
         $this->mockWebhookHandlerException('unsubscribeWebhooks', new Exception());
-        $response = (array) $this->sendPost('/webhook/applications/null/users/bar/unsubscribe', []);
+        $response = (array) $this->sendPost('/webhook/applications/null/users/bar/sdk/sdk/unsubscribe', []);
 
         self::assertEquals(500, $response['status']);
     }
@@ -162,7 +162,7 @@ final class WebhookControllerTest extends ControllerTestCaseAbstract
     private function mockWebhookHandlerException(string $fn, mixed $return): void
     {
         $mock = self::createPartialMock(WebhookHandler::class, [$fn]);
-        $mock->expects(self::any())->method($fn)->willThrowException($return);
+        $mock->expects(self::atLeastOnce())->method($fn)->willThrowException($return);
         self::getContainer()->set('hbpf.application.handler.webhook', $mock);
     }
 

@@ -39,7 +39,7 @@ final class ConnectorControllerTest extends ControllerTestCaseAbstract
     public function testProcessActionActionErr2(): void
     {
         $handler = self::createPartialMock(ConnectorHandler::class, ['getConnectors']);
-        $handler->expects(self::any())->method('getConnectors')->willThrowException(new Exception());
+        $handler->method('getConnectors')->willThrowException(new Exception());
 
         self::getContainer()->set('hbpf.handler.connector', $handler);
 
@@ -64,7 +64,7 @@ final class ConnectorControllerTest extends ControllerTestCaseAbstract
     public function testListOfConnectorsAction(): void
     {
         $handler = self::createPartialMock(ConnectorHandler::class, ['getConnectors']);
-        $handler->expects(self::any())->method('getConnectors')->willThrowException(new Exception());
+        $handler->expects(self::atLeastOnce())->method('getConnectors')->willThrowException(new Exception());
 
         self::getContainer()->set('hbpf.handler.connector', $handler);
 

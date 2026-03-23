@@ -18,6 +18,7 @@ class ApplicationInstall extends DocumentAbstract
 
     public const string USER = 'user';
     public const string KEY  = 'key';
+    public const string SDK  = 'sdk';
 
     /**
      * @var DateTime|null
@@ -43,6 +44,11 @@ class ApplicationInstall extends DocumentAbstract
      * @var string|null
      */
     private ?string $key = NULL;
+
+    /**
+     * @var string
+     */
+    private string $sdk = '';
 
     /**
      * @var bool
@@ -267,6 +273,26 @@ class ApplicationInstall extends DocumentAbstract
     }
 
     /**
+     * @return string
+     */
+    public function getSdk(): string
+    {
+        return $this->sdk;
+    }
+
+    /**
+     * @param string $sdk
+     *
+     * @return self
+     */
+    public function setSdk(string $sdk): self
+    {
+        $this->sdk = $sdk;
+
+        return $this;
+    }
+
+    /**
      * @return mixed[]|null
      */
     public function getNonEncryptedSettings(): ?array
@@ -336,6 +362,7 @@ class ApplicationInstall extends DocumentAbstract
             'updated'              => $this->getUpdated()?->format(DateTimeUtils::DATE_TIME),
             '_id'                  => $this->getId(),
             self::KEY              => $this->getKey(),
+            self::SDK              => $this->getSdk(),
             self::USER             => $this->getUser(),
         ];
     }
@@ -362,6 +389,8 @@ class ApplicationInstall extends DocumentAbstract
             $this->setUser($data[self::USER]);
         if (array_key_exists(self::KEY, $data))
             $this->setKey($data[self::KEY]);
+        if (array_key_exists(self::SDK, $data))
+            $this->setSdk($data[self::SDK]);
         if (array_key_exists('nonEncryptedSettings', $data))
             $this->setNonEncryptedSettings($data['nonEncryptedSettings']);
         if (array_key_exists('encryptedSettings', $data))

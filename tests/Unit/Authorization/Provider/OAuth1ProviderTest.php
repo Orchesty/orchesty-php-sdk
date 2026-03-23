@@ -119,11 +119,11 @@ final class OAuth1ProviderTest extends KernelTestCaseAbstract
         $dto = new OAuth1Dto($install);
 
         $oauth = self::createPartialMock(OAuth::class, ['getAccessToken', 'setToken']);
-        $oauth->expects(self::any())->method('getAccessToken')->willThrowException(new OAuthException());
-        $oauth->expects(self::any())->method('setToken');
+        $oauth->expects(self::atLeastOnce())->method('getAccessToken')->willThrowException(new OAuthException());
+        $oauth->expects(self::atLeastOnce())->method('setToken');
 
         $provider = self::createPartialMock(OAuth1Provider::class, ['createClient']);
-        $provider->expects(self::any())->method('createClient')->willReturn($oauth);
+        $provider->expects(self::atLeastOnce())->method('createClient')->willReturn($oauth);
         $provider->setLogger(new Logger('logger'));
 
         $this->expectException(AuthorizationException::class);
@@ -233,8 +233,8 @@ final class OAuth1ProviderTest extends KernelTestCaseAbstract
         );
         $oauth->method('getAccessToken')->willReturn($data);
         $oauth->method('getRequestToken')->willReturn($data);
-        $oauth->method('setToken')->with('token', 'secret')->willReturn(TRUE);
-        $oauth->method('getRequestHeader')->with('GET', 'someEndpoint/Url')->willReturn('generatedUrl');
+        $oauth->method('setToken')->willReturn(TRUE);
+        $oauth->method('getRequestHeader')->willReturn('generatedUrl');
 
         $client = self::getMockBuilder(OAuth1Provider::class)
             ->setConstructorArgs(

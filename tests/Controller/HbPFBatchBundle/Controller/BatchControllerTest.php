@@ -40,7 +40,7 @@ final class BatchControllerTest extends ControllerTestCaseAbstract
     public function testProcessActionActionErr2(): void
     {
         $handler = self::createPartialMock(BatchHandler::class, ['getBatches']);
-        $handler->expects(self::any())->method('getBatches')->willThrowException(new Exception());
+        $handler->method('getBatches')->willThrowException(new Exception());
 
         self::getContainer()->set('hbpf.handler.batch', $handler);
 
@@ -65,7 +65,7 @@ final class BatchControllerTest extends ControllerTestCaseAbstract
     public function testListOfConnectorsAction(): void
     {
         $handler = self::createPartialMock(BatchHandler::class, ['getBatches']);
-        $handler->expects(self::any())->method('getBatches')->willThrowException(new Exception());
+        $handler->expects(self::atLeastOnce())->method('getBatches')->willThrowException(new Exception());
 
         self::getContainer()->set('hbpf.handler.batch', $handler);
 

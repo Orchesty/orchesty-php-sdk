@@ -49,11 +49,13 @@ final class ApplicationController
 
     /**
      * @param Request $request
+     * @param string  $sdk
+     *
      * @return Response
      */
-    #[Route('/applications/limits', methods: ['POST'])]
-    #[Route('/applications/limits/', methods: ['POST'])]
-    public function listOfApplicationsLimitsAction(Request $request): Response
+    #[Route('/applications/sdk/{sdk}/limits', methods: ['POST'])]
+    #[Route('/applications/sdk/{sdk}/limits/', methods: ['POST'])]
+    public function listOfApplicationsLimitsAction(Request $request, string $sdk): Response
     {
         try {
             $parameters = Json::decode($request->getContent());
@@ -61,6 +63,7 @@ final class ApplicationController
             return $this->getResponse(
                 $this->applicationHandler->getApplicationsLimits(
                     $parameters['user'] ?? '',
+                    $sdk,
                     $parameters['applications']?? '',
                 ),
             );
@@ -133,11 +136,12 @@ final class ApplicationController
      * @param Request $request
      * @param string  $key
      * @param string  $user
+     * @param string  $sdk
      *
      * @return Response
      */
-    #[Route('/applications/{key}/users/{user}/authorize', methods: ['GET'])]
-    public function authorizeApplicationAction(Request $request, string $key, string $user): Response
+    #[Route('/applications/{key}/users/{user}/sdk/{sdk}/authorize', methods: ['GET'])]
+    public function authorizeApplicationAction(Request $request, string $key, string $user, string $sdk): Response
     {
         try {
             /** @var string $redirectUrl */
@@ -146,7 +150,7 @@ final class ApplicationController
                 throw new InvalidArgumentException('Missing "redirect_url" query parameter.');
             }
 
-            $url = $this->applicationHandler->authorizeApplication($key, $user, $redirectUrl);
+            $url = $this->applicationHandler->authorizeApplication($key, $user, $sdk, $redirectUrl);
 
             return $this->getResponse(['authorizeUrl' => $url]);
         } catch (ApplicationInstallException $e) {
@@ -160,14 +164,15 @@ final class ApplicationController
      * @param Request $request
      * @param string  $key
      * @param string  $user
+     * @param string  $sdk
      *
      * @return Response
      */
-    #[Route('/applications/{key}/users/{user}/authorize/token', methods: ['GET'])]
-    public function setAuthorizationTokenAction(Request $request, string $key, string $user): Response
+    #[Route('/applications/{key}/users/{user}/sdk/{sdk}/authorize/token', methods: ['GET'])]
+    public function setAuthorizationTokenAction(Request $request, string $key, string $user, string $sdk): Response
     {
         try {
-            $url = $this->applicationHandler->saveAuthToken($key, $user, $request->query->all());
+            $url = $this->applicationHandler->saveAuthToken($key, $user, $sdk, $request->query->all());
 
             return $this->getResponse(['redirectUrl' => $url]);
         } catch (ApplicationInstallException $e) {
@@ -186,9 +191,9 @@ final class ApplicationController
     public function setAuthorizationTokenQueryAction(Request $request): Response
     {
         try {
-            [$user, $key] = OAuth2Provider::stateDecode($request->query->getString('state'));
+            [$user, $key, $sdk] = OAuth2Provider::stateDecode($request->query->getString('state'));
 
-            $url = $this->applicationHandler->saveAuthToken($key, $user, $request->query->all());
+            $url = $this->applicationHandler->saveAuthToken($key, $user, $sdk, $request->query->all());
 
             return $this->getResponse(['redirectUrl' => $url]);
         } catch (ApplicationInstallException $e) {
@@ -200,14 +205,15 @@ final class ApplicationController
 
     /**
      * @param string $user
+     * @param string $sdk
      *
      * @return Response
      */
-    #[Route('/applications/users/{user}', methods: ['GET'])]
-    public function getUsersApplicationAction(string $user): Response
+    #[Route('/applications/users/{user}/sdk/{sdk}', methods: ['GET'])]
+    public function getUsersApplicationAction(string $user, string $sdk): Response
     {
         try {
-            return $this->getResponse($this->applicationHandler->getApplicationsByUser($user));
+            return $this->getResponse($this->applicationHandler->getApplicationsByUser($user, $sdk));
         } catch (Throwable $t) {
             return $this->getErrorResponse($t);
         }
@@ -216,14 +222,15 @@ final class ApplicationController
     /**
      * @param string $key
      * @param string $user
+     * @param string $sdk
      *
      * @return Response
      */
-    #[Route('/applications/{key}/users/{user}', methods: ['GET'])]
-    public function getApplicationDetailAction(string $key, string $user): Response
+    #[Route('/applications/{key}/users/{user}/sdk/{sdk}', methods: ['GET'])]
+    public function getApplicationDetailAction(string $key, string $user, string $sdk): Response
     {
         try {
-            return $this->getResponse($this->applicationHandler->getApplicationByKeyAndUser($key, $user));
+            return $this->getResponse($this->applicationHandler->getApplicationByKeyAndUser($key, $user, $sdk));
         } catch (ApplicationInstallException $e) {
             return $this->getErrorResponse($e, 404, ControllerUtils::NOT_FOUND);
         } catch (Throwable $e) {
@@ -234,14 +241,15 @@ final class ApplicationController
     /**
      * @param string $key
      * @param string $user
+     * @param string $sdk
      *
      * @return Response
      */
-    #[Route('/applications/{key}/users/{user}/install', methods: ['POST'])]
-    public function installApplicationAction(string $key, string $user): Response
+    #[Route('/applications/{key}/users/{user}/sdk/{sdk}/install', methods: ['POST'])]
+    public function installApplicationAction(string $key, string $user, string $sdk): Response
     {
         try {
-            return $this->getResponse($this->applicationHandler->installApplication($key, $user));
+            return $this->getResponse($this->applicationHandler->installApplication($key, $user, $sdk));
         } catch (ApplicationInstallException $e) {
             return $this->getErrorResponse($e, 404, ControllerUtils::NOT_FOUND);
         } catch (Throwable $e) {
@@ -252,14 +260,15 @@ final class ApplicationController
     /**
      * @param string $key
      * @param string $user
+     * @param string $sdk
      *
      * @return Response
      */
-    #[Route('/applications/{key}/users/{user}/uninstall', methods: ['DELETE'])]
-    public function uninstallApplicationAction(string $key, string $user): Response
+    #[Route('/applications/{key}/users/{user}/sdk/{sdk}/uninstall', methods: ['DELETE'])]
+    public function uninstallApplicationAction(string $key, string $user, string $sdk): Response
     {
         try {
-            return $this->getResponse($this->applicationHandler->uninstallApplication($key, $user));
+            return $this->getResponse($this->applicationHandler->uninstallApplication($key, $user, $sdk));
         } catch (ApplicationInstallException $e) {
             return $this->getErrorResponse($e, 404, ControllerUtils::NOT_FOUND);
         } catch (Throwable $e) {
@@ -271,16 +280,18 @@ final class ApplicationController
      * @param Request $request
      * @param string  $key
      * @param string  $user
+     * @param string  $sdk
      *
      * @return Response
      */
-    #[Route('/applications/{key}/users/{user}/changeState', methods: ['PUT'])]
-    public function changeStateOfApplication(Request $request, string $key, string $user): Response
+    #[Route('/applications/{key}/users/{user}/sdk/{sdk}/changeState', methods: ['PUT'])]
+    public function changeStateOfApplication(Request $request, string $key, string $user, string $sdk): Response
     {
         try {
             return $this->getResponse($this->applicationHandler->changeStateOfApplication(
                 $key,
                 $user,
+                $sdk,
                 $request->request->getBoolean('enabled'),
             ));
         } catch (ApplicationInstallException $e) {
@@ -294,15 +305,16 @@ final class ApplicationController
      * @param Request $request
      * @param string  $key
      * @param string  $user
+     * @param string  $sdk
      *
      * @return Response
      */
-    #[Route('/applications/{key}/users/{user}/settings', methods: ['PUT'])]
-    public function updateApplicationSettingsAction(Request $request, string $key, string $user): Response
+    #[Route('/applications/{key}/users/{user}/sdk/{sdk}/settings', methods: ['PUT'])]
+    public function updateApplicationSettingsAction(Request $request, string $key, string $user, string $sdk): Response
     {
         try {
             return $this->getResponse(
-                $this->applicationHandler->updateApplicationSettings($key, $user, $request->request->all()),
+                $this->applicationHandler->updateApplicationSettings($key, $user, $sdk, $request->request->all()),
             );
         } catch (ApplicationInstallException $e) {
             return $this->getErrorResponse($e, 404, ControllerUtils::NOT_FOUND);
@@ -315,17 +327,19 @@ final class ApplicationController
      * @param Request $request
      * @param string  $key
      * @param string  $user
+     * @param string  $sdk
      *
      * @return Response
      */
-    #[Route('/applications/{key}/users/{user}/password', methods: ['PUT'])]
-    public function saveApplicationPasswordAction(Request $request, string $key, string $user): Response
+    #[Route('/applications/{key}/users/{user}/sdk/{sdk}/password', methods: ['PUT'])]
+    public function saveApplicationPasswordAction(Request $request, string $key, string $user, string $sdk): Response
     {
         try {
             return $this->getResponse(
                 $this->applicationHandler->updateApplicationPassword(
                     $key,
                     $user,
+                    $sdk,
                     $request->request->all(),
                 ),
             );
