@@ -39,7 +39,7 @@ final class OAuth2ProviderTest extends KernelTestCaseAbstract
         $provider = $this->getMockedProvider($url);
         $install  = new ApplicationInstall();
         $dto      = new OAuth2Dto($install, 'authorize/url', 'token/url');
-        $dto->setCustomAppDependencies(uniqid(), 'magento');
+        $dto->setCustomAppDependencies(uniqid(), 'magento', 'sdk');
 
         $provider->authorize($dto, []);
         self::assertFake();
@@ -116,7 +116,7 @@ final class OAuth2ProviderTest extends KernelTestCaseAbstract
     {
         $state = OAuth2Provider::stateDecode('ZXhhbXBsZQ,,');
 
-        self::assertEquals(['example', ''], $state);
+        self::assertEquals(['example', '', ''], $state);
     }
 
     /**
@@ -128,7 +128,7 @@ final class OAuth2ProviderTest extends KernelTestCaseAbstract
         $oauth->method('getAccessToken')->willThrowException(new IdentityProviderException('message', 5, ''));
 
         $provider = self::createPartialMock(OAuth2Provider::class, ['createClient']);
-        $provider->expects(self::any())->method('createClient')->willReturn($oauth);
+        $provider->expects(self::atLeastOnce())->method('createClient')->willReturn($oauth);
         $provider->setLogger(new Logger('logger'));
 
         $this->setProperty($provider, 'backend', '127.0.0.11');

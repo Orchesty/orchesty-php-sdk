@@ -66,13 +66,16 @@ final class AuthorizeUserCommand extends Command
         $question2 = new Question(sprintf('Please input user name.%s', PHP_EOL));
         $user      = $helper->ask($input, $output, $question2);
 
-        if (!is_string($key) || !is_string($user)) {
+        $question3 = new Question(sprintf('Please input sdk.%s', PHP_EOL));
+        $sdk       = $helper->ask($input, $output, $question3);
+
+        if (!is_string($key) || !is_string($user) || !is_string($sdk)) {
             $output->writeln('Please make sure that input parameters are string.');
 
             return 1;
         }
 
-        $output->writeln($this->applicationManager->authorizeApplication($key, $user, ''));
+        $output->writeln($this->applicationManager->authorizeApplication($key, $user, $sdk, ''));
 
         return 0;
     }

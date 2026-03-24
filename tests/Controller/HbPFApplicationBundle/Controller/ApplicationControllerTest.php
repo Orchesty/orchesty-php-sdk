@@ -144,7 +144,7 @@ final class ApplicationControllerTest extends ControllerTestCaseAbstract
     public function testAuthorizeApplicationAction(): void
     {
         $this->mockHandler('authorizeApplication');
-        $response = $this->sendGet('/applications/key/users/user/authorize?redirect_url=/redirect/url');
+        $response = $this->sendGet('/applications/key/users/user/sdk/sdk/authorize?redirect_url=/redirect/url');
 
         self::assertEquals(200, $response->status);
     }
@@ -155,7 +155,7 @@ final class ApplicationControllerTest extends ControllerTestCaseAbstract
     public function testAuthorizeApplicationActionNotFound(): void
     {
         $this->mockHandler('authorizeApplication', new ApplicationInstallException());
-        $response = $this->sendGet('/applications/key/users/user/authorize?redirect_url=https://example.com');
+        $response = $this->sendGet('/applications/key/users/user/sdk/sdk/authorize?redirect_url=https://example.com');
 
         self::assertEquals(404, $response->status);
     }
@@ -166,7 +166,7 @@ final class ApplicationControllerTest extends ControllerTestCaseAbstract
     public function testAuthorizeApplicationActionErr(): void
     {
         $this->mockHandler('authorizeApplication');
-        $response = $this->sendGet('/applications/key/users/user/authorize');
+        $response = $this->sendGet('/applications/key/users/user/sdk/sdk/authorize');
 
         self::assertEquals(500, $response->status);
     }
@@ -176,10 +176,10 @@ final class ApplicationControllerTest extends ControllerTestCaseAbstract
      */
     public function testSetAuthorizationTokenAction(): void
     {
-        $this->mockHandler('saveAuthToken', '/applications/key/users/user/authorize');
+        $this->mockHandler('saveAuthToken', '/applications/key/users/user/sdk/sdk/authorize');
         $this->sendRequest(
             'GET',
-            '/applications/key/users/user/authorize/token',
+            '/applications/key/users/user/sdk/sdk/authorize/token',
             [],
             [],
             [],
@@ -195,7 +195,7 @@ final class ApplicationControllerTest extends ControllerTestCaseAbstract
     public function testSetAuthorizationTokenActionNotFound(): void
     {
         $this->mockHandler('saveAuthToken', new ApplicationInstallException());
-        $response = $this->sendGet('/applications/key/users/user/authorize/token');
+        $response = $this->sendGet('/applications/key/users/user/sdk/sdk/authorize/token');
 
         self::assertEquals(404, $response->status);
     }
@@ -206,7 +206,7 @@ final class ApplicationControllerTest extends ControllerTestCaseAbstract
     public function testSetAuthorizationTokenActionErr(): void
     {
         $this->mockHandler('saveAuthToken', new LogicException());
-        $response = $this->sendGet('/applications/key/users/user/authorize/token');
+        $response = $this->sendGet('/applications/key/users/user/sdk/sdk/authorize/token');
 
         self::assertEquals(500, $response->status);
     }
@@ -252,7 +252,7 @@ final class ApplicationControllerTest extends ControllerTestCaseAbstract
             Json::decode(File::getContent(sprintf('%s/data/data.json', __DIR__))),
         );
 
-        $this->client->request('GET', '/applications/users/bar');
+        $this->client->request('GET', '/applications/users/bar/sdk/sdk');
         $response = $this->client->getResponse();
 
         self::assertEquals(
@@ -269,7 +269,7 @@ final class ApplicationControllerTest extends ControllerTestCaseAbstract
     {
         $this->mockHandler('getApplicationsByUser', new Exception());
 
-        $response = (array) $this->sendGet('/applications/users/bar');
+        $response = (array) $this->sendGet('/applications/users/bar/sdk/sdk');
         self::assertEquals(500, $response['status']);
     }
 
@@ -282,7 +282,7 @@ final class ApplicationControllerTest extends ControllerTestCaseAbstract
         self::getContainer()->set('hbpf.worker-api', $this->mockServer);
         $this->mockServer->addMock(
             new Mock(
-                '/document/ApplicationInstall?filter={"enabled":null,"names":["someApp"],"users":["bar"]}',
+                '/document/ApplicationInstall?filter={"enabled":null,"names":["someApp"],"users":["bar"],"sdks":["sdk"]}',
                 NULL,
                 CurlManager::METHOD_GET,
                 new GuzzleResponse(200, [], '[{"name":"someApp","user":"bar"}]'),
@@ -294,10 +294,10 @@ final class ApplicationControllerTest extends ControllerTestCaseAbstract
         $application->method('getApplicationForms')->willReturn([]);
         self::getContainer()->set('hbpf.application.someApp', $application);
 
-        $response = (array) $this->sendGet('/applications/someApp/users/bar');
+        $response = (array) $this->sendGet('/applications/someApp/users/bar/sdk/sdk');
         self::assertEquals('200', $response['status']);
 
-        $response = (array) $this->sendGet('/applications/application/users/user');
+        $response = (array) $this->sendGet('/applications/application/users/user/sdk/sdk');
         self::assertEquals('404', $response['status']);
     }
 
@@ -307,7 +307,7 @@ final class ApplicationControllerTest extends ControllerTestCaseAbstract
     public function testApplicationDetailErr(): void
     {
         $this->mockHandler('getApplicationByKeyAndUser', new Exception());
-        $response = (array) $this->sendGet('/applications/someApp/users/bar');
+        $response = (array) $this->sendGet('/applications/someApp/users/bar/sdk/sdk');
 
         self::assertEquals(500, $response['status']);
     }
@@ -321,7 +321,7 @@ final class ApplicationControllerTest extends ControllerTestCaseAbstract
         self::getContainer()->set('hbpf.worker-api', $this->mockServer);
         $this->mockServer->addMock(
             new Mock(
-                '/document/ApplicationInstall?filter={"enabled":null,"names":["example"],"users":["bar"]}',
+                '/document/ApplicationInstall?filter={"enabled":null,"names":["example"],"users":["bar"],"sdks":["sdk"]}',
                 NULL,
                 CurlManager::METHOD_GET,
                 new GuzzleResponse(200, [], '[]'),
@@ -340,7 +340,7 @@ final class ApplicationControllerTest extends ControllerTestCaseAbstract
         );
         $this->mockServer->addMock(
             new Mock(
-                '/document/ApplicationInstall?filter={"enabled":null,"names":["example"],"users":["bar"]}',
+                '/document/ApplicationInstall?filter={"enabled":null,"names":["example"],"users":["bar"],"sdks":["sdk"]}',
                 NULL,
                 CurlManager::METHOD_GET,
                 new GuzzleResponse(200, [], '[{}]'),
@@ -349,10 +349,10 @@ final class ApplicationControllerTest extends ControllerTestCaseAbstract
         $application = new NullApplication();
         self::getContainer()->set('hbpf.application.example', $application);
 
-        $response = (array) $this->sendPost('/applications/example/users/bar/install', []);
+        $response = (array) $this->sendPost('/applications/example/users/bar/sdk/sdk/install', []);
         self::assertEquals('200', $response['status']);
 
-        $response = (array) $this->sendPost('/applications/application/users/user/install', []);
+        $response = (array) $this->sendPost('/applications/application/users/user/sdk/sdk/install', []);
         self::assertEquals('404', $response['status']);
     }
 
@@ -363,7 +363,7 @@ final class ApplicationControllerTest extends ControllerTestCaseAbstract
     {
         $this->mockHandler('installApplication', new Exception());
 
-        $response = (array) $this->sendPost('/applications/example/users/bar/install', []);
+        $response = (array) $this->sendPost('/applications/example/users/bar/sdk/sdk/install', []);
 
         self::assertEquals(500, $response['status']);
     }
@@ -377,13 +377,13 @@ final class ApplicationControllerTest extends ControllerTestCaseAbstract
         self::getContainer()->set('hbpf.worker-api', $this->mockServer);
         $this->mockServer->addMock(
             new Mock(
-                '/document/ApplicationInstall?filter={"enabled":null,"names":["null"],"users":["bar"]}',
+                '/document/ApplicationInstall?filter={"enabled":null,"names":["null"],"users":["bar"],"sdks":["sdk"]}',
                 NULL,
                 CurlManager::METHOD_GET,
                 new GuzzleResponse(200, [], '[{"key":"null","user":"bar"}]'),
             ),
         );
-        $this->client->request('DELETE', '/applications/null/users/bar/uninstall');
+        $this->client->request('DELETE', '/applications/null/users/bar/sdk/sdk/uninstall');
         $response = $this->client->getResponse();
 
         self::assertEquals(
@@ -399,7 +399,7 @@ final class ApplicationControllerTest extends ControllerTestCaseAbstract
     public function testUninstallApplicationErr(): void
     {
         $this->mockHandler('uninstallApplication', new Exception());
-        $response = (array) $this->sendDelete('/applications/null/users/bar/uninstall');
+        $response = (array) $this->sendDelete('/applications/null/users/bar/sdk/sdk/uninstall');
 
         self::assertEquals(500, $response['status']);
     }
@@ -411,7 +411,7 @@ final class ApplicationControllerTest extends ControllerTestCaseAbstract
     {
         $this->mockHandler('updateApplicationSettings', ['new_settings' => 'test1']);
 
-        $this->client->request('PUT', '/applications/someApp/users/bar/settings', [], [], [], '{"test":1}');
+        $this->client->request('PUT', '/applications/someApp/users/bar/sdk/sdk/settings', [], [], [], '{"test":1}');
         $response = $this->client->getResponse();
         self::assertEquals('200', $response->getStatusCode());
         self::assertEquals(
@@ -419,7 +419,7 @@ final class ApplicationControllerTest extends ControllerTestCaseAbstract
             Json::decode((string) $response->getContent())['new_settings'],
         );
 
-        $this->client->request('PUT', '/applications/application/users/user/settings');
+        $this->client->request('PUT', '/applications/application/users/user/sdk/sdk/settings');
         $response = $this->client->getResponse();
         self::assertEquals('404', $response->getStatusCode());
     }
@@ -430,7 +430,7 @@ final class ApplicationControllerTest extends ControllerTestCaseAbstract
     public function testUpdateApplicationSettingsErr(): void
     {
         $this->mockHandler('updateApplicationSettings', new Exception());
-        $response = (array) $this->sendPut('/applications/someApp/users/bar/settings', [], ['test' => 1]);
+        $response = (array) $this->sendPut('/applications/someApp/users/bar/sdk/sdk/settings', [], ['test' => 1]);
 
         self::assertEquals(500, $response['status']);
     }
@@ -444,7 +444,7 @@ final class ApplicationControllerTest extends ControllerTestCaseAbstract
 
         $this->client->request(
             'PUT',
-            '/applications/someApp/users/bar/password',
+            '/applications/someApp/users/bar/sdk/sdk/password',
             [
                 'fieldKey' => BasicApplicationInterface::PASSWORD,
                 'formKey'  => ApplicationInterface::AUTHORIZATION_FORM,
@@ -464,7 +464,7 @@ final class ApplicationControllerTest extends ControllerTestCaseAbstract
         self::getContainer()->set('hbpf.worker-api', $this->mockServer);
         $this->mockServer->addMock(
             new Mock(
-                '/document/ApplicationInstall?filter={"enabled":null,"names":["application"],"users":["user"]}',
+                '/document/ApplicationInstall?filter={"enabled":null,"names":["application"],"users":["user"],"sdks":["sdk"]}',
                 NULL,
                 CurlManager::METHOD_GET,
                 new GuzzleResponse(200, [], '[]'),
@@ -473,7 +473,7 @@ final class ApplicationControllerTest extends ControllerTestCaseAbstract
 
         $this->client->request(
             'PUT',
-            '/applications/application/users/user/password',
+            '/applications/application/users/user/sdk/sdk/password',
             [
                 'fieldKey' => BasicApplicationInterface::PASSWORD,
                 'formKey'  => ApplicationInterface::AUTHORIZATION_FORM,
@@ -490,7 +490,11 @@ final class ApplicationControllerTest extends ControllerTestCaseAbstract
     public function testSaveApplicationPasswordErr(): void
     {
         $this->mockHandler('updateApplicationPassword', new Exception());
-        $response = (array) $this->sendPut('/applications/someApp/users/bar/password', [], ['passwd' => 'test']);
+        $response = (array) $this->sendPut(
+            '/applications/someApp/users/bar/sdk/sdk/password',
+            [],
+            ['passwd' => 'test'],
+        );
 
         self::assertEquals(500, $response['status']);
     }
@@ -504,12 +508,12 @@ final class ApplicationControllerTest extends ControllerTestCaseAbstract
         $handler = self::createPartialMock(ApplicationHandler::class, [$method]);
         if ($return) {
             if ($return instanceof Exception) {
-                $handler->expects(self::any())->method($method)->willThrowException($return);
+                $handler->expects(self::atLeastOnce())->method($method)->willThrowException($return);
             } else {
-                $handler->expects(self::any())->method($method)->willReturn($return);
+                $handler->expects(self::atLeastOnce())->method($method)->willReturn($return);
             }
         } else {
-            $handler->expects(self::any())->method($method);
+            $handler->method($method);
         }
 
         $container = $this->client->getContainer();

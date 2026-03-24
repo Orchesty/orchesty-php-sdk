@@ -34,14 +34,15 @@ final class WebhookController
      * @param Request $request
      * @param string  $key
      * @param string  $user
+     * @param string  $sdk
      *
      * @return Response
      */
-    #[Route('/webhook/applications/{key}/users/{user}/subscribe', methods: ['POST'])]
-    public function subscribeWebhooksAction(Request $request, string $key, string $user): Response
+    #[Route('/webhook/applications/{key}/users/{user}/sdk/{sdk}/subscribe', methods: ['POST'])]
+    public function subscribeWebhooksAction(Request $request, string $key, string $user, string $sdk): Response
     {
         try {
-            $this->webhookHandler->subscribeWebhooks($key, $user, $request->request->all());
+            $this->webhookHandler->subscribeWebhooks($key, $user, $sdk, $request->request->all());
 
             return $this->getResponse([]);
         } catch (ApplicationInstallException $e) {
@@ -55,14 +56,15 @@ final class WebhookController
      * @param Request $request
      * @param string  $key
      * @param string  $user
+     * @param string  $sdk
      *
      * @return Response
      */
-    #[Route('/webhook/applications/{key}/users/{user}/unsubscribe', methods: ['POST'])]
-    public function unsubscribeWebhooksAction(Request $request, string $key, string $user): Response
+    #[Route('/webhook/applications/{key}/users/{user}/sdk/{sdk}/unsubscribe', methods: ['POST'])]
+    public function unsubscribeWebhooksAction(Request $request, string $key, string $user, string $sdk): Response
     {
         try {
-            $this->webhookHandler->unsubscribeWebhooks($key, $user, $request->request->all());
+            $this->webhookHandler->unsubscribeWebhooks($key, $user, $sdk, $request->request->all());
 
             return $this->getResponse([]);
         } catch (ApplicationInstallException $e) {

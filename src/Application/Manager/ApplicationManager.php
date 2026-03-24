@@ -117,17 +117,18 @@ final class ApplicationManager
     /**
      * @param string  $key
      * @param string  $user
+     * @param string  $sdk
      * @param mixed[] $data
      *
      * @return mixed[]
      * @throws ApplicationInstallException
      * @throws GuzzleException
      */
-    public function saveApplicationSettings(string $key, string $user, array $data): array
+    public function saveApplicationSettings(string $key, string $user, string $sdk, array $data): array
     {
         /** @var BasicApplicationInterface $application */
         $application        = $this->loader->getApplication($key);
-        $applicationInstall = $this->applicationInstallRepository->findUserApp($key, $user);
+        $applicationInstall = $this->applicationInstallRepository->findUserApp($key, $user, $sdk);
         $res                = $application->saveApplicationForms($applicationInstall, $data)->toArray();
         $this->applicationInstallRepository->update($applicationInstall);
 
@@ -140,6 +141,7 @@ final class ApplicationManager
     /**
      * @param string $key
      * @param string $user
+     * @param string $sdk
      * @param string $formKey
      * @param string $fieldKey
      * @param string $password
@@ -151,12 +153,13 @@ final class ApplicationManager
     public function saveApplicationPassword(
         string $key,
         string $user,
+        string $sdk,
         string $formKey,
         string $fieldKey,
         string $password,
     ): ApplicationInstall
     {
-        $applicationInstall = $this->applicationInstallRepository->findUserApp($key, $user);
+        $applicationInstall = $this->applicationInstallRepository->findUserApp($key, $user, $sdk);
 
         /** @var BasicApplicationInterface $application */
         $application = $this->loader->getApplication($key);
@@ -169,15 +172,16 @@ final class ApplicationManager
     /**
      * @param string $key
      * @param string $user
+     * @param string $sdk
      * @param string $redirectUrl
      *
      * @return string
      * @throws ApplicationInstallException
      * @throws GuzzleException
      */
-    public function authorizeApplication(string $key, string $user, string $redirectUrl): string
+    public function authorizeApplication(string $key, string $user, string $sdk, string $redirectUrl): string
     {
-        $applicationInstall = $this->applicationInstallRepository->findUserApp($key, $user);
+        $applicationInstall = $this->applicationInstallRepository->findUserApp($key, $user, $sdk);
 
         /** @var OAuth1ApplicationInterface|OAuth2ApplicationInterface $application */
         $application = $this->loader->getApplication($key);
@@ -190,15 +194,16 @@ final class ApplicationManager
     /**
      * @param string  $key
      * @param string  $user
+     * @param string  $sdk
      * @param mixed[] $token
      *
      * @return string
      * @throws ApplicationInstallException
      * @throws GuzzleException
      */
-    public function saveAuthorizationToken(string $key, string $user, array $token): string
+    public function saveAuthorizationToken(string $key, string $user, string $sdk, array $token): string
     {
-        $applicationInstall = $this->applicationInstallRepository->findUserApp($key, $user);
+        $applicationInstall = $this->applicationInstallRepository->findUserApp($key, $user, $sdk);
 
         /** @var OAuth1ApplicationInterface|OAuth2ApplicationInterface $application */
         $application = $this->loader->getApplication($key);
@@ -210,39 +215,48 @@ final class ApplicationManager
 
     /**
      * @param string $user
+     * @param string $sdk
      *
      * @return mixed[]
      * @throws GuzzleException
      */
-    public function getInstalledApplications(string $user): array
+    public function getInstalledApplications(string $user, string $sdk): array
     {
-        return $this->applicationInstallRepository->findMany(new ApplicationInstallFilter(users: [$user]));
+        return $this->applicationInstallRepository->findMany(
+            new ApplicationInstallFilter(users: [$user], sdks: [$sdk]),
+        );
     }
 
     /**
      * @param string $key
      * @param string $user
+     * @param string $sdk
      *
      * @return ApplicationInstall
      * @throws ApplicationInstallException
      * @throws GuzzleException
      */
-    public function getInstalledApplicationDetail(string $key, string $user): ApplicationInstall
+    public function getInstalledApplicationDetail(string $key, string $user, string $sdk): ApplicationInstall
     {
-        return $this->applicationInstallRepository->findUserApp($key, $user);
+        return $this->applicationInstallRepository->findUserApp($key, $user, $sdk);
     }
 
     /**
      * @param string $key
      * @param string $user
+     * @param string $sdk
      *
      * @return ApplicationInstall
      * @throws ApplicationInstallException
      * @throws GuzzleException
      */
-    public function installApplication(string $key, string $user): ApplicationInstall
+    public function installApplication(string $key, string $user, string $sdk): ApplicationInstall
     {
-        if ($this->applicationInstallRepository->findOne(new ApplicationInstallFilter(names: [$key], users: [$user]))) {
+        $existing = $this->applicationInstallRepository->findOne(
+            new ApplicationInstallFilter(names: [$key], users: [$user], sdks: [$sdk]),
+        );
+
+        if ($existing) {
             throw new ApplicationInstallException(
                 sprintf('Application [%s] was already installed.', $key),
                 ApplicationInstallException::APP_ALREADY_INSTALLED,
@@ -252,7 +266,8 @@ final class ApplicationManager
         $applicationInstall = new ApplicationInstall();
         $applicationInstall
             ->setUser($user)
-            ->setKey($key);
+            ->setKey($key)
+            ->setSdk($sdk);
         $this->applicationInstallRepository->insert($applicationInstall);
 
         return $applicationInstall;
@@ -261,16 +276,17 @@ final class ApplicationManager
     /**
      * @param string $key
      * @param string $user
+     * @param string $sdk
      *
      * @return ApplicationInstall
      * @throws ApplicationInstallException
      * @throws CurlException
      * @throws GuzzleException
      */
-    public function uninstallApplication(string $key, string $user): ApplicationInstall
+    public function uninstallApplication(string $key, string $user, string $sdk): ApplicationInstall
     {
-        $applicationInstall = $this->applicationInstallRepository->findUserApp($key, $user);
-        $this->unsubscribeWebhooks($applicationInstall);
+        $applicationInstall = $this->applicationInstallRepository->findUserApp($key, $user, $sdk);
+        $this->unsubscribeWebhooks($applicationInstall, $sdk);
 
         $this->applicationInstallRepository->remove($applicationInstall);
 
@@ -279,6 +295,7 @@ final class ApplicationManager
 
     /**
      * @param ApplicationInstall $applicationInstall
+     * @param string             $sdk
      * @param mixed[]            $data
      *
      * @return void
@@ -287,7 +304,7 @@ final class ApplicationManager
      * @throws DateTimeException
      * @throws GuzzleException
      */
-    public function subscribeWebhooks(ApplicationInstall $applicationInstall, array $data = []): void
+    public function subscribeWebhooks(ApplicationInstall $applicationInstall, string $sdk, array $data = []): void
     {
         /** @var WebhookApplicationInterface $application */
         $application = $this->loader->getApplication($applicationInstall->getKey() ?? '');
@@ -295,12 +312,13 @@ final class ApplicationManager
         if (ApplicationTypeEnum::isWebhook($application->getApplicationType()) &&
             $application->isAuthorized($applicationInstall)
         ) {
-            $this->webhook->subscribeWebhooks($application, $applicationInstall->getUser() ?? '', $data);
+            $this->webhook->subscribeWebhooks($application, $applicationInstall->getUser() ?? '', $sdk, $data);
         }
     }
 
     /**
      * @param ApplicationInstall $applicationInstall
+     * @param string             $sdk
      * @param mixed[]            $data
      *
      * @return void
@@ -308,7 +326,7 @@ final class ApplicationManager
      * @throws CurlException
      * @throws GuzzleException
      */
-    public function unsubscribeWebhooks(ApplicationInstall $applicationInstall, array $data = []): void
+    public function unsubscribeWebhooks(ApplicationInstall $applicationInstall, string $sdk, array $data = []): void
     {
         /** @var WebhookApplicationInterface $application */
         $application = $this->loader->getApplication($applicationInstall->getKey() ?? '');
@@ -316,21 +334,22 @@ final class ApplicationManager
         if (ApplicationTypeEnum::isWebhook($application->getApplicationType()) &&
             $application->isAuthorized($applicationInstall)
         ) {
-            $this->webhook->unsubscribeWebhooks($application, $applicationInstall->getUser() ?? '', $data);
+            $this->webhook->unsubscribeWebhooks($application, $applicationInstall->getUser() ?? '', $sdk, $data);
         }
     }
 
     /**
      * @param string $key
      * @param string $user
+     * @param string $sdk
      *
      * @return mixed[]
      * @throws ApplicationInstallException
      * @throws GuzzleException
      */
-    public function getApplicationSettings(string $key, string $user): array
+    public function getApplicationSettings(string $key, string $user, string $sdk): array
     {
-        $applicationInstall = $this->applicationInstallRepository->findUserApp($key, $user);
+        $applicationInstall = $this->applicationInstallRepository->findUserApp($key, $user, $sdk);
         /** @var ApplicationAbstract $application */
         $application = $this->loader->getApplication($key);
 
@@ -339,16 +358,17 @@ final class ApplicationManager
 
     /**
      * @param string  $user
+     * @param string  $sdk
      * @param mixed[] $applications
      *
      * @return mixed[]
      * @throws GuzzleException
      */
-    public function getApplicationsLimits(string $user, array $applications): array
+    public function getApplicationsLimits(string $user, string $sdk, array $applications): array
     {
-        $applicationInstalls = $this->applicationInstallRepository->findUserApps($user, $applications);
+        $applicationInstalls = $this->applicationInstallRepository->findUserApps($user, $applications, $sdk);
 
-        $appLimits = array_map(static function(ApplicationInstall $appInstall) {
+        $appLimits = array_map(static function(ApplicationInstall $appInstall) use ($sdk) {
             $limiterForm = $appInstall->getSettings()[ApplicationInterface::LIMITER_FORM] ?? NULL;
             if (!$limiterForm) {
                 return NULL;
@@ -367,17 +387,17 @@ final class ApplicationManager
 
             if($groupTime && $groupValue){
                 return PipesHeaders::getLimiterKeyWithGroup(
-                    sprintf('%s|%s', $appInstall->getUser(), $appInstall->getKey()),
+                    sprintf('%s|%s:%s', $appInstall->getUser(), $sdk, $appInstall->getKey()),
                     (int) $time,
                     (int) $value,
-                    sprintf('|%s', $appInstall->getKey()),
+                    sprintf('|%s:%s', $sdk, $appInstall->getKey()),
                     (int) $groupTime,
                     (int) $groupValue,
                 );
             }
 
             return PipesHeaders::getLimiterKey(
-                sprintf('%s|%s', $appInstall->getUser(), $appInstall->getKey()),
+                sprintf('%s|%s:%s', $appInstall->getUser(), $sdk, $appInstall->getKey()),
                 (int) $time,
                 (int) $value,
             );
@@ -390,15 +410,16 @@ final class ApplicationManager
     /**
      * @param string $key
      * @param string $user
+     * @param string $sdk
      * @param bool   $enabled
      *
      * @return ApplicationInstall
      * @throws ApplicationInstallException
      * @throws GuzzleException
      */
-    public function changeStateOfApplication(string $key, string $user, bool $enabled): ApplicationInstall
+    public function changeStateOfApplication(string $key, string $user, string $sdk, bool $enabled): ApplicationInstall
     {
-        $applicationInstall = $this->applicationInstallRepository->findUserApp($key, $user);
+        $applicationInstall = $this->applicationInstallRepository->findUserApp($key, $user, $sdk);
         $applicationInstall->setEnabled($enabled);
 
         $this->applicationInstallRepository->update($applicationInstall);

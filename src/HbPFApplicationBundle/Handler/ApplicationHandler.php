@@ -61,14 +61,15 @@ final class ApplicationHandler
 
     /**
      * @param string  $user
+     * @param string  $sdk
      * @param mixed[] $applications
      *
      * @return mixed[]
      * @throws GuzzleException
      */
-    public function getApplicationsLimits(string $user, array $applications): array
+    public function getApplicationsLimits(string $user, string $sdk, array $applications): array
     {
-        return $this->applicationManager->getApplicationsLimits($user, $applications);
+        return $this->applicationManager->getApplicationsLimits($user, $sdk, $applications);
     }
 
     /**
@@ -113,12 +114,13 @@ final class ApplicationHandler
 
     /**
      * @param string $user
+     * @param string $sdk
      *
      * @return mixed[]
      * @throws ApplicationInstallException
      * @throws GuzzleException
      */
-    public function getApplicationsByUser(string $user): array
+    public function getApplicationsByUser(string $user, string $sdk): array
     {
         return [
             'items' => array_map(
@@ -139,7 +141,7 @@ final class ApplicationHandler
                         ],
                     );
                 },
-                $this->applicationManager->getInstalledApplications($user),
+                $this->applicationManager->getInstalledApplications($user, $sdk),
             ),
         ];
     }
@@ -147,16 +149,17 @@ final class ApplicationHandler
     /**
      * @param string $key
      * @param string $user
+     * @param string $sdk
      *
      * @return mixed[]
      * @throws ApplicationInstallException
      * @throws GuzzleException
      */
-    public function getApplicationByKeyAndUser(string $key, string $user): array
+    public function getApplicationByKeyAndUser(string $key, string $user, string $sdk): array
     {
         /** @var BasicApplicationAbstract&WebhookApplicationInterface $application */
         $application        = $this->applicationManager->getApplication($key);
-        $applicationInstall = $this->applicationManager->getInstalledApplicationDetail($key, $user);
+        $applicationInstall = $this->applicationManager->getInstalledApplicationDetail($key, $user, $sdk);
 
         return array_merge(
             $application->toArray(),
@@ -166,7 +169,7 @@ final class ApplicationHandler
                 self::CUSTOM_ACTIONS       => $this->customActionsToArray($application->getCustomActions()),
                 self::ENABLED              => $applicationInstall->isEnabled(),
                 self::WEBHOOK_SETTINGS     => $application->getApplicationType() === ApplicationTypeEnum::WEBHOOK->value
-                    ? $this->webhookManager->getWebhooks($application, $user)
+                    ? $this->webhookManager->getWebhooks($application, $user, $sdk)
                     : [],
 
             ],
@@ -176,16 +179,17 @@ final class ApplicationHandler
     /**
      * @param string $key
      * @param string $user
+     * @param string $sdk
      *
      * @return mixed[]
      * @throws ApplicationInstallException
      * @throws GuzzleException
      */
-    public function installApplication(string $key, string $user): array
+    public function installApplication(string $key, string $user, string $sdk): array
     {
         /** @var BasicApplicationAbstract $application */
         $application        = $this->applicationManager->getApplication($key);
-        $applicationInstall = $this->applicationManager->installApplication($key, $user);
+        $applicationInstall = $this->applicationManager->installApplication($key, $user, $sdk);
 
         return array_merge(
             $application->toArray(),
@@ -199,16 +203,17 @@ final class ApplicationHandler
     /**
      * @param string $key
      * @param string $user
+     * @param string $sdk
      *
      * @return mixed[]
      * @throws ApplicationInstallException
      * @throws CurlException
      * @throws GuzzleException
      */
-    public function uninstallApplication(string $key, string $user): array
+    public function uninstallApplication(string $key, string $user, string $sdk): array
     {
         return array_merge(
-            $this->applicationManager->uninstallApplication($key, $user)->toArray(),
+            $this->applicationManager->uninstallApplication($key, $user, $sdk)->toArray(),
             [
                 self::APPLICATION_SETTINGS => NULL,
                 self::AUTHORIZED           => FALSE,
@@ -219,27 +224,29 @@ final class ApplicationHandler
     /**
      * @param string  $key
      * @param string  $user
+     * @param string  $sdk
      * @param mixed[] $data
      *
      * @return mixed[]
      * @throws ApplicationInstallException
      * @throws GuzzleException
      */
-    public function updateApplicationSettings(string $key, string $user, array $data): array
+    public function updateApplicationSettings(string $key, string $user, string $sdk, array $data): array
     {
-        return $this->applicationManager->saveApplicationSettings($key, $user, $data);
+        return $this->applicationManager->saveApplicationSettings($key, $user, $sdk, $data);
     }
 
     /**
      * @param string  $key
      * @param string  $user
+     * @param string  $sdk
      * @param mixed[] $data
      *
      * @return mixed[]
      * @throws ApplicationInstallException
      * @throws GuzzleException
      */
-    public function updateApplicationPassword(string $key, string $user, array $data): array
+    public function updateApplicationPassword(string $key, string $user, string $sdk, array $data): array
     {
         if (!array_key_exists(BasicApplicationInterface::PASSWORD, $data)) {
             throw new InvalidArgumentException('Field password is not included.');
@@ -256,6 +263,7 @@ final class ApplicationHandler
         return $this->applicationManager->saveApplicationPassword(
             $key,
             $user,
+            $sdk,
             $data['formKey'],
             $data['fieldKey'],
             $data[BasicApplicationInterface::PASSWORD],
@@ -265,43 +273,46 @@ final class ApplicationHandler
     /**
      * @param string $key
      * @param string $user
+     * @param string $sdk
      * @param string $redirectUrl
      *
      * @return string
      * @throws ApplicationInstallException
      * @throws GuzzleException
      */
-    public function authorizeApplication(string $key, string $user, string $redirectUrl): string
+    public function authorizeApplication(string $key, string $user, string $sdk, string $redirectUrl): string
     {
-        return $this->applicationManager->authorizeApplication($key, $user, $redirectUrl);
+        return $this->applicationManager->authorizeApplication($key, $user, $sdk, $redirectUrl);
     }
 
     /**
      * @param string  $key
      * @param string  $user
+     * @param string  $sdk
      * @param mixed[] $token
      *
      * @return string
      * @throws ApplicationInstallException
      * @throws GuzzleException
      */
-    public function saveAuthToken(string $key, string $user, array $token): string
+    public function saveAuthToken(string $key, string $user, string $sdk, array $token): string
     {
-        return $this->applicationManager->saveAuthorizationToken($key, $user, $token);
+        return $this->applicationManager->saveAuthorizationToken($key, $user, $sdk, $token);
     }
 
     /**
      * @param string $key
      * @param string $user
+     * @param string $sdk
      * @param bool   $enabled
      *
      * @return ApplicationInstall
      * @throws ApplicationInstallException
      * @throws GuzzleException
      */
-    public function changeStateOfApplication(string $key, string $user, bool $enabled): ApplicationInstall
+    public function changeStateOfApplication(string $key, string $user, string $sdk, bool $enabled): ApplicationInstall
     {
-        return $this->applicationManager->changeStateOfApplication($key, $user, $enabled);
+        return $this->applicationManager->changeStateOfApplication($key, $user, $sdk, $enabled);
     }
 
     /**

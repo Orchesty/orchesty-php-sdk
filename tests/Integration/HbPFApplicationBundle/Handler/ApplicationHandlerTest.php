@@ -139,12 +139,12 @@ final class ApplicationHandlerTest extends KernelTestCaseAbstract
     public function testAuthorizeApplication(): void
     {
         $applicationManager = self::createPartialMock(ApplicationManager::class, ['authorizeApplication']);
-        $applicationManager->expects(self::any())->method('authorizeApplication');
+        $applicationManager->expects(self::atLeastOnce())->method('authorizeApplication');
 
         $webhookManager = self::createMock(WebhookManager::class);
 
         $handler = new ApplicationHandler($applicationManager, $webhookManager);
-        $handler->authorizeApplication('null', 'user', '/redirect/url');
+        $handler->authorizeApplication('null', 'user', 'sdk', '/redirect/url');
         self::assertFake();
     }
 
@@ -154,12 +154,12 @@ final class ApplicationHandlerTest extends KernelTestCaseAbstract
     public function testSaveAuthToken(): void
     {
         $applicationManager = self::createPartialMock(ApplicationManager::class, ['authorizeApplication']);
-        $applicationManager->expects(self::any())->method('authorizeApplication');
+        $applicationManager->expects(self::atLeastOnce())->method('authorizeApplication');
 
         $webhookManager = self::createMock(WebhookManager::class);
 
         $handler = new ApplicationHandler($applicationManager, $webhookManager);
-        $handler->authorizeApplication('null', 'user', '/redirect/url');
+        $handler->authorizeApplication('null', 'user', 'sdk', '/redirect/url');
         self::assertFake();
     }
 
@@ -170,13 +170,13 @@ final class ApplicationHandlerTest extends KernelTestCaseAbstract
     {
         $applicationManager = self::createPartialMock(ApplicationManager::class, ['saveAuthorizationToken']);
         $applicationManager
-            ->expects(self::any())->method('saveAuthorizationToken')
+            ->expects(self::atLeastOnce())->method('saveAuthorizationToken')
             ->willReturn('/redirect/url');
 
         $webhookManager = self::createMock(WebhookManager::class);
 
         $handler     = new ApplicationHandler($applicationManager, $webhookManager);
-        $redirectUrl = $handler->saveAuthToken('null', 'user', ['code' => '__code__']);
+        $redirectUrl = $handler->saveAuthToken('null', 'user', 'sdk', ['code' => '__code__']);
 
         self::assertSame('/redirect/url', $redirectUrl);
     }
@@ -191,14 +191,14 @@ final class ApplicationHandlerTest extends KernelTestCaseAbstract
         self::getContainer()->set('hbpf.worker-api', $this->mockServer);
         $this->mockServer->addMock(
             new Mock(
-                '/document/ApplicationInstall?filter={"enabled":null,"users":["user"]}',
+                '/document/ApplicationInstall?filter={"enabled":null,"users":["user"],"sdks":["sdk"]}',
                 NULL,
                 CurlManager::METHOD_GET,
                 new Response(200, [], '[{"user":"user","name":"null"}, {"user":"user","name":"webhook"}]'),
             ),
         );
         $this->privateSetUp();
-        $result = $this->handler->getApplicationsByUser('user');
+        $result = $this->handler->getApplicationsByUser('user', 'sdk');
 
         self::assertEquals(2, count($result['items']));
     }
@@ -212,7 +212,7 @@ final class ApplicationHandlerTest extends KernelTestCaseAbstract
         self::getContainer()->set('hbpf.worker-api', $this->mockServer);
         $this->mockServer->addMock(
             new Mock(
-                '/document/ApplicationInstall?filter={"enabled":null,"names":["webhook"],"users":["user"]}',
+                '/document/ApplicationInstall?filter={"enabled":null,"names":["webhook"],"users":["user"],"sdks":["sdk"]}',
                 NULL,
                 CurlManager::METHOD_GET,
                 new Response(200, [], '[{"name":"webhook"}]'),
@@ -220,14 +220,14 @@ final class ApplicationHandlerTest extends KernelTestCaseAbstract
         );
         $this->mockServer->addMock(
             new Mock(
-                '/document/Webhook?filter={"applications":["webhook"],"user_uds":["user"]}',
+                '/document/Webhook?filter={"applications":["webhook"],"user_uds":["user"],"sdks":["sdk"]}',
                 NULL,
                 CurlManager::METHOD_GET,
                 new Response(200, [], '[]'),
             ),
         );
         $this->privateSetUp();
-        $result = $this->handler->getApplicationByKeyAndUser('webhook', 'user');
+        $result = $this->handler->getApplicationByKeyAndUser('webhook', 'user', 'sdk');
         self::assertEquals('Webhook', $result['name']);
     }
 
@@ -241,7 +241,7 @@ final class ApplicationHandlerTest extends KernelTestCaseAbstract
         self::getContainer()->set('hbpf.worker-api', $this->mockServer);
         $this->mockServer->addMock(
             new Mock(
-                '/document/ApplicationInstall?filter={"enabled":null,"names":["null"],"users":["user"]}',
+                '/document/ApplicationInstall?filter={"enabled":null,"names":["null"],"users":["user"],"sdks":["sdk"]}',
                 NULL,
                 CurlManager::METHOD_GET,
                 new Response(200, [], '[{"name":"null"}]'),
@@ -266,6 +266,7 @@ final class ApplicationHandlerTest extends KernelTestCaseAbstract
         $res = $this->handler->updateApplicationSettings(
             'null',
             'user',
+            'sdk',
             [ApplicationInterface::AUTHORIZATION_FORM => [BasicApplicationInterface::USER => 'New user']],
         );
 
@@ -287,7 +288,7 @@ final class ApplicationHandlerTest extends KernelTestCaseAbstract
         self::getContainer()->set('hbpf.worker-api', $this->mockServer);
         $this->mockServer->addMock(
             new Mock(
-                '/document/ApplicationInstall?filter={"enabled":null,"names":["null"],"users":["user"]}',
+                '/document/ApplicationInstall?filter={"enabled":null,"names":["null"],"users":["user"],"sdks":["sdk"]}',
                 NULL,
                 CurlManager::METHOD_GET,
                 new Response(200, [], '[{"name":"null"}]'),
@@ -310,7 +311,7 @@ final class ApplicationHandlerTest extends KernelTestCaseAbstract
         );
         $this->mockServer->addMock(
             new Mock(
-                '/document/ApplicationInstall?filter={"enabled":null,"names":["null"],"users":["user"]}',
+                '/document/ApplicationInstall?filter={"enabled":null,"names":["null"],"users":["user"],"sdks":["sdk"]}',
                 NULL,
                 CurlManager::METHOD_GET,
                 new Response(
@@ -324,13 +325,14 @@ final class ApplicationHandlerTest extends KernelTestCaseAbstract
         $this->handler->updateApplicationPassword(
             'null',
             'user',
+            'sdk',
             [
                 'fieldKey' => BasicApplicationInterface::PASSWORD,
                 'formKey'  => ApplicationInterface::AUTHORIZATION_FORM,
                 'password' => '_newPasswd_',
             ],
         );
-        $app = $this->handler->getApplicationByKeyAndUser('null', 'user');
+        $app = $this->handler->getApplicationByKeyAndUser('null', 'user', 'sdk');
         self::assertEquals(
             TRUE,
             $app[ApplicationManager::APPLICATION_SETTINGS][ApplicationInterface::AUTHORIZATION_FORM][ApplicationInterface::FIELDS][1]['value'],
@@ -347,6 +349,7 @@ final class ApplicationHandlerTest extends KernelTestCaseAbstract
         $this->handler->updateApplicationPassword(
             'null',
             'user',
+            'sdk',
             [
                 'fieldKey' => BasicApplicationInterface::PASSWORD,
                 'formKey'  => ApplicationInterface::AUTHORIZATION_FORM,

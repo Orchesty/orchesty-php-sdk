@@ -31,6 +31,7 @@ final class WebhookHandler
     /**
      * @param string  $key
      * @param string  $user
+     * @param string  $sdk
      * @param mixed[] $data
      *
      * @return void
@@ -40,14 +41,15 @@ final class WebhookHandler
      * @throws GuzzleException
      * @throws PipesFrameworkException
      */
-    public function subscribeWebhooks(string $key, string $user, array $data = []): void
+    public function subscribeWebhooks(string $key, string $user, string $sdk, array $data = []): void
     {
         if ($data) {
             ControllerUtils::checkParameters([WebhookSubscription::NAME, WebhookSubscription::TOPOLOGY], $data);
         }
 
         $this->applicationManager->subscribeWebhooks(
-            $this->applicationManager->getInstalledApplicationDetail($key, $user),
+            $this->applicationManager->getInstalledApplicationDetail($key, $user, $sdk),
+            $sdk,
             $data,
         );
     }
@@ -55,6 +57,7 @@ final class WebhookHandler
     /**
      * @param string  $key
      * @param string  $user
+     * @param string  $sdk
      * @param mixed[] $data
      *
      * @return void
@@ -63,14 +66,15 @@ final class WebhookHandler
      * @throws GuzzleException
      * @throws PipesFrameworkException
      */
-    public function unsubscribeWebhooks(string $key, string $user, array $data = []): void
+    public function unsubscribeWebhooks(string $key, string $user, string $sdk, array $data = []): void
     {
         if ($data) {
             ControllerUtils::checkParameters([WebhookSubscription::NAME, WebhookSubscription::TOPOLOGY], $data);
         }
 
         $this->applicationManager->unsubscribeWebhooks(
-            $this->applicationManager->getInstalledApplicationDetail($key, $user),
+            $this->applicationManager->getInstalledApplicationDetail($key, $user, $sdk),
+            $sdk,
             $data,
         );
     }

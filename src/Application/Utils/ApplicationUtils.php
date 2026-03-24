@@ -21,9 +21,10 @@ final class ApplicationUtils
     {
         if ($systemInstall) {
             return sprintf(
-                '/api/applications/%s/users/%s/authorize/token',
+                '/api/applications/%s/users/%s/sdk/%s/authorize/token',
                 $systemInstall->getKey(),
                 $systemInstall->getUser(),
+                $systemInstall->getSdk(),
             );
         } else {
             return '/api/applications/authorize/token';

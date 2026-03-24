@@ -21,10 +21,10 @@ final class ApplicationUtilsTest extends KernelTestCaseAbstract
      */
     public function testGenerateUrl(): void
     {
-        $applicationInstall = (new ApplicationInstall())->setUser('user')->setKey('key');
+        $applicationInstall = (new ApplicationInstall())->setUser('user')->setKey('key')->setSdk('sdk');
 
         self::assertSame(
-            '/api/applications/key/users/user/authorize/token',
+            '/api/applications/key/users/user/sdk/sdk/authorize/token',
             ApplicationUtils::generateUrl($applicationInstall),
         );
     }

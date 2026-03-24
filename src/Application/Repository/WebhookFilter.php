@@ -17,12 +17,14 @@ final class WebhookFilter extends Filter
      *
      * @param mixed[]|null $applications
      * @param mixed[]|null $userIds
+     * @param mixed[]|null $sdks
      * @param mixed[]|null $ids
      * @param bool|null    $deleted
      */
     public function __construct(
         public ?array $applications = NULL,
         public ?array $userIds = NULL,
+        public ?array $sdks = NULL,
         ?array $ids = NULL,
         ?bool $deleted = NULL,
     )
@@ -39,6 +41,7 @@ final class WebhookFilter extends Filter
 
         if ($this->applications) $retArray['applications'] = $this->applications;
         if ($this->userIds) $retArray['user_uds']          = $this->userIds;
+        if ($this->sdks) $retArray['sdks']                 = $this->sdks;
 
         return $retArray;
     }

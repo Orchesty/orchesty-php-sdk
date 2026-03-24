@@ -66,13 +66,19 @@ final class WebhookManagerTest extends KernelTestCaseAbstract
         self::getContainer()->set('hbpf.worker-api', $this->mockServer);
         $this->mockServer->addMock(
             new Mock(
-                '/document/ApplicationInstall?filter={"enabled":null,"names":["webhook"],"users":["User"]}',
+                '/document/ApplicationInstall?filter={"enabled":null,"names":["webhook"],"users":["User"],"sdks":["sdk"]}',
                 NULL,
                 CurlManager::METHOD_GET,
                 new Response(
                     200,
                     [],
-                    Json::encode((new ApplicationInstall())->setUser('User')->setKey('webhook')->toArray()),
+                    Json::encode(
+                        (new ApplicationInstall())
+                            ->setUser('User')
+                            ->setKey('webhook')
+                            ->setSdk('sdk')
+                            ->toArray(),
+                    ),
                 ),
             ),
         );
@@ -114,7 +120,7 @@ final class WebhookManagerTest extends KernelTestCaseAbstract
         );
         $this->mockServer->addMock(
             new Mock(
-                '/document/Webhook?filter={"applications":["webhook"],"user_uds":["User"]}',
+                '/document/Webhook?filter={"applications":["webhook"],"user_uds":["User"],"sdks":["sdk"]}',
                 NULL,
                 CurlManager::METHOD_GET,
                 new Response(200, [], '[]'),
@@ -130,7 +136,7 @@ final class WebhookManagerTest extends KernelTestCaseAbstract
         );
         $this->privateSetUp();
         $this->getService(static fn(): ResponseDto => new ResponseDto(200, 'OK', '{"id":"id"}', []))
-            ->subscribeWebhooks($this->application, 'User');
+            ->subscribeWebhooks($this->application, 'User', 'sdk');
 
         /** @var Webhook[] $webhooks */
         $webhooks = $this->repository->findMany();
@@ -144,7 +150,7 @@ final class WebhookManagerTest extends KernelTestCaseAbstract
         self::assertFalse($webhooks[0]->isUnsubscribeFailed());
 
         $this->getService(static fn(): ResponseDto => new ResponseDto(200, 'OK', '{"success":true}', []))
-            ->unsubscribeWebhooks($this->application, 'User');
+            ->unsubscribeWebhooks($this->application, 'User', 'sdk');
 
         self::assertCount(0, $this->repository->findMany());
     }
@@ -159,7 +165,7 @@ final class WebhookManagerTest extends KernelTestCaseAbstract
         self::getContainer()->set('hbpf.worker-api', $this->mockServer);
         $this->mockServer->addMock(
             new Mock(
-                '/document/ApplicationInstall?filter={"enabled":null,"names":["webhook"],"users":["User"]}',
+                '/document/ApplicationInstall?filter={"enabled":null,"names":["webhook"],"users":["User"],"sdks":["sdk"]}',
                 NULL,
                 CurlManager::METHOD_GET,
                 new Response(200, [], '[{}]'),
@@ -175,14 +181,20 @@ final class WebhookManagerTest extends KernelTestCaseAbstract
                 new Response(
                     200,
                     [],
-                    Json::encode((new ApplicationInstall())->setUser('User')->setKey('webhook')->toArray()),
+                    Json::encode(
+                        (new ApplicationInstall())
+                            ->setUser('User')
+                            ->setKey('webhook')
+                            ->setSdk('sdk')
+                            ->toArray(),
+                    ),
                 ),
                 ['created' => '2023-02-13 11:55:26', 'token' => '7d2fe1873b77049267371062a784c4923b65a6e4a3cf549294'],
             ),
         );
         $this->mockServer->addMock(
             new Mock(
-                '/document/Webhook?filter={"applications":["webhook"],"user_uds":["User"]}',
+                '/document/Webhook?filter={"applications":["webhook"],"user_uds":["User"],"sdks":["sdk"]}',
                 NULL,
                 CurlManager::METHOD_GET,
                 new Response(200, [], '[{}]'),
@@ -190,7 +202,7 @@ final class WebhookManagerTest extends KernelTestCaseAbstract
         );
         $this->mockServer->addMock(
             new Mock(
-                '/document/ApplicationInstall?filter={"enabled":null,"names":["webhook"],"users":["User"]}',
+                '/document/ApplicationInstall?filter={"enabled":null,"names":["webhook"],"users":["User"],"sdks":["sdk"]}',
                 NULL,
                 CurlManager::METHOD_GET,
                 new Response(200, [], '[{}]'),
@@ -210,10 +222,10 @@ final class WebhookManagerTest extends KernelTestCaseAbstract
         );
         $this->privateSetUp();
         $this->getService(static fn(): ResponseDto => new ResponseDto(200, 'OK', '{"id":"id"}', []))
-            ->subscribeWebhooks($this->application, 'User');
+            ->subscribeWebhooks($this->application, 'User', 'sdk');
 
         $this->getService(static fn(): ResponseDto => new ResponseDto(200, 'OK', '{"success":false}', []))
-            ->unsubscribeWebhooks($this->application, 'User');
+            ->unsubscribeWebhooks($this->application, 'User', 'sdk');
 
         /** @var Webhook[] $webhooks */
         $webhooks = $this->repository->findMany();
@@ -236,7 +248,7 @@ final class WebhookManagerTest extends KernelTestCaseAbstract
         self::getContainer()->set('hbpf.worker-api', $this->mockServer);
         $this->mockServer->addMock(
             new Mock(
-                '/document/ApplicationInstall?filter={"enabled":null,"names":["webhook"],"users":["User"]}',
+                '/document/ApplicationInstall?filter={"enabled":null,"names":["webhook"],"users":["User"],"sdks":["sdk"]}',
                 NULL,
                 CurlManager::METHOD_GET,
                 new Response(200, [], '[]'),
@@ -247,7 +259,7 @@ final class WebhookManagerTest extends KernelTestCaseAbstract
         self::expectExceptionCode(ApplicationInstallException::APP_WAS_NOT_FOUND);
 
         $this->getService(static fn(): ResponseDto => new ResponseDto(200, 'OK', '{"id":"id"}', []))
-            ->subscribeWebhooks($this->application, 'User');
+            ->subscribeWebhooks($this->application, 'User', 'sdk');
     }
 
     /**
@@ -261,7 +273,7 @@ final class WebhookManagerTest extends KernelTestCaseAbstract
         self::getContainer()->set('hbpf.worker-api', $this->mockServer);
         $this->mockServer->addMock(
             new Mock(
-                '/document/Webhook?filter={"applications":["webhook"],"user_uds":["user"]}',
+                '/document/Webhook?filter={"applications":["webhook"],"user_uds":["user"],"sdks":["sdk"]}',
                 NULL,
                 CurlManager::METHOD_GET,
                 new Response(200, [], '[{"name":"name","default":true,"enabled":false,"topology":"1"}]'),
@@ -270,7 +282,7 @@ final class WebhookManagerTest extends KernelTestCaseAbstract
         $this->privateSetUp();
 
         $result = $this->getService(static fn(): ResponseDto => new ResponseDto(200, 'OK', '{"id":"id"}', []))
-            ->getWebhooks($this->application, 'user');
+            ->getWebhooks($this->application, 'user', 'sdk');
 
         self::assertEquals(
             [
@@ -293,7 +305,7 @@ final class WebhookManagerTest extends KernelTestCaseAbstract
         $params = (new WebhookSubscription('name', 'node', 'topo', []))->getParameters();
 
         $this->getService(static fn(): ResponseDto => new ResponseDto(200, 'OK', '{"id":"id"}', []))
-            ->subscribeWebhooks($this->application, 'user', ['name' => 'testName']);
+            ->subscribeWebhooks($this->application, 'user', 'sdk', ['name' => 'testName']);
 
         self::assertEquals([], $params);
     }
@@ -308,7 +320,7 @@ final class WebhookManagerTest extends KernelTestCaseAbstract
         self::getContainer()->set('hbpf.worker-api', $this->mockServer);
         $this->mockServer->addMock(
             new Mock(
-                '/document/Webhook?filter={"applications":["webhook"],"user_uds":["user"]}',
+                '/document/Webhook?filter={"applications":["webhook"],"user_uds":["user"],"sdks":["sdk"]}',
                 NULL,
                 CurlManager::METHOD_GET,
                 new Response(200, [], '[]'),
@@ -317,7 +329,7 @@ final class WebhookManagerTest extends KernelTestCaseAbstract
         $this->privateSetUp();
         $this
             ->getService(static fn(): ResponseDto => new ResponseDto(200, 'OK', '{"id":"id"}', []))
-            ->unsubscribeWebhooks($this->application, 'user', ['topology' => 'testTopo']);
+            ->unsubscribeWebhooks($this->application, 'user', 'sdk', ['topology' => 'testTopo']);
 
         self::assertFake();
     }
@@ -341,7 +353,7 @@ final class WebhookManagerTest extends KernelTestCaseAbstract
     private function getService(Closure $closure): WebhookManager
     {
         $manager = self::createMock(CurlManagerInterface::class);
-        $manager->expects(self::any())->method('send')->willReturnCallback($closure);
+        $manager->method('send')->willReturnCallback($closure);
 
         /** @var ApplicationInstallRepository $applicationInstallRepository */
         $applicationInstallRepository = self::getContainer()->get('hbpf.application_install.repository');

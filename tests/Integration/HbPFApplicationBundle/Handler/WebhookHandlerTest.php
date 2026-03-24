@@ -27,10 +27,10 @@ final class WebhookHandlerTest extends KernelTestCaseAbstract
     public function testSubscribeWebhooks(): void
     {
         $mock = self::createMock(ApplicationManager::class);
-        $mock->expects(self::any())->method('subscribeWebhooks');
+        $mock->expects(self::atLeastOnce())->method('subscribeWebhooks');
         $handler = new WebhookHandler($mock);
 
-        $handler->subscribeWebhooks('webhook', 'user', ['name' => 'name', 'topology' => 'topo']);
+        $handler->subscribeWebhooks('webhook', 'user', 'sdk', ['name' => 'name', 'topology' => 'topo']);
 
         self::assertFake();
     }
@@ -42,10 +42,10 @@ final class WebhookHandlerTest extends KernelTestCaseAbstract
     public function testUnsubscribeWebhooks(): void
     {
         $mock = self::createMock(ApplicationManager::class);
-        $mock->expects(self::any())->method('unsubscribeWebhooks');
+        $mock->expects(self::atLeastOnce())->method('unsubscribeWebhooks');
         $handler = new WebhookHandler($mock);
 
-        $handler->unsubscribeWebhooks('webhook', 'user', ['name' => 'name', 'topology' => 'topo']);
+        $handler->unsubscribeWebhooks('webhook', 'user', 'sdk', ['name' => 'name', 'topology' => 'topo']);
 
         self::assertFake();
     }

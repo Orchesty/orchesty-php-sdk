@@ -40,6 +40,11 @@ final class OAuth2Dto implements OAuth2DtoInterface
     private string $applicationKey = '';
 
     /**
+     * @var string
+     */
+    private string $sdk = '';
+
+    /**
      * OAuth2Dto constructor.
      *
      * @param ApplicationInstall $authorization
@@ -143,13 +148,23 @@ final class OAuth2Dto implements OAuth2DtoInterface
     }
 
     /**
+     * @return string
+     */
+    public function getSdk(): string
+    {
+        return $this->sdk;
+    }
+
+    /**
      * @param string $user
      * @param string $applicationKey
+     * @param string $sdk
      */
-    public function setCustomAppDependencies(string $user, string $applicationKey): void
+    public function setCustomAppDependencies(string $user, string $applicationKey, string $sdk): void
     {
         $this->user           = $user;
         $this->applicationKey = $applicationKey;
+        $this->sdk            = $sdk;
     }
 
 }
