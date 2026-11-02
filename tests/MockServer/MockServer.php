@@ -71,7 +71,7 @@ class MockServer implements ClientInterface
      */
     private function popMock(): ?Mock
     {
-        return array_shift($this->mocks) ?? NULL;
+        return array_shift($this->mocks);
     }
 
     /**

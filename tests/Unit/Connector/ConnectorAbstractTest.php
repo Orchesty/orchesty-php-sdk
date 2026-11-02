@@ -77,7 +77,7 @@ final class ConnectorAbstractTest extends KernelTestCaseAbstract
     public function testGetApplication(): void
     {
         $this->nullConnector->setApplication(new TestNullApplication());
-        self::assertNotEmpty($this->nullConnector->getApplication());
+        self::assertInstanceOf(TestNullApplication::class, $this->nullConnector->getApplication());
     }
 
     /**
@@ -86,7 +86,7 @@ final class ConnectorAbstractTest extends KernelTestCaseAbstract
     public function testGetSetSender(): void
     {
         $this->nullConnector->setSender(new CurlManager(new CurlClientFactory()));
-        self::assertNotEmpty(self::getProperty($this->nullConnector,'sender'));
+        self::assertInstanceOf(CurlManager::class, self::getProperty($this->nullConnector,'sender'));
     }
 
     /**

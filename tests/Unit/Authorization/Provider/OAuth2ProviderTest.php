@@ -82,7 +82,7 @@ final class OAuth2ProviderTest extends KernelTestCaseAbstract
 
         $token = $provider->getAccessToken($dto, $request);
 
-        self::assertNotEmpty($token);
+        self::assertNotCount(0, $token);
     }
 
     /**
@@ -106,7 +106,7 @@ final class OAuth2ProviderTest extends KernelTestCaseAbstract
 
         $token = $provider->refreshAccessToken($dto, $token);
 
-        self::assertNotEmpty($token);
+        self::assertNotCount(0, $token);
     }
 
     /**

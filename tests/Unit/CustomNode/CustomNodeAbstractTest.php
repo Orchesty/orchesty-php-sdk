@@ -77,7 +77,7 @@ final class CustomNodeAbstractTest extends KernelTestCaseAbstract
     public function testGetApplication(): void
     {
         $this->nullConnector->setApplication(new TestNullApplication());
-        self::assertNotEmpty($this->nullConnector->getApplication());
+        self::assertInstanceOf(TestNullApplication::class, $this->nullConnector->getApplication());
     }
 
     /**

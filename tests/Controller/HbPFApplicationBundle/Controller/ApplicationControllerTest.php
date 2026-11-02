@@ -49,7 +49,7 @@ final class ApplicationControllerTest extends ControllerTestCaseAbstract
     {
         $response = $this->sendGet('/applications');
 
-        self::assertNotEmpty($response->content);
+        self::assertNotCount(0, $response->content->items);
         self::assertEquals(200, $response->status);
     }
 

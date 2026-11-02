@@ -98,7 +98,7 @@ final class OAuth1ProviderTest extends KernelTestCaseAbstract
 
         $token = $provider->getAccessToken($dto, $request, 'accesToken/Url');
 
-        self::assertNotEmpty($token);
+        self::assertNotCount(0, $token);
     }
 
     /**
@@ -154,7 +154,7 @@ final class OAuth1ProviderTest extends KernelTestCaseAbstract
 
         $header = $provider->getAuthorizeHeader($dto, 'GET', 'someEndpoint/Url');
 
-        self::assertNotEmpty($header);
+        self::assertNotSame('', $header);
         self::assertStringStartsWith('ge', $header);
     }
 

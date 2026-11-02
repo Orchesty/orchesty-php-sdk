@@ -13,7 +13,7 @@ use Symfony\Component\Filesystem\Filesystem;
  *
  * @package Hanaboso\PipesPhpSdk\HbPFTableParserBundle\Handler
  */
-final class TableParserHandler
+final readonly class TableParserHandler
 {
 
     /**
@@ -21,7 +21,7 @@ final class TableParserHandler
      *
      * @param TableParser $tableParser
      */
-    public function __construct(private readonly TableParser $tableParser)
+    public function __construct(private TableParser $tableParser)
     {
     }
 

@@ -11,7 +11,7 @@ use Hanaboso\PipesPhpSdk\Storage\File\FileSystem;
  *
  * @package Hanaboso\PipesPhpSdk\Storage\DataStorage
  */
-final class DataStorageManager
+final readonly class DataStorageManager
 {
 
     /**
@@ -19,7 +19,7 @@ final class DataStorageManager
      *
      * @param FileSystem $fileSystem
      */
-    public function __construct(private readonly FileSystem $fileSystem)
+    public function __construct(private FileSystem $fileSystem)
     {
     }
 
