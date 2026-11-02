@@ -22,7 +22,7 @@ use Throwable;
  *
  * @package Hanaboso\PipesPhpSdk\HbPFApplicationBundle\Handler
  */
-final class ApplicationHandler
+final readonly class ApplicationHandler
 {
 
     private const string SYNC_METHODS         = 'syncMethods';
@@ -38,10 +38,7 @@ final class ApplicationHandler
      * @param ApplicationManager $applicationManager
      * @param WebhookManager     $webhookManager
      */
-    public function __construct(
-        private readonly ApplicationManager $applicationManager,
-        private readonly WebhookManager $webhookManager,
-    )
+    public function __construct(private ApplicationManager $applicationManager, private WebhookManager $webhookManager)
     {
     }
 

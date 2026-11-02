@@ -134,7 +134,7 @@ final class FileSystem implements LoggerAwareInterface
             fclose($openFile);
 
             return array_map(static fn($item) => DataStorageDocument::fromJson($item), $data);
-        } catch (error) {
+        } catch (Error) {
             $this->logger->error(
                 sprintf('Read file [%s] was not successful. Tries [%s/%s]', $file, $actualTry, $this->maxTries),
             );
@@ -164,7 +164,7 @@ final class FileSystem implements LoggerAwareInterface
             unlink($dataPath);
 
             return TRUE;
-        } catch (error) {
+        } catch (Error) {
             $this->logger->error(
                 sprintf('Delete file [%s] was not successful. Tries [%s/%s]', $file, $actualTry, $this->maxTries),
             );

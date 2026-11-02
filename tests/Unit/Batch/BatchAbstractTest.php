@@ -65,7 +65,7 @@ final class BatchAbstractTest extends KernelTestCaseAbstract
     public function testGetApplication(): void
     {
         $this->nullBatchConnector->setApplication(new TestNullApplication());
-        self::assertNotEmpty($this->nullBatchConnector->getApplication());
+        self::assertInstanceOf(TestNullApplication::class, $this->nullBatchConnector->getApplication());
     }
 
     /**
